@@ -388,7 +388,7 @@ void assignment_struct_1()
 	};
 
 	// 定义 结构体类型 变量并赋值
-	struct student_s student = { 1, "张三", 18 };
+	struct Student student = { 1, "张三", 18 };
 	printf("学号 = %d, 姓名 = %s, 年龄 = %d\n", student.id, student.name, student.age);
 	printf("-------------------------------------\n");
 }
