@@ -42,5 +42,6 @@ void find_student(const StudentManager *p_student_manager);
 void delete_student_by_pos(StudentManager *p_student_manager, int pos);
 void delete_student(StudentManager *p_student_manager);
 void modify_student(StudentManager *p_student_manager);
+void start_student_manager();
 
 #endif
