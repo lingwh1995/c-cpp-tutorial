@@ -16,7 +16,7 @@ typedef struct
 	float scores[SCORE_SIZE];
 	float total_score;
 	float avg_score;
-} Student;
+} Student, *PStudent;
 
 typedef struct
 {
@@ -24,10 +24,12 @@ typedef struct
 	int current_count;
 	// 容量
 	int max_capacity;
-	Student student_list*;
+	Student *student_list;
 } StudentManager, *PStudentManager;
 
 void init_student_manager(StudentManager *p_student_manager);
+void destory_student_manager(StudentManager *p_student_manager);
+bool scaling_student_list(StudentManager *p_student_manager);
 void load_student_from_file(StudentManager *p_student_manager);
 int get_student_size(const StudentManager  *p_student_manager);
 bool is_full(const StudentManager  *p_student_manager);

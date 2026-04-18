@@ -6,8 +6,42 @@ void init_student_manager(StudentManager *p_student_manager)
 	assert(p_student_manager != NULL);
 	p_student_manager->current_count = 0;
 	p_student_manager->max_capacity = MAX_STUDENT;
-	p_student_manager->data = (StudentManager)malloc(sizeof(StudentManager) * p_student_manager->max_capacity);
-	memset(p_student_manager->student_list, 0, sizeof(Student) * p_student_manager->max_capacity);
+    // 使用maclloc() + memset() 动态开辟内存
+	//p_student_manager->student_list = (PStudent)malloc(sizeof(Student) * p_student_manager->max_capacity);
+    //memset(p_student_manager->student_list, 0, sizeof(Student) * p_student_manager->max_capacity);
+
+    // 使用calloc()动态开辟内存
+    p_student_manager->student_list = (PStudent)calloc(p_student_manager->max_capacity, sizeof(Student));
+    if(NULL == p_student_manager->student_list)
+    {
+        exit(EXIT_FAILURE);
+    }
+}
+
+void destory_student_manager(StudentManager *p_student_manager)
+{
+    free(p_student_manager->student_list);
+    p_student_manager->student_list = NULL;
+    p_student_manager->current_count = 0;
+    p_student_manager->max_capacity = 0;
+}
+
+bool scaling_student_list(StudentManager *p_student_manager)
+{
+    if(NULL == p_student_manager)
+    {
+        return;
+    }
+    bool scaling_result = true;
+    // 使用 realloc() 重新设置数组大小
+    int new_max_capacity = p_student_manager->max_capacity * SCALING_RATIO;
+    p_student_manager->student_list = realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student) );
+    if(NULL == p_student_manager->student_list)
+    {
+        scaling_result = false;
+    }
+    p_student_manager->max_capacity = new_max_capacity;
+    return scaling_result;
 }
 
 void load_student_from_file(StudentManager *p_student_manager)
@@ -79,9 +113,9 @@ Student input_student()
 bool add_student(StudentManager  *p_student_manager)
 {
 	assert(p_student_manager != NULL);
-	if(is_full(p_student_manager))
+	if(is_full(p_student_manager) && !scaling_student_list(p_student_manager))
 	{
-		return false;
+        return false;
 	}
 	const Student student = input_student();
 	p_student_manager->student_list[p_student_manager->current_count] = student;
@@ -515,4 +549,5 @@ void start_student_manager()
 		}
 	} while (select != 0);
 	write_student_to_file(&student_manager);
+    destory_student_manager(&student_manager);
 }
