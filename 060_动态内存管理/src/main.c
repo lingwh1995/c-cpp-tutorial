@@ -205,31 +205,38 @@ void dynamic_memory_manage_malloc_5()
 
 void dynamic_memory_manage_realloc_1()
 {
-	int n = 5;
-	int m = 10;
+	int n = 4;
+	int m = 8;
+	int s = 2;
 	// 共分配20个字节的空间
 	int *ip = (int*)malloc(sizeof(int) * n);
+    printf("ip = %p\n", ip);
 	if(NULL == ip)
 	{
 		exit(1);
 	}
 	for(int i = 0; i < n; i++)
 	{
-		ip[i] = i;
+		ip[i] = 0xFFFFFFFF;
 	}
 	// 扩容为40个字节的空间
 	ip = (int*)realloc(ip, sizeof(int) * m);
+    printf("ip = %p\n", ip);
 	if(NULL == ip)
 	{
 		exit(1);
 	}
-	for(int i = 0; i < n; i++)
+	for(int i = 0; i < m; i++)
 	{
-		ip[i] = i + 10;
+        ip[i] = 0xFFFFFFFF;
 	}
 	// 缩容为8个字节的空间
 	ip = (int*)realloc(ip, sizeof(int) * 2);
-
+    printf("ip = %p\n", ip);
+    for(int i = 0; i < s; i++)
+    {
+        ip[i] = 0xFFFFFFFF;
+    }
 	free(ip);
 	ip = NULL;
 }
