@@ -369,3 +369,5 @@ FodyWeavers.xsd
 main
 cmake-build-debug/
 main.dSYM/
+
+student.txt
