@@ -30,7 +30,7 @@ bool scaling_student_list(StudentManager *p_student_manager)
 {
     if(NULL == p_student_manager)
     {
-        return;
+        return false;
     }
     bool scaling_result = true;
     // 使用 realloc() 重新设置数组大小
@@ -39,6 +39,10 @@ bool scaling_student_list(StudentManager *p_student_manager)
     if(NULL == p_student_manager->student_list)
     {
         scaling_result = false;
+    }
+    else
+    {
+    	printf("动态扩容数组成功，原始数组大小 = %d, 当前数组大小 = %d\n", p_student_manager->max_capacity, new_max_capacity);
     }
     p_student_manager->max_capacity = new_max_capacity;
     return scaling_result;
@@ -54,7 +58,27 @@ void load_student_from_file(StudentManager *p_student_manager)
         printf("open file error\n");
         return;
     }
-    fread(&p_student_manager->current_count, sizeof(int), 1, p_file);
+    // 读取出当前学生个数
+    int current_count = 0;
+    fread(&current_count, sizeof(int), 1, p_file);
+
+
+    if(current_count <= p_student_manager->max_capacity)
+    {
+    	// 当前元素个数同步
+    	p_student_manager->current_count = current_count;
+    }
+    else
+    {
+    	// 新的数组容量为 Student.txt 中元素个数的1.5倍
+    	int new_max_capacity = current_count * 1.5;
+    	p_student_manager->student_list = (PStudent)realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student));
+    	// 容量同步
+    	p_student_manager->max_capacity = new_max_capacity;
+    	// 当前元素个数同步
+    	p_student_manager->current_count = current_count;
+    }
+    // 读取真正的数据
     fread(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, p_file);
     fclose(p_file);
     p_file = NULL;
@@ -502,6 +526,15 @@ void modify_student(StudentManager *p_student_manager) // 去掉const
     } while(is_continue == 'Y' || is_continue == 'y');
 }
 
+void show_student_manager_info(const StudentManager *p_student_manager)
+{
+	if(NULL == p_student_manager)
+	{
+		return;
+	}
+	printf("当前学生数量 %d,数组容量大小 %d\n", p_student_manager->current_count, p_student_manager->max_capacity);
+}
+
 void start_student_manager()
 {
 	// 解决eclipse无法使用scanf()从控制台接收参数的问题
@@ -519,6 +552,7 @@ void start_student_manager()
 		printf("3. 查询学生\n");
 		printf("4. 删除学生\n");
 		printf("5. 修改学生\n");
+		printf("6. 系统信息\n");
 		printf("0. 退出系统\n");
 		printf("请选择功能: \n");
 		printf("**********\n");
@@ -542,6 +576,9 @@ void start_student_manager()
 			break;
 		case 5:
 			modify_student(&student_manager);
+			break;
+		case 6:
+			show_student_manager_info(&student_manager);
 			break;
 		default:
 			printf("不支持该选项！");

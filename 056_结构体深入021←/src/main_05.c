@@ -211,7 +211,6 @@ void struct_bit_field_memory_test_1()
  *                                    └─ Padding(0)
  * -------------------------------------- 大端格式 --------------------------------------
  */
-
 void struct_bit_field_memory_test_2()
 {
 	struct Data

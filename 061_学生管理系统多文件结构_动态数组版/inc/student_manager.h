@@ -3,7 +3,7 @@
 #define STUDENT_MANAGER_H
 
 #define SCORE_SIZE 3	 // 科目数量
-#define MAX_STUDENT 10   // 最大学生数
+#define MAX_STUDENT 1   // 最大学生数
 #define SCALING_RATIO 2  // 缩放倍数
 
 typedef struct
@@ -46,5 +46,6 @@ void delete_student_by_pos(StudentManager *p_student_manager, int pos);
 void delete_student(StudentManager *p_student_manager);
 void modify_student(StudentManager *p_student_manager);
 void start_student_manager();
+void show_student_manager_info(const StudentManager *p_student_manager);
 
 #endif

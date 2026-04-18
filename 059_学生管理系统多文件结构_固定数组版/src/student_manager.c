@@ -467,6 +467,15 @@ void modify_student(StudentManager *p_student_manager) // 去掉const
     } while(is_continue == 'Y' || is_continue == 'y');
 }
 
+void show_student_manager_info(const StudentManager *p_student_manager)
+{
+	if(NULL == p_student_manager)
+	{
+		return;
+	}
+	printf("当前学生数量 %d,数组容量大小 %d\n", p_student_manager->current_count, p_student_manager->max_capacity);
+}
+
 void start_student_manager()
 {
 	// 解决eclipse无法使用scanf()从控制台接收参数的问题
@@ -484,6 +493,7 @@ void start_student_manager()
 		printf("3. 查询学生\n");
 		printf("4. 删除学生\n");
 		printf("5. 修改学生\n");
+		printf("6. 系统信息\n");
 		printf("0. 退出系统\n");
 		printf("请选择功能: \n");
 		printf("**********\n");
@@ -507,6 +517,9 @@ void start_student_manager()
 			break;
 		case 5:
 			modify_student(&student_manager);
+			break;
+		case 6:
+			show_student_manager_info(&student_manager);
 			break;
 		default:
 			printf("不支持该选项！");

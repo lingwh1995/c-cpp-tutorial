@@ -31,7 +31,8 @@ void dangling_pointer()
 
 void *my_calloc(size_t n, size_t size)
 {
-    if (n == 0 || size == 0) {
+    if (n == 0 || size == 0)
+    {
         return NULL;
     }
 	void *vp = malloc(n * size);
