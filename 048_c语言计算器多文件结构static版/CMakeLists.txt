@@ -1,13 +1,27 @@
-# 设置当前子项目的名称
-project(048_calculator_static C)
+# 自动获取文件夹名并提取数字
+get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+string(REGEX MATCH "^[0-9]+" PROJECT_ID ${DIR_NAME})
 
-# 自动搜集 src 下的所有 .c 文件
-file(GLOB SOURCES "src/*.c")
+# 构造您要求的命名格式：数字_main.c
+if(PROJECT_ID)
+    set(TARGET_NAME "${PROJECT_ID}_main.c")
+else()
+    set(TARGET_NAME "main.c")
+endif()
 
-# 定义可执行文件
-add_executable(048_calculator_static ${SOURCES})
+# 定义项目
+project(${TARGET_NAME} C)
 
-# 如果有头文件目录，加入包含路径
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/inc")
-    target_include_directories(048_calculator_static PRIVATE inc)
+# 自动搜集源码
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c")
+
+if(SOURCES)
+    # 创建可执行文件
+    add_executable(${TARGET_NAME} ${SOURCES})
+
+    # 配置头文件搜索路径
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/inc")
+        target_include_directories(${TARGET_NAME} PRIVATE inc)
+    endif()
+    target_include_directories(${TARGET_NAME} PRIVATE src)
 endif()
