@@ -1,4 +1,4 @@
-#include "mylib.h"
+#include "../inc/mylib.h"
 
 // 定义一个全局变量
 int gi_in_other_file = 100;

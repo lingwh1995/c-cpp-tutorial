@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "mylib.h"
+#include "../inc/mylib.h"
 
 #if 0
 int main()

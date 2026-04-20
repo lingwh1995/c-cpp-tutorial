@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "mylib.h"
+#include "../inc/mylib.h"
 
 //定义一个被static修饰的全局变量
 int gi_in_other_file_static = 10;
