@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 
 # 1. 获取当前文件夹名并提取数字前缀
-get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+get_filename_component(DIR_NAME src NAME)
 if(DIR_NAME MATCHES "^([0-9]+)")
     set(PROJECT_ID ${CMAKE_MATCH_1})
 else()

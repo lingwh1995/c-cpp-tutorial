@@ -700,7 +700,7 @@ int main()
 	  printf("花费时间 = %ld s\n", (end - start));
 	 */
 
-	//question_001_loop_print_a2g();
+	question_001_loop_print_a2g();
 	//question_002_loop_print_a2g();
 	//question_003_gcd();
 	//question_004_gcd();
@@ -723,7 +723,7 @@ int main()
 	//question_021_get_max_input_value();
     //question_022_guess_number();
     //question_023_get_earliest_Input_date();
-	question_024_get_earliest_input_date();
+	//question_024_get_earliest_input_date();
 	//question_025_pascals_triangle();
 	return 0;
 }

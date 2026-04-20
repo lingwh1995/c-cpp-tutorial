@@ -1,32 +1,46 @@
-# 1. 必须有版本声明，确保独立运行不报错
 cmake_minimum_required(VERSION 3.28)
 
-# 2. 获取文件夹名并处理名称冲突
+# 1. 获取当前文件夹名并提取数字前缀
 get_filename_component(DIR_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-string(REGEX MATCH "^[0-9]+" PROJECT_ID ${DIR_NAME})
-
-if(PROJECT_ID)
-    # 使用 ID + 部分文件夹名，既合法又唯一
-    set(SAFE_TARGET_NAME "${DIR_NAME}")
-    # 过滤掉非英文数字字符（保留数字和下划线，满足 CMake 规范）
-    string(REGEX REPLACE "[^a-zA-Z0-9_]" "_" SAFE_TARGET_NAME ${SAFE_TARGET_NAME})
-    set(SAFE_TARGET_NAME "${SAFE_TARGET_NAME}_main.c")
+if(DIR_NAME MATCHES "^([0-9]+)")
+    set(PROJECT_ID ${CMAKE_MATCH_1})
 else()
-    set(SAFE_TARGET_NAME "target_${DIR_NAME}_main.c")
+    # 如果文件夹没数字，用安全的文件夹名代替
+    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" PROJECT_ID ${DIR_NAME})
 endif()
 
-project(${SAFE_TARGET_NAME} C)
+# 定义总项目名 (这只是给 CMake 内部归档用的，不影响生成的文件名)
+project(Practice_${PROJECT_ID} C)
+set(CMAKE_C_STANDARD 23)
 
-# 3. 继承或独立设置标准
-if(NOT CMAKE_C_STANDARD)
-    set(CMAKE_C_STANDARD 23)
-endif()
-
-# 4. 扫描源码（添加 CONFIGURE_DEPENDS 让 CMake 在文件增删时自动刷新）
+# 2. 扫描 src 目录下的所有 .c 文件
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c")
 
-if(SOURCES)
-    add_executable(${SAFE_TARGET_NAME} ${SOURCES})
-    target_include_directories(${SAFE_TARGET_NAME} PRIVATE inc src)
-    message(STATUS "Build Target: ${SAFE_TARGET_NAME}")
-endif()
+# 3. 遍历每一个 .c 文件
+foreach(SOURCE_PATH IN LISTS SOURCES)
+
+    # 【关键修改】：获取带后缀的文件全名，例如 "main.c"
+    get_filename_component(FULL_FILE_NAME ${SOURCE_PATH} NAME)
+
+    # 提取不带后缀的文件名，用于输出文件名（保持 .exe 干净）
+    get_filename_component(BASE_NAME ${SOURCE_PATH} NAME_WE)
+
+    # 拼接 Target 名称：000_main.c
+    set(TARGET_NAME "${PROJECT_ID}_${FULL_FILE_NAME}")
+
+    # 拼接输出文件名：000_main (生成后会自动补 .exe)
+    set(OUTPUT_NAME "${PROJECT_ID}_${BASE_NAME}")
+
+    # 创建可执行目标
+    add_executable("${TARGET_NAME}" ${SOURCE_PATH})
+
+    # 设置包含目录
+    target_include_directories("${TARGET_NAME}" PRIVATE inc src)
+
+    # 【核心】：让 Target 名和最终的文件名分开
+    set_target_properties("${TARGET_NAME}" PROPERTIES OUTPUT_NAME "${OUTPUT_NAME}")
+
+    # 打印你要求的格式
+    message(STATUS "Build Target: ${TARGET_NAME} -> ${OUTPUT_NAME}.exe")
+
+endforeach()
