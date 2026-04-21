@@ -1,32 +1,55 @@
 cmake_minimum_required(VERSION 3.28)
-project(clang_workspace C)
+project(C_Tutorial_Master C)
 
 # 统一全局配置
 set(CMAKE_C_STANDARD 23)
 
 if(WIN32)
     if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-        # 仅设置输入编码，避免 iconv 转换错误
         add_compile_options("-finput-charset=UTF-8")
     endif()
 endif()
 
-# 自动扫描子目录
-file(GLOB children RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
+# 1. 扫描第一层目录 (分类文件夹)
+file(GLOB categories RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
 
-foreach(child ${children})
-    if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${child} AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${child}/CMakeLists.txt)
+foreach(category ${categories})
+    set(category_full_path "${CMAKE_CURRENT_SOURCE_DIR}/${category}")
 
-        # 提取文件夹开头的数字作为中间编译路径名 (如 "048_c语言..." -> "build_048")
-        # 这一步是解决 "Invalid argument" 报错的关键：让中间产物路径不含中文
-        string(REGEX MATCH "^[0-9]+" dir_id ${child})
-        if(dir_id)
-            set(bin_dir "build_${dir_id}")
-        else()
-            set(bin_dir "build_extra_${child}")
-        endif()
+    if(IS_DIRECTORY "${category_full_path}"
+       AND NOT category STREQUAL "cmake-build-debug"
+       AND NOT category MATCHES "^\\.")
 
-        # 添加子项目，指定英文中间路径
-        add_subdirectory(${child} ${bin_dir})
+        # 2. 扫描第二层子目录 (具体项目文件夹)
+        file(GLOB projects RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${category}/*")
+
+        foreach(project_path ${projects})
+            set(full_project_path "${CMAKE_CURRENT_SOURCE_DIR}/${project_path}")
+
+            if(IS_DIRECTORY "${full_project_path}" AND EXISTS "${full_project_path}/CMakeLists.txt")
+
+                # 获取二级目录的文件名
+                get_filename_component(project_name "${full_project_path}" NAME)
+
+                # 3. 提取编号 (纯数字组合，如 01_03)
+                string(REGEX MATCH "^[0-9]+" cat_id "${category}")
+                string(REGEX MATCH "^[0-9]+" proj_id "${project_name}")
+
+                if(cat_id AND proj_id)
+                    set(safe_id "${cat_id}_${proj_id}")
+                else()
+                    # 如果没有数字，生成一个绝对安全的英文 ID
+                    string(MD5 safe_id "${project_path}")
+                    string(SUBSTRING "${safe_id}" 0 6 safe_id)
+                    set(safe_id "ext_${safe_id}")
+                endif()
+
+                # 4. 关键：通过 CACHE 传递纯英文数字 ID 给子项目，供其 add_executable 使用
+                set(PARENT_PROJ_ID "${safe_id}" CACHE INTERNAL "Safe ID for subproject target names")
+
+                # 指定构建目录 (如 build_01_03)
+                add_subdirectory("${project_path}" "build_${safe_id}")
+            endif()
+        endforeach()
     endif()
 endforeach()
