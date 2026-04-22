@@ -3,7 +3,7 @@
 
 /**
  * 1. 逻辑运算符
- *    && 逻辑与、|| 逻辑或
+ *    && 逻辑与、 || 逻辑或
  *    特性：短路求值（左侧表达式可确定结果时，右侧不再执行）
  *
  * 2. 逗号表达式（comma expression）
@@ -20,7 +20,7 @@
 void relational_operator_test()
 {
 	int a = 1, b = 2, c = 3;
-	int i = a < b < c;
+	int i = (a < b ) < 3;
 	//a < b => true(1) ,1 < 3 => true => 1
 	printf("%d\n", i);
 
