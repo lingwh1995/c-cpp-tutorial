@@ -76,6 +76,7 @@ void judge_character_type_test_2()
         printf("other char\n");
     }
 }
+
 int main()
 {
     //judge_character_type_test_1();
