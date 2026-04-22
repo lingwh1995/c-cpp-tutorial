@@ -52,10 +52,11 @@ void dynamic_memory_manage_malloc_1()
 	int i = 0;
 	int *ip = NULL;
 	int *is = NULL;
+	printf("请输入要申请的空间个数:\n");
 	scanf("%d", &n);
 	// 注意事项：使用 sizeof(int) 而非 4，因为不同平台int类型占据大小不一样
-	ip = (int*)malloc(sizeof(int) * n);
-	is = (int*)calloc(n, sizeof(int));
+	ip = malloc(sizeof(int) * n);
+	is = calloc(n, sizeof(int));
 	if(NULL == ip)
 	{
 		exit(1);
@@ -77,7 +78,7 @@ void dynamic_memory_manage_malloc_1()
  */
 void dynamic_memory_manage_malloc_2()
 {
-	int *ip = (int*)malloc(sizeof(int));
+	int *ip = malloc(sizeof(int));
 	if(NULL == ip)
 	{
 		exit(1);
@@ -97,7 +98,7 @@ void dynamic_memory_manage_malloc_2()
 	free(ip);
 	printf("%p => %x\n", ip, *ip);
 
-	int *is = (int*)malloc(sizeof(int));
+	int *is = malloc(sizeof(int));
 
 	// 测试free()只是释放了指针指向的对空间，没有删除指针本身，所以要让指针指向NULL
 	*ip = 0x100;
@@ -133,7 +134,7 @@ void dynamic_memory_manage_malloc_2()
 void dynamic_memory_manage_malloc_3()
 {
 	int n = 10;
-	int *ip = (int*)malloc(sizeof(int) * n);
+	int *ip = malloc(sizeof(int) * n);
 	if(NULL == ip)
 	{
 		exit(1);
@@ -150,9 +151,9 @@ void dynamic_memory_manage_malloc_3()
 	free(ip);
 }
 
-void get_mem_1(char *p, int n)
+void get_mem_1(const char *p, const int n)
 {
-	p = (char*)malloc(sizeof(char) *n);
+	p = malloc(sizeof(char) *n);
 	// 非常重要，必须要有这个判断，因为c语言很自由
 	if(NULL == p)
 	{
@@ -163,9 +164,9 @@ void get_mem_1(char *p, int n)
 /**
  * 使用二级指针直接把分配的地址赋值给cp
  */
-void get_mem_2(char **p, int n)
+void get_mem_2(char **p, const int n)
 {
-	*p = (char*)malloc(sizeof(char) *n);
+	*p = malloc(sizeof(char) *n);
 }
 
 /**
@@ -173,7 +174,7 @@ void get_mem_2(char **p, int n)
  */
 char *get_mem_3(int n)
 {
-	char *p =(char*)malloc(sizeof(char) *n);
+	char *p = malloc(sizeof(char) *n);
 	// 非常重要，必须要有这个判断，因为c语言很自由
 	if(NULL == p)
 	{
@@ -210,7 +211,7 @@ void dynamic_memory_manage_realloc_1()
 	int m = 8;
 	int s = 2;
 	// 共分配20个字节的空间
-	int *ip = (int*)malloc(sizeof(int) * n);
+	int *ip = malloc(sizeof(int) * n);
     printf("ip = %p\n", ip);
 	if(NULL == ip)
 	{
@@ -245,7 +246,7 @@ void dynamic_memory_manage_realloc_1()
 int main()
 {
 	//dangling_pointer();
-	//dynamic_memory_manage_malloc_1();
+	dynamic_memory_manage_malloc_1();
 	dynamic_memory_manage_malloc_2();
 	// 不测试时要注释掉，不然会影响后面的内存分配，这个程序已经破坏了正常的内存分配
 	//dynamic_memory_manage_malloc_3();

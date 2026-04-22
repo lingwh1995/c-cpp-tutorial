@@ -505,7 +505,7 @@ void memcpy_test_1()
 void memcpy_test_2()
 {
 	char src[] = "hello world";
-	char *dest = (char *)malloc((int)sizeof(char) * (int)sizeof(src));;
+	char *dest = malloc((int)sizeof(char) * (int)sizeof(src));;
 
 	/**
 	 * void *memcpy(void *dest, const void *src, size_t n)
@@ -1510,7 +1510,7 @@ char *my_strdup(const char *str)
         return NULL;
     }
     int len = strlen(str) + 1;
-    char *dest = (char *)malloc(sizeof(char) * len);
+    char *dest = malloc(sizeof(char) * len);
     strcpy(dest, str);
     return dest;
 }

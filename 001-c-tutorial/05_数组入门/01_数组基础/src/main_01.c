@@ -28,7 +28,7 @@ int *copy_array1(int *src,int len)
 	//int dest[len] = { };
 
 	// 动态分配空间
-	int *dest = (int *)malloc(sizeof(int) * len);
+	int *dest = malloc(sizeof(int) * len);
 	for(int i = 0; i < len; i++)
 	{
 		dest[i] = src[i];
@@ -42,7 +42,7 @@ int *copy_array1(int *src,int len)
  */
 int *copy_array2(int *src,int len)
 {
-	int *dest = (int *)malloc(sizeof(int) * len);
+	int *dest = malloc(sizeof(int) * len);
 	/**
 	 * void *memcpy(void *dest, const void *src, size_t n);
 	 * dest-- 指向用于存储复制内容的目标数组，类型强制转换为 void * 指针。

@@ -527,7 +527,7 @@ void right_move_arr_step_k_2(int *arr, int len, int k)
     k = k % len;
 
     // 创建一个数组用于保存最后k个元素
-    int *arr_temp = (int *)malloc(k * sizeof(int));
+    int *arr_temp = malloc(k * sizeof(int));
 
     // 把最后k个元素保存到临时数组中
     for(int i = 0; i < k; i++)
@@ -593,7 +593,7 @@ void left_move_arr_step_k_2(int *arr, int len, int k)
     k = k % len;
 
     // 创建一个数组用于保存前k个元素
-    int *arr_temp = (int *)malloc(k * sizeof(int));
+    int *arr_temp = malloc(k * sizeof(int));
 
     // 把前k个元素保存到临时数组中
     for(int i = 0; i < k; i++)

@@ -24,10 +24,10 @@ Node *init_list()
  * @param head
  * @param data
  */
-void insert_head(Node *head, int data)
+void insert_head(Node *head, const int data)
 {
 	assert(head != NULL);
-	Node *current = (Node *)malloc(sizeof(Node));
+	Node *current = malloc(sizeof(Node));
 	if (NULL == current)
 	{
 		exit(1);
@@ -37,10 +37,10 @@ void insert_head(Node *head, int data)
 	head->next = current;
 }
 
-void print_linked_list(Node *head)
+void print_linked_list(const Node *head)
 {
 	assert(head != NULL);
-	Node *temp = head->next;
+	const Node *temp = head->next;
 	while (NULL != temp)
 	{
 		printf("%d ", temp->data);

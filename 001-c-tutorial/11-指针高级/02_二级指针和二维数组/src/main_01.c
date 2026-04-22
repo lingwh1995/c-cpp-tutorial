@@ -89,7 +89,7 @@ void double_pointer_simulate_td_arr_test()
     int rows = 3, cols = 4;
 
     // 1. 分配二级指针数组
-    int **arr = (int **)malloc(rows * sizeof(int *));
+    int **arr = malloc(rows * sizeof(int *));
     printf("分配了 %d 个指针的空间\n", rows);
 
     // 2. 为每一行分配内存
@@ -263,7 +263,7 @@ void td_arr_bubble_sort_2(char (*p_str)[LEN], int rows, int len)
 	{
 		return;
 	}
-	char *temp = (char *)malloc(sizeof(char) * len);
+	char *temp = malloc(sizeof(char) * len);
 	for(int i = 0; i < rows - 1; i++)
 	{
 		for(int j = 0; j < rows - 1 - i; j++)

@@ -7,11 +7,11 @@ void init_student_manager(StudentManager *p_student_manager)
 	p_student_manager->current_count = 0;
 	p_student_manager->max_capacity = MAX_STUDENT;
     // 使用maclloc() + memset() 动态开辟内存
-	//p_student_manager->student_list = (PStudent)malloc(sizeof(Student) * p_student_manager->max_capacity);
+	//p_student_manager->student_list = (Student *)malloc(sizeof(Student) * p_student_manager->max_capacity);
     //memset(p_student_manager->student_list, 0, sizeof(Student) * p_student_manager->max_capacity);
 
     // 使用calloc()动态开辟内存
-    p_student_manager->student_list = (PStudent)calloc(p_student_manager->max_capacity, sizeof(Student));
+    p_student_manager->student_list = (Student *)calloc(p_student_manager->max_capacity, sizeof(Student));
     if(NULL == p_student_manager->student_list)
     {
         exit(EXIT_FAILURE);
