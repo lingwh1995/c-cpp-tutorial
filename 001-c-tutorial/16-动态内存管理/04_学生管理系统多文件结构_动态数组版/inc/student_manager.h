@@ -16,7 +16,7 @@ typedef struct
 	float scores[SCORE_SIZE];
 	float total_score;
 	float avg_score;
-} Student, *PStudent;
+} Student;
 
 typedef struct
 {
@@ -25,7 +25,7 @@ typedef struct
 	// 容量
 	int max_capacity;
 	Student *student_list;
-} StudentManager, *PStudentManager;
+} StudentManager;
 
 void init_student_manager(StudentManager *p_student_manager);
 void destory_student_manager(StudentManager *p_student_manager);

@@ -21,8 +21,7 @@ struct Student
 typedef struct Student Student;
 */
 
-
-// （匿名）结构体 + typedef简化结构体定义
+// (匿名)结构体 + typedef简化结构体定义
 typedef struct
 {
 	int id;

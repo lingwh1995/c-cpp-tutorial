@@ -24,7 +24,7 @@ typedef struct
 	// 容量
 	int max_capacity;
 	Student student_list[MAX_STUDENT];
-} StudentManager, *PStudentManager;
+} StudentManager;
 
 void init_student_manager(StudentManager *p_student_manager);
 void load_student_from_file(StudentManager *p_student_manager);

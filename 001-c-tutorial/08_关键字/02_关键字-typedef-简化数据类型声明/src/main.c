@@ -21,11 +21,9 @@
  *    简化复杂类型写法，提升代码可读性，最常用于结构体、枚举、指针等复杂类型的别名定义。如自定义bool或者简化学生(结构体)类型变量的声明
  */
 
-
 // 宏定义和typedef的对比
 #define MINT int *
 typedef int* PINT;
-
 
 void typedef_test()
 {
@@ -56,9 +54,8 @@ void typedef_test()
     printf("unsigned long: sizeof(ll)= %d, sizeof(tll)= %d\n", sizeof(ll), sizeof(tll));
 }
 
-
 /**
- * typedef和结构体结合使用方式一:
+ * typedef和结构体结合使用方式一(不推荐):
  */
 struct Student
 {
@@ -70,14 +67,24 @@ typedef struct Student Student;
 typedef struct Student *PStudent;
 
 /**
- * typedef和结构体结合使用方式二:
+ * typedef和结构体结合使用方式二(不推荐):
  */
 typedef struct User
 {
     char id[32];
     char name[20];
     int age;
-} User, *PUser;
+} User, *PUser;     // 一般不推荐使用 typedef 直接定义指针，现代C语言开发已经淘汰这种风格
+
+/**
+ * typedef和结构体结合使用方式三(最推荐):
+ */
+typedef struct Person
+{
+    char id[32];
+    char name[20];
+    int age;
+} Person;
 
 
 /**
@@ -86,16 +93,22 @@ typedef struct User
 void typedef_with_struct_test()
 {
     /**
-     * 测试 typedef和结构体结合使用方式一:
+     * 测试 typedef和结构体结合使用方式一(不推荐):
      */
 	Student student;
 	PStudent p_student = &student;
 
     /**
-     * 测试 typedef和结构体结合使用方式二:
+     * 测试 typedef和结构体结合使用方式二(不推荐):
      */
     User user;
     PUser p_user = &user;
+
+    /**
+     * 测试 typedef和结构体结合使用方式三(最推荐):
+     */
+    Person person;
+    Person *p_person = &person;
 }
 
 /**

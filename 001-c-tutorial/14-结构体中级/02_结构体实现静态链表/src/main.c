@@ -1,9 +1,10 @@
 #include <stdio.h>
 
 /**
- * 链表节点结构体
+ * 静态链表节点结构体
  */
-typedef struct Node {
+typedef struct Node
+{
     int data;
     struct Node *next;
 } Node;

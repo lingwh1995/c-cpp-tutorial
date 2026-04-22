@@ -53,7 +53,7 @@
  *    		int id;
  *   		char name[20];
  *   		int age;
- *	    } Student, *PStudent;
+ *	    } Student, *PStudent;	// 一般不推荐使用 typedef 直接定义指针，现代C语言开发已经淘汰这种风格
  *
  *      // 定义 结构体类型 变量
  * 	    Student student;
@@ -67,7 +67,7 @@
  *			int id;
  *			char name[20];
  *			int age;
- *		} Student, *PStudent;
+ *		} Student, *PStudent;	// 一般不推荐使用 typedef 直接定义指针，现代C语言开发已经淘汰这种风格
  *
  *		// 定义 结构体类型 变量
  *		Student student;
@@ -297,10 +297,11 @@ void define_struct_3()
 
 	// v2.0 => 同时定义 结构体类型 别名和 结构体指针类型 别名 (typedef + 带标签结构体)  	 => 不推荐，只有结构体自引用(如：链表)才加标签
 	/*
-	typedef struct Node{
+	typedef struct Node
+	{
 		int data;
 		p_node next;
-	} Node, *PNode;
+	} Node, *PNode;		// 一般不推荐使用 typedef 直接定义指针，现代C语言开发已经淘汰这种风格
 	*/
 	/*
 	typedef struct Student
@@ -308,7 +309,7 @@ void define_struct_3()
 	 	int id;
 	 	char name[20];
 	 	int age;
-	} Student, *PStudent;
+	} Student, *PStudent;	// 一般不推荐使用 typedef 直接定义指针，现代C语言开发已经淘汰这种风格
 
 	// 定义 结构体类型 变量
 	Student student;
@@ -322,7 +323,7 @@ void define_struct_3()
 		int id;
 	 	char name[20];
 	 	int age;
-	} Student, *PStudent;
+	} Student, *PStudent;	// 一般不推荐使用 typedef 直接定义指针，现代C语言开发已经淘汰这种风格
 
 	// 定义 结构体类型 变量
 	Student student;

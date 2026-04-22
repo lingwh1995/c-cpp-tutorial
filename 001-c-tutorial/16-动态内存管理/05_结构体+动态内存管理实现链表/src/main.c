@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <assert.h>
 
-struct ListNode
+typedef struct Node
 {
 	int data;
-	struct ListNode *next;
-};
+	struct Node *next;
+} Node;
 
-struct ListNode *init_list()
+Node *init_list()
 {
-	struct ListNode *head = (struct ListNode *)malloc(sizeof(struct ListNode));
+	Node *head = malloc(sizeof(Node));
 	if (NULL == head)
 	{
 		exit(-1);
@@ -24,10 +24,10 @@ struct ListNode *init_list()
  * @param head
  * @param data
  */
-void insert(struct ListNode *head, int data)
+void insert_head(Node *head, int data)
 {
 	assert(head != NULL);
-	struct ListNode *current = (struct ListNode *)malloc(sizeof(struct ListNode));
+	Node *current = (Node *)malloc(sizeof(Node));
 	if (NULL == current)
 	{
 		exit(1);
@@ -37,10 +37,10 @@ void insert(struct ListNode *head, int data)
 	head->next = current;
 }
 
-void print_linked_list(struct ListNode *head)
+void print_linked_list(Node *head)
 {
 	assert(head != NULL);
-	struct ListNode *temp = head->next;
+	Node *temp = head->next;
 	while (NULL != temp)
 	{
 		printf("%d ", temp->data);
@@ -50,10 +50,10 @@ void print_linked_list(struct ListNode *head)
 
 int main()
 {
-	struct  ListNode *head = init_list();
+	Node *head = init_list();
 	for (int i = 1; i <= 10; i++)
 	{
-		insert(head, i);
+		insert_head(head, i);
 	}
 	print_linked_list(head);
 	return 0;

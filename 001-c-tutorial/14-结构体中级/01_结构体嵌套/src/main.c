@@ -55,7 +55,7 @@ typedef struct
 	char name[20];
 	char sex[8];
 	int age;
-} Student, *PStudent;
+} Student;
 
 /**
  * 使用指针打印结构体
@@ -106,7 +106,7 @@ void pointer_input_structure(Student *student)
 void pointer_print_structure_test()
 {
 	Student student = { "002", "李四", "男", 20 };
-	PStudent p_student = &student;
+	Student *p_student = &student;
 	// 只有数组才名才能在不去地址的情况下直接当成指针用，其他类型数据不行，要取地址才能用
 	pointer_print_structure(p_student);
 	printf("-------------------------------------\n");
@@ -118,7 +118,7 @@ void pointer_print_structure_test()
 void pointer_input_and_print_structure_test()
 {
 	Student student = { 0 };
-	PStudent p_student = &student;
+	Student *p_student = &student;
 	pointer_input_structure(p_student);
 	pointer_print_structure(p_student);
 	printf("-------------------------------------\n");
@@ -177,10 +177,10 @@ void pointer_print_structure_arr_test()
 	int len = sizeof(students) / sizeof(students[0]);
 	/**
 	 * 特别注意：
-	 * 	  PStudent p_students = &students; 错误写法  &students代表的是整个数组的地址
-	 * 	  PStudent p_students = students;  正确写法  students 代表的是数组首元素地址
+	 * 	  Student *p_students = &students; 错误写法  &students代表的是整个数组的地址
+	 * 	  Student *p_students = students;  正确写法  students 代表的是数组首元素地址
 	 */
-	PStudent p_students = students;
+	Student *p_students = students;
 	pointer_print_structure_arr(p_students, len);
 	printf("-------------------------------------\n");
 }
@@ -224,10 +224,10 @@ void pointer_find_structure_test()
 	int len = sizeof(students) / sizeof(students[0]);
 	/**
 	 * 特别注意：
-	 * 	  PStudent p_students = &students; 错误写法  &students代表的是整个数组的地址
-	 * 	  PStudent p_students = students;  正确写法  students 代表的是数组首元素地址
+	 * 	  Student *p_students = &students; 错误写法  &students代表的是整个数组的地址
+	 * 	  Student *p_students = students;  正确写法  students 代表的是数组首元素地址
 	 */
-	const PStudent p_students = students;
+	const Student *p_students = students;
 	char *name = "王五";
 	int position = pointer_find_structure(p_students, len, name);
 	printf("索引位置 = %d\n", position);

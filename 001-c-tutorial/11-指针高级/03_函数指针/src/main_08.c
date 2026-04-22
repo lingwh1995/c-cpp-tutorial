@@ -40,14 +40,11 @@ int comp_int(const void *pa, const void *pb)
 	{
 		return 1;
 	}
-	else if(*pia < *pib)
+	if(*pia < *pib)
 	{
 		return -1;
 	}
-	else
-	{
-		return 0;
-	}
+	return 0;
 }
 
 /**
