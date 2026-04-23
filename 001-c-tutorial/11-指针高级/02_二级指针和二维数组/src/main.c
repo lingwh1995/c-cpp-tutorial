@@ -248,7 +248,7 @@ void two_dimensional_arr_traverse_2(int (*arr)[4], int rows)
 void two_dimensional_arr_traverse_3(int *arr, int rows, int cols)
 {
 	printf("方式3:\n");
-	if(NULL == arr)
+	if(arr == NULL)
 	{
 		return;
 	}

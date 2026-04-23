@@ -29,12 +29,12 @@ void strlen_test()
  */
 int my_strlen_1(const char *str)
 {
-    if(NULL == str)
+    if(str == NULL)
     {
         return -1;
     }
     // 或
-    //assert(NULL != str);
+    //assert(str != NULL);
     int l = 0;
     while (str[l] != '\0')
     {
@@ -61,12 +61,12 @@ void my_strlen_1_test()
  */
 int my_strlen_2(const char *str)
 {
-    if(NULL == str)
+    if(str == NULL)
     {
         return -1;
     }
     // 或
-    //assert(NULL != str);
+    //assert(str! = NULL);
     char *pc = (char *)str;
     while(*pc != '\0')
     {
@@ -178,12 +178,12 @@ void strcpy_test()
  */
 char *my_strcpy_1(char *dest, const char *src)
 {
-    if(NULL == dest || NULL == src)
+    if(dest == NULL || src == NULL)
     {
         return NULL;
     }
     // 或
-    //assert(NULL != str1 && NULL != str2);
+    //assert(str1 != NULL && str2 != NULL);
     int i = 0;
     while (src[i] != '\0')
     {
@@ -216,12 +216,12 @@ void my_strcpy_1_test()
  */
 char *my_strcpy_2(char *dest, const char *src)
 {
-    if(NULL == dest || NULL == src)
+    if(dest == NULL || src == NULL)
     {
         return NULL;
     }
     // 或
-    //assert(NULL != str1 && NULL != str2);
+    //assert(str1 != NULL && str2 != NULL);
     // 把const char *类型转为char *
     char *ptr = (char *)dest;
     // 当复制到结尾符 '\0' 的时候，代码相当于 while('\0')， '\0' 的ASCII码是0，所以为假
@@ -373,7 +373,7 @@ void strcat_test()
  */
 char *my_strcat_1(char *dest, const char *src)
 {
-    if(NULL == dest || NULL == src)
+    if(dest == NULL || src == NULL)
     {
         return NULL;
     }
@@ -404,7 +404,7 @@ void my_strcat_1_test()
  */
 char *my_strcat_2(char *dest, const char *src)
 {
-    if(NULL == dest || NULL == src)
+    if(dest == NULL || src == NULL)
     {
         return NULL;
     }
@@ -937,12 +937,12 @@ void strcmp_test()
  */
 int my_strcmp_1(const char *str1, const char *str2)
 {
-    if(NULL == str1 || NULL == str2)
+    if(str1 == NULL || str2 == NULL)
     {
         return -1;
     }
     // 或
-    //assert(NULL != str1 && NULL != str2);
+    //assert(str1 != NULL && str2 != NULL);
     while (*str1 != '\0' && *str2 != '\0' && *str1 == *str2)
     {
         str1++;
@@ -989,12 +989,12 @@ void my_strcmp_1_test()
  */
 int my_strcmp_2(const char *str1, const char *str2)
 {
-    if(NULL == str1 || NULL == str2)
+    if(str1 == NULL|| str2 == NULL)
     {
         return -1;
     }
     // 或
-    //assert(NULL != str1 && NULL != str2);
+    //assert(str1 != NULL && str2 != NULL);
     int k = 0;
     while (((k = *str1 -*str2) == 0) && *str1++ && *str2++);
     return k;
@@ -1074,12 +1074,12 @@ void strncmp_test()
 */
 int my_strncmp(const char *str1, const char *str2, size_t n)
 {
-    if(NULL == str1 || NULL == str2 || 0 == n)
+    if(str1 == NULL || str2 == NULL || 0 == n)
     {
         return -1;
     }
     // 或
-    //assert(NULL != str1 && NULL != str2 && 0 != n);
+    //assert(str1 != NULL && str2 != NULL && 0 != n);
     while (--n > 0 && *str1 != '\0' && *str2 != '\0' && *str1 == *str2)
     {
         str1++;
@@ -1149,7 +1149,7 @@ void strchr_test()
  */
 char *my_strchr(const char *str, int c)
 {
-    if(NULL == str)
+    if(str == NULL)
     {
         return NULL;
     }
@@ -1218,7 +1218,7 @@ void strrchr_test()
  */
 char *my_strrchr_1(const char *str, int c)
 {
-    if(NULL == str)
+    if(str == NULL)
     {
         return NULL;
     }
@@ -1265,7 +1265,7 @@ void my_strrchr_1_test()
  */
 char *my_strrchr_2(const char *str, int c)
 {
-    if(NULL == str)
+    if(str == NULL)
     {
         return NULL;
     }
@@ -1335,7 +1335,7 @@ void strstr_test()
  */
 char *my_strstr_1(const char *str, const char *substr)
 {
-    if (NULL == str || NULL == substr)
+    if (str == NULL|| substr == NULL)
     {
         return NULL;
     }
@@ -1392,7 +1392,7 @@ void my_strstr_1_test()
  */
 char *my_strstr_2(const char *str, const char *substr)
 {
-    if (NULL == str || NULL == substr)
+    if (str == NULL || substr == NULL)
     {
         return NULL;
     }
@@ -1505,7 +1505,7 @@ void strdup_test()
 */
 char *my_strdup(const char *str)
 {
-    if(NULL == str)
+    if(str == NULL)
     {
         return NULL;
     }

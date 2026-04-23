@@ -115,7 +115,7 @@ int my_atoi_hex(const char *str)
 int my_atoi(const char *str)
 {
 	int sum = 0;
-	assert(NULL != str);
+	assert(str != NULL);
 	int tag = 1;	// 1.负数 2.正数
 	while(isspace(*str))
 	{
@@ -203,7 +203,7 @@ void strtol_test()
  */
 int str2i(const char *str, char split, char **endptr)
 {
-	if(NULL == str || NULL == endptr)
+	if(str == NULL || endptr == NULL)
 	{
 		return -1;
 	}

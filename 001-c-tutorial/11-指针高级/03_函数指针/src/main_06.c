@@ -42,7 +42,7 @@ void print_char_arr_3(const void *pv)
  */
 void print_arr_3(const void *arr, const int len, int element_size, void (*print)(const void *))
 {
-	if(NULL == arr || NULL == print || len < 1 || element_size < 1)
+	if(arr == NULL || print == NULL || len < 1 || element_size < 1)
 	{
 		return;
 	}
@@ -66,7 +66,7 @@ void print_arr_3(const void *arr, const int len, int element_size, void (*print)
 /*
 void print_arr_3(const void *arr, const int len, int element_size, void (*print)(const void *))
 {
-	if(NULL == arr || NULL == print || len < 1 || element_size < 1)
+	if(arr == NULL || print == NULL || len < 1 || element_size < 1)
 	{
 		return;
 	}

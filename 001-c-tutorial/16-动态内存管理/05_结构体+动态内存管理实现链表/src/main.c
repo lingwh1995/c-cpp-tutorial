@@ -11,7 +11,7 @@ typedef struct Node
 Node *init_list()
 {
 	Node *head = malloc(sizeof(Node));
-	if (NULL == head)
+	if (head == NULL)
 	{
 		exit(-1);
 	}
@@ -28,13 +28,23 @@ void insert_head(Node *head, const int data)
 {
 	assert(head != NULL);
 	Node *current = malloc(sizeof(Node));
-	if (NULL == current)
+	if (current == NULL)
 	{
 		exit(1);
 	}
 	current->data = data;
 	current->next = head->next;
 	head->next = current;
+}
+
+/**
+ * 尾插法
+ * @param head
+ * @param data
+ */
+void insert_tail(Node *head, const int data)
+{
+	assert(head != NULL);
 }
 
 void print_linked_list(const Node *head)

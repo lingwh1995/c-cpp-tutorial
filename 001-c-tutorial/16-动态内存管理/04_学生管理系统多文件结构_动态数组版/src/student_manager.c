@@ -12,7 +12,7 @@ void init_student_manager(StudentManager *p_student_manager)
 
     // 使用calloc()动态开辟内存
     p_student_manager->student_list = (Student *)calloc(p_student_manager->max_capacity, sizeof(Student));
-    if(NULL == p_student_manager->student_list)
+    if(p_student_manager->student_list == NULL)
     {
         exit(EXIT_FAILURE);
     }
@@ -28,7 +28,7 @@ void destory_student_manager(StudentManager *p_student_manager)
 
 bool scaling_student_list(StudentManager *p_student_manager)
 {
-    if(NULL == p_student_manager)
+    if(p_student_manager == NULL)
     {
         return false;
     }
@@ -36,7 +36,7 @@ bool scaling_student_list(StudentManager *p_student_manager)
     // 使用 realloc() 重新设置数组大小
     int new_max_capacity = p_student_manager->max_capacity * SCALING_RATIO;
     p_student_manager->student_list = realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student) );
-    if(NULL == p_student_manager->student_list)
+    if(p_student_manager->student_list == NULL)
     {
         scaling_result = false;
     }
@@ -53,7 +53,7 @@ void load_student_from_file(StudentManager *p_student_manager)
     assert(p_student_manager != NULL);
     // 二进制读文件
     FILE* p_file = fopen("student.txt", "rb");
-    if (NULL == p_file)
+    if (p_file == NULL)
     {
         printf("open file error\n");
         return;
@@ -258,7 +258,7 @@ void write_student_to_file(const StudentManager *p_student_manager)
     assert(p_student_manager != NULL);
     // 二进制写文件
     FILE* p_file = fopen("student.txt", "wb");
-    if (NULL == p_file)
+    if (p_file == NULL)
     {
         printf("open file error\n");
         return;
@@ -528,7 +528,7 @@ void modify_student(StudentManager *p_student_manager) // 去掉const
 
 void show_student_manager_info(const StudentManager *p_student_manager)
 {
-	if(NULL == p_student_manager)
+	if(p_student_manager == NULL)
 	{
 		return;
 	}

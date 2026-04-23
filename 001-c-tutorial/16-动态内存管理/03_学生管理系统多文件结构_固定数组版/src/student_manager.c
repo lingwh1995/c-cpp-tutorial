@@ -14,7 +14,7 @@ void load_student_from_file(StudentManager *p_student_manager)
     assert(p_student_manager != NULL);
     // 二进制读文件
     FILE* p_file = fopen("student.txt", "rb");
-    if (NULL == p_file)
+    if (p_file == NULL)
     {
         printf("open file error\n");
         return;
@@ -199,7 +199,7 @@ void write_student_to_file(const StudentManager *p_student_manager)
     assert(p_student_manager != NULL);
     // 二进制写文件
     FILE* p_file = fopen("student.txt", "wb");
-    if (NULL == p_file)
+    if (p_file == NULL)
     {
         printf("open file error\n");
         return;
@@ -469,7 +469,7 @@ void modify_student(StudentManager *p_student_manager) // 去掉const
 
 void show_student_manager_info(const StudentManager *p_student_manager)
 {
-	if(NULL == p_student_manager)
+	if(p_student_manager == NULL)
 	{
 		return;
 	}

@@ -12,7 +12,7 @@
  */ 
 char *my_strstr(const char *str, const char *substr)
 {
-    if(NULL == str || NULL == substr)
+    if(str == NULL || substr == NULL)
     {
         return NULL;
     }

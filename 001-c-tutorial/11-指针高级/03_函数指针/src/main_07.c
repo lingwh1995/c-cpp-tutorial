@@ -88,7 +88,7 @@ void print_struct_arr_4(const void *pv)
 void print_arr_4(const void *pv, const int size, int element_size, void (*print)(const void *), char *element_type_name, int print_type)
 {
 	printf("%s类型数组冒泡排序%s => ", element_type_name, print_type == 0 ? "前" : "后");
-	if(NULL == pv || NULL == print || size < 1 || element_size < 1)
+	if(pv == NULL || print == NULL || size < 1 || element_size < 1)
 	{
 		return;
 	}

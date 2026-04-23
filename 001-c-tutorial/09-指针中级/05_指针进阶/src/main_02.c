@@ -39,7 +39,7 @@ void print_arr_1(const int *nums)	  // 写法三	推荐
  */
 void print_arr_2(const int *nums, const int n)
 {
-    if(NULL == nums)
+    if(nums == NULL)
     {
         return;
     }
@@ -55,7 +55,7 @@ void print_arr_2(const int *nums, const int n)
  */
 void print_arr_by_while_loop(const int *start, const int *end)
 {
-    if(NULL == start || NULL == end)
+    if(start == NULL || end == NULL)
     {
         return;
     }

@@ -55,7 +55,7 @@ int main()
  */
 int call_fun_1(int a, int b, int (*p_fun)(int, int))
 {
-	if(NULL == p_fun)
+	if(p_fun == NULL)
 	{
 		return -1;
 	}
@@ -71,7 +71,7 @@ int call_fun_1(int a, int b, int (*p_fun)(int, int))
  */
 int call_fun_2(int a, int b, p_fun_t p_fun)
 {
-	if(NULL == p_fun)
+	if(p_fun == NULL)
 	{
 		return -1;
 	}

@@ -171,7 +171,7 @@ void print_td_arr_by_onetd_arr_test()
 //void print_td_arr_1(const char **p_str, int n)
 void print_td_arr_1(const char *p_str[], int n)
 {
-	if(NULL == p_str)
+	if(p_str == NULL)
 	{
 		return;
 	}
@@ -187,7 +187,7 @@ void print_td_arr_1(const char *p_str[], int n)
  */
 void td_arr_bubble_sort_1(const char *p_str[], int n)
 {
-	if(NULL == p_str)
+	if(p_str == NULL)
 	{
 		return;
 	}
@@ -240,7 +240,7 @@ void td_arr_bubble_sort_test_1()
  */
 void init_td_arr(char (*p_str)[LEN], int rows)
 {
-	assert(NULL != p_str);
+	assert(p_str != NULL);
     printf("请输入%d个字符串作为数组内容\n", rows);
 	for(int i = 0; i < rows; i++)
 	{
@@ -255,7 +255,7 @@ void init_td_arr(char (*p_str)[LEN], int rows)
  */
 void td_arr_bubble_sort_2(char (*p_str)[LEN], int rows, int len)
 {
-	if(NULL == p_str)
+	if(p_str == NULL)
 	{
 		return;
 	}

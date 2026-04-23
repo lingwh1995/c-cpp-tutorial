@@ -146,7 +146,7 @@ void print_arr_by_while_pointer(const int *arr, int len)
 void print_arr_by_while_loop(const int *start, const int *end)
 {
     // 判断指针是否为空
-    if(NULL == start || NULL == end)
+    if(start == NULL || end == NULL)
     {
         return;
     }

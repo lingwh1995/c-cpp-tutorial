@@ -6,7 +6,7 @@ int main()
     const int arr[] = { 12, 23, 34, 45, 56, 67, 78, 89, 90, 100 };
     const int  n = sizeof(arr) / sizeof(arr[0]);
     FILE *fp = fopen("file.txt", "w");
-    if (NULL == fp)
+    if (fp == NULL)
     {
         printf("error opening file\n");
         return 1;

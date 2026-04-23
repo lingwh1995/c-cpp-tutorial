@@ -49,7 +49,7 @@ void init_grid(grid_array_t ga)
  */
 void show_grid(grid_array_t ga, struct letter_s *pl, int n)
 {
-	if(NULL == pl)
+	if(pl == NULL)
 	{
 		return;
 	}
@@ -70,7 +70,7 @@ void show_grid(grid_array_t ga, struct letter_s *pl, int n)
  */
 void rand_letter(struct Letter* pl, int n)
 {
-	if(NULL == pl)
+	if(pl == NULL)
 	{
 		return;
 	}

@@ -326,7 +326,7 @@ void algorithm_01_bubble_sort()
  */
 int binary_search_find_value(const int *arr, int n, int val)
 {
-	if(NULL == arr || n < 1)
+	if(arr == NULL || n < 1)
 	{
 		return -1;
 	}
@@ -394,7 +394,7 @@ void algorithm_02_binary_search_find_value()
  */
 void reverse_arr_1(int *arr, int left, int right)
 {
-	if(NULL == arr)
+	if(arr == NULL)
 	{
 		return;
 	}
@@ -409,7 +409,7 @@ void reverse_arr_1(int *arr, int left, int right)
  */
 void reverse_arr_2(int *arr, int left, int right)
 {
-	if(NULL == arr)
+	if(arr == NULL)
 	{
 		return;
 	}
@@ -443,7 +443,7 @@ void algorithm_03_reverse_arr()
  */
 void right_move_arr_step_1(int *arr, int len)
 {
-   if(NULL == arr || len < 2)
+   if(arr == NULL || len < 2)
    {
 	   return;
    }
@@ -465,7 +465,7 @@ void right_move_arr_step_1(int *arr, int len)
  */
 void left_move_arr_step_1(int *arr, int len)
 {
-   if(NULL == arr || len < 2)
+   if(arr == NULL || len < 2)
    {
 	   return;
    }
@@ -487,7 +487,7 @@ void left_move_arr_step_1(int *arr, int len)
  */
 void right_move_arr_step_k_1(int *arr, int len, int k)
 {
-	if(NULL == arr || len < 2)
+	if(arr == NULL || len < 2)
 	{
 		return;
 	}
@@ -519,7 +519,7 @@ void right_move_arr_step_k_2(int *arr, int len, int k)
 		left_move_arr_step_k_2(arr, len, -k);
         return;
 	}
-    if(NULL == arr || len < 2)
+    if(arr == NULL || len < 2)
     {
 	    return;
     }
@@ -553,7 +553,7 @@ void right_move_arr_step_k_2(int *arr, int len, int k)
  */
 void left_move_arr_step_k_1(int *arr, int len, int k)
 {
-	if(NULL == arr || len < 2)
+	if(arr == NULL || len < 2)
 	{
 		return;
 	}
@@ -585,7 +585,7 @@ void left_move_arr_step_k_2(int *arr, int len, int k)
 		right_move_arr_step_k_2(arr, len, -k);
         return;
 	}
-    if(NULL == arr || len < 2)
+    if(arr == NULL || len < 2)
     {
 	    return;
     }
@@ -624,7 +624,7 @@ void right_move_arr_step_k_3(int *arr, int len, int k)
         left_move_arr_step_k_3(arr, len, -k);
         return;
     }
-    if(NULL == arr || len < 2 || k < 1)
+    if(arr == NULL || len < 2 || k < 1)
     {
         return;
     }
@@ -645,7 +645,7 @@ void right_move_arr_step_k_3(int *arr, int len, int k)
  */
 void reverse_arr(int *arr, int left, int right)
 {
-    if(NULL == arr || left >= right)
+    if(arr == NULL || left >= right)
     {
         return;
     }
@@ -669,7 +669,7 @@ void left_move_arr_step_k_3(int *arr, int len, int k)
         right_move_arr_step_k_3(arr, len, -k);
         return;
     }
-    if(NULL == arr || len < 2 || k < 1)
+    if(arr == NULL || len < 2 || k < 1)
     {
         return;
     }

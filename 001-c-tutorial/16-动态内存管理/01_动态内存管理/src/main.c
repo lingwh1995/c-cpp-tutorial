@@ -57,7 +57,7 @@ void dynamic_memory_manage_malloc_1()
 	// 注意事项：使用 sizeof(int) 而非 4，因为不同平台int类型占据大小不一样
 	ip = malloc(sizeof(int) * n);
 	is = calloc(n, sizeof(int));
-	if(NULL == ip)
+	if(ip == NULL)
 	{
 		exit(1);
 	}
@@ -79,7 +79,7 @@ void dynamic_memory_manage_malloc_1()
 void dynamic_memory_manage_malloc_2()
 {
 	int *ip = malloc(sizeof(int));
-	if(NULL == ip)
+	if(ip == NULL)
 	{
 		exit(1);
 	}
@@ -135,7 +135,7 @@ void dynamic_memory_manage_malloc_3()
 {
 	int n = 10;
 	int *ip = malloc(sizeof(int) * n);
-	if(NULL == ip)
+	if(ip == NULL)
 	{
 		exit(1);
 	}
@@ -155,7 +155,7 @@ void get_mem_1(const char *p, const int n)
 {
 	p = malloc(sizeof(char) *n);
 	// 非常重要，必须要有这个判断，因为c语言很自由
-	if(NULL == p)
+	if(p == NULL)
 	{
 		exit(1);
 	}
@@ -176,7 +176,7 @@ char *get_mem_3(int n)
 {
 	char *p = malloc(sizeof(char) *n);
 	// 非常重要，必须要有这个判断，因为c语言很自由
-	if(NULL == p)
+	if(p == NULL)
 	{
 		exit(1);
 	}
@@ -213,7 +213,7 @@ void dynamic_memory_manage_realloc_1()
 	// 共分配20个字节的空间
 	int *ip = malloc(sizeof(int) * n);
     printf("ip = %p\n", ip);
-	if(NULL == ip)
+	if(ip == NULL)
 	{
 		exit(1);
 	}
@@ -224,7 +224,7 @@ void dynamic_memory_manage_realloc_1()
 	// 扩容为40个字节的空间
 	ip = (int*)realloc(ip, sizeof(int) * m);
     printf("ip = %p\n", ip);
-	if(NULL == ip)
+	if(ip == NULL)
 	{
 		exit(1);
 	}

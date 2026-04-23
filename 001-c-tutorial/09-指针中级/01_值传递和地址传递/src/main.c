@@ -27,7 +27,7 @@ void swap_number_1(int a, int b)
 void swap_number_2(int *x, int *y)
 {
     //使用指针变量前正确的做法是先对指针进行判空处理
-    if (NULL == x || NULL == y)
+    if (x == NULL || y == NULL)
     {
         return;
     }

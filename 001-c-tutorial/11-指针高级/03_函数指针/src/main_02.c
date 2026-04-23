@@ -19,7 +19,7 @@ void swap_number_1(int *a, int *b)
  */
 void bubble_sort_1(int *arr, int len)
 {
-	if(NULL == arr || len < 2)
+	if(arr == NULL || len < 2)
 	{
 		return;
 	}

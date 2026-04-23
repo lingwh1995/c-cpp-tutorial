@@ -36,7 +36,7 @@ bool less(int a, int b)
  */
 void bubble_sort_2(int *arr, int len, int (*compare)(int, int))
 {
-	if(NULL == arr || len < 2)
+	if(arr == NULL || len < 2)
 	{
 		return;
 	}
