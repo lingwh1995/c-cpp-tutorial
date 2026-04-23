@@ -17,8 +17,8 @@ pipeline {
       steps {
         echo '正在推送文件...'
         echo '${GIT_COMMIT_MSG}'
-        sh 'git fetch https://lingwh1995:${GITEE_TOKEN}@gitee.com/lingwh1995/clang.git'
-        sh 'git push -f https://lingwh1995:${GITEE_TOKEN}@gitee.com/lingwh1995/clang.git HEAD:master'
+        sh 'git fetch https://lingwh1995:${GITEE_TOKEN}@gitee.com/lingwh1995/c-cpp-tutorial.git'
+        sh 'git push -f https://lingwh1995:${GITEE_TOKEN}@gitee.com/lingwh1995/c-cpp-tutorial.git HEAD:master'
         echo '完成文件推送...'
       }
     }
