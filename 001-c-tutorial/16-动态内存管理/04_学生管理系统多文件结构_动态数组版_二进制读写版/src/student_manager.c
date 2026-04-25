@@ -6,23 +6,86 @@ void init_student_manager(StudentManager *p_student_manager)
 	assert(p_student_manager != NULL);
 	p_student_manager->current_count = 0;
 	p_student_manager->max_capacity = MAX_STUDENT;
-	memset(p_student_manager->student_list, 0, sizeof(Student) * p_student_manager->max_capacity);
+    // 使用maclloc() + memset() 动态开辟内存
+	//p_student_manager->student_list = (Student *)malloc(sizeof(Student) * p_student_manager->max_capacity);
+    //memset(p_student_manager->student_list, 0, sizeof(Student) * p_student_manager->max_capacity);
+
+    // 使用calloc()动态开辟内存
+    p_student_manager->student_list = (Student *)calloc(p_student_manager->max_capacity, sizeof(Student));
+    if(p_student_manager->student_list == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+}
+
+void destory_student_manager(StudentManager *p_student_manager)
+{
+    free(p_student_manager->student_list);
+    p_student_manager->student_list = NULL;
+    p_student_manager->current_count = 0;
+    p_student_manager->max_capacity = 0;
+}
+
+bool scaling_student_list(StudentManager *p_student_manager)
+{
+    if(p_student_manager == NULL)
+    {
+        return false;
+    }
+    bool scaling_result = true;
+    // 使用 realloc() 重新设置数组大小
+    int new_max_capacity = p_student_manager->max_capacity * SCALING_RATIO;
+    p_student_manager->student_list = realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student) );
+    if(p_student_manager->student_list == NULL)
+    {
+        scaling_result = false;
+    }
+    else
+    {
+    	printf("动态扩容数组成功，原始数组大小 = %d, 当前数组大小 = %d\n", p_student_manager->max_capacity, new_max_capacity);
+    }
+    p_student_manager->max_capacity = new_max_capacity;
+    return scaling_result;
 }
 
 void load_student_from_file(StudentManager *p_student_manager)
 {
     assert(p_student_manager != NULL);
     // 二进制读文件
-    FILE* p_file = fopen("student.txt", "rb");
-    if (p_file == NULL)
+    FILE* fp = fopen("student.txt", "rb");
+    if (fp == NULL)
     {
         printf("open file error\n");
         return;
     }
-    fread(&p_student_manager->current_count, sizeof(int), 1, p_file);
-    fread(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, p_file);
-    fclose(p_file);
-    p_file = NULL;
+    // 读取出当前学生个数
+    int n = 0;
+    fread(&n, sizeof(int), 1, fp);
+	// ferror() 用于检查文件流是否发生了错误
+	if (ferror(fp))
+	{
+		printf("读取文件时发生错误\n");
+		fclose(fp);
+		return;
+	}
+	if(n > p_student_manager->max_capacity)
+    {
+    	// 新的数组容量为 Student.txt 中元素个数的2倍
+    	int new_max_capacity = n * 2;
+    	p_student_manager->student_list = realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student));
+		if (p_student_manager->student_list == NULL)
+		{
+			exit(EXIT_FAILURE);
+		}
+		// 容量同步
+    	p_student_manager->max_capacity = new_max_capacity;
+    }
+	// 当前元素个数同步
+	p_student_manager->current_count = n;
+    // 读取真正的数据
+    fread(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, fp);
+    fclose(fp);
+    fp = NULL;
 }
 
 int get_student_size(const StudentManager  *p_student_manager)
@@ -78,9 +141,9 @@ Student input_student()
 bool add_student(StudentManager  *p_student_manager)
 {
 	assert(p_student_manager != NULL);
-	if(is_full(p_student_manager))
+	if(is_full(p_student_manager) && !scaling_student_list(p_student_manager))
 	{
-		return false;
+        return false;
 	}
 	const Student student = input_student();
 	p_student_manager->student_list[p_student_manager->current_count] = student;
@@ -198,18 +261,18 @@ void write_student_to_file(const StudentManager *p_student_manager)
 {
     assert(p_student_manager != NULL);
     // 二进制写文件
-    FILE* p_file = fopen("student.txt", "wb");
-    if (p_file == NULL)
+    FILE* fp = fopen("student.txt", "wb");
+    if (fp == NULL)
     {
         printf("open file error\n");
         return;
     }
     // 把数组中的元素个数写进去
-    fwrite(&p_student_manager->current_count, sizeof(int), 1, p_file);
+    fwrite(&p_student_manager->current_count, sizeof(int), 1, fp);
     // 把数组写入
-    fwrite(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, p_file);
-    fclose(p_file);
-    p_file = NULL;
+    fwrite(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, fp);
+    fclose(fp);
+    fp = NULL;
 }
 
 int find_by_id(const StudentManager *p_student_manager, int id)
@@ -527,4 +590,5 @@ void start_student_manager()
 		}
 	} while (select != 0);
 	write_student_to_file(&student_manager);
+    destory_student_manager(&student_manager);
 }

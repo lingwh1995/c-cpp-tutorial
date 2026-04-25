@@ -1,31 +1,5 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-
-#define SCORE_SIZE 3	 // 科目数量
-#define MAX_STUDENT 100  // 最大学生数
-
-typedef struct
-{
-	int id;
-	char name[10];
-    // 特别注意：要多开辟一个空间存放字符串结尾符 '\0'
-	char sex[7];
-	int age;
-	float scores[SCORE_SIZE];
-	float total_score;
-	float avg_score;
-} Student;
-
-typedef struct
-{
-	// 前学生数量
-	int current_count;
-	// 容量
-	int max_capacity;
-	Student student_list[MAX_STUDENT];
-} StudentManager;
+#include "../inc/stdaef.h"
+#include "../inc/student_manager.h"
 
 void init_student_manager(StudentManager *p_student_manager)
 {
@@ -45,10 +19,7 @@ void load_student_from_file(StudentManager *p_student_manager)
         printf("open file error\n");
         return;
     }
-	int current_count = 0;
     fread(&p_student_manager->current_count, sizeof(int), 1, fp);
-
-
     fread(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, fp);
     fclose(fp);
     fp = NULL;
@@ -505,14 +476,14 @@ void show_student_manager_info(const StudentManager *p_student_manager)
 	printf("当前学生数量 %d,数组容量大小 %d\n", p_student_manager->current_count, p_student_manager->max_capacity);
 }
 
-int main()
+void start_student_manager()
 {
 	// 解决eclipse无法使用scanf()从控制台接收参数的问题
 	setbuf(stdout, NULL);
 
 	StudentManager student_manager;
 	init_student_manager(&student_manager);
-    load_student_from_file(&student_manager);
+	load_student_from_file(&student_manager);
 	int select = 0;
 	do
 	{
@@ -529,32 +500,31 @@ int main()
 		scanf("%d", &select);
 		switch (select)
 		{
-			case 0:
-				printf("退出管理系统\n");
-				break;
-			case 1:
-				add_student(&student_manager);
-				break;
-			case 2:
-				show_student(&student_manager);
-				break;
-			case 3:
-				find_student(&student_manager);
-				break;
-			case 4:
-				delete_student(&student_manager);
-				break;
-			case 5:
-				modify_student(&student_manager);
-				break;
-			case 6:
-				show_student_manager_info(&student_manager);
-				break;
-			default:
-				printf("不支持该选项！");
-				break;
+		case 0:
+			printf("退出管理系统\n");
+			break;
+		case 1:
+			add_student(&student_manager);
+			break;
+		case 2:
+			show_student(&student_manager);
+			break;
+		case 3:
+			find_student(&student_manager);
+			break;
+		case 4:
+			delete_student(&student_manager);
+			break;
+		case 5:
+			modify_student(&student_manager);
+			break;
+		case 6:
+			show_student_manager_info(&student_manager);
+			break;
+		default:
+			printf("不支持该选项！");
+			break;
 		}
 	} while (select != 0);
-    write_student_to_file(&student_manager);
-	return 0;
+	write_student_to_file(&student_manager);
 }

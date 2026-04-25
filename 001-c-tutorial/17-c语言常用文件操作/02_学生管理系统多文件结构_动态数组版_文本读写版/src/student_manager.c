@@ -52,36 +52,47 @@ void load_student_from_file(StudentManager *p_student_manager)
 {
     assert(p_student_manager != NULL);
     // 二进制读文件
-    FILE* p_file = fopen("student.txt", "rb");
-    if (p_file == NULL)
+    FILE* fp = fopen("student.txt", "r");
+    if (fp == NULL)
     {
         printf("open file error\n");
         return;
     }
     // 读取出当前学生个数
-    int current_count = 0;
-    fread(&current_count, sizeof(int), 1, p_file);
-
-
-    if(current_count <= p_student_manager->max_capacity)
+    int n = 0;
+    fscanf(fp, "%d", &n);
+    if(n > p_student_manager->max_capacity)
     {
-    	// 当前元素个数同步
-    	p_student_manager->current_count = current_count;
-    }
-    else
-    {
-    	// 新的数组容量为 Student.txt 中元素个数的1.5倍
-    	int new_max_capacity = current_count * 1.5;
-    	p_student_manager->student_list = (PStudent)realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student));
+    	// 新的数组容量为 Student.txt 中元素个数的2倍
+    	int new_max_capacity = n * 2;
+    	p_student_manager->student_list = realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student));
+    	if (p_student_manager->student_list == NULL)
+    	{
+    		exit(EXIT_FAILURE);
+    	}
     	// 容量同步
     	p_student_manager->max_capacity = new_max_capacity;
-    	// 当前元素个数同步
-    	p_student_manager->current_count = current_count;
     }
-    // 读取真正的数据
-    fread(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, p_file);
-    fclose(p_file);
-    p_file = NULL;
+	// 当前元素个数同步
+	p_student_manager->current_count = n;
+
+	// 读取真正的数据
+	for (int i = 0; i < p_student_manager->current_count; i++)
+	{
+		Student student = { 0 };
+		student.total_score = 0;
+		fscanf(fp, "%d %s %s %d", &student.id, student.name, student.sex, &student.age);
+		for (int j = 0; j < SCORE_SIZE; j++)
+		{
+			fscanf(fp, "%f", &student.scores[j]);
+			student.total_score = student.total_score + student.scores[j];
+		}
+		student.avg_score = student.total_score / SCORE_SIZE;
+		p_student_manager->student_list[i] = student;
+	}
+
+    fclose(fp);
+    fp = NULL;
 }
 
 int get_student_size(const StudentManager  *p_student_manager)
@@ -257,18 +268,26 @@ void write_student_to_file(const StudentManager *p_student_manager)
 {
     assert(p_student_manager != NULL);
     // 二进制写文件
-    FILE* p_file = fopen("student.txt", "wb");
-    if (p_file == NULL)
+    FILE* fp = fopen("student.txt", "w");
+    if (fp == NULL)
     {
         printf("open file error\n");
         return;
     }
     // 把数组中的元素个数写进去
-    fwrite(&p_student_manager->current_count, sizeof(int), 1, p_file);
-    // 把数组写入
-    fwrite(p_student_manager->student_list, sizeof(Student), p_student_manager->current_count, p_file);
-    fclose(p_file);
-    p_file = NULL;
+    fprintf(fp, "%d\n", p_student_manager->current_count);
+	for (int i = 0; i < p_student_manager->current_count; i++)
+	{
+		Student student = p_student_manager->student_list[i];
+		fprintf(fp, "%d %s %s %d", student.id, student.name, student.sex, student.age);
+		for (int j = 0; j < SCORE_SIZE; j++)
+		{
+			fprintf(fp, "%f\n", student.scores[j]);
+		}
+	}
+	fprintf(fp, "\n");
+    fclose(fp);
+    fp = NULL;
 }
 
 int find_by_id(const StudentManager *p_student_manager, int id)

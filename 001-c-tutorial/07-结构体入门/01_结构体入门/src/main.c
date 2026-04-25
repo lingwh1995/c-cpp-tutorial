@@ -135,7 +135,7 @@
  *			int age;
  *		};
  *
- *		struct Student student = {};
+ *		struct Student student = { 0 };
  *
  *		// 定义 结构体指针类型 变量
  *		struct Student *p_student = &student;
@@ -154,7 +154,7 @@
  *			int age;
  *		};
  *
- *		struct Student student = {};
+ *		struct Student student = { 0 };
  *
  *		// 定义 结构体指针类型 变量
  *		struct Student *p_student = &student;
@@ -453,7 +453,7 @@ void assignment_struct_4()
 		int age;
 	};
 
-	struct Student student = {};
+	struct Student student = { 0 };
 
 	// 定义 结构体指针类型 变量
 	struct Student *p_student = &student;
@@ -481,7 +481,7 @@ void assignment_struct_5()
 		int age;
 	};
 
-	struct Student student = {};
+	struct Student student = { 0 };
 
 	// 定义 结构体指针类型 变量
 	struct Student *p_student = &student;
