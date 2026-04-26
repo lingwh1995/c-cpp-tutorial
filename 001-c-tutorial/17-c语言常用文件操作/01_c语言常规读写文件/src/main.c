@@ -7,7 +7,7 @@
  * 演示了C语言中文件写入操作的基本流程，包括文件打开、错误检查、数据写入和文件关闭。
  * 同时展示了文件缓冲机制的工作原理：数据先写入缓冲区，关闭文件时才真正写入磁盘。
  */
-void fprintf_txt_int_data_to_file()
+void fprintf_int_to_text_file()
 {
     const int arr[] = { 12, 23, 34, 45, 56, 67, 78, 89, 90, 100 };
     const int len = sizeof(arr) / sizeof(arr[0]);
@@ -43,7 +43,7 @@ void fprintf_txt_int_data_to_file()
  * 该函数创建一个包含10个双精度浮点数的数组，并将其以文本格式（保留两位小数）
  * 写入到file_double.txt文件中。演示了浮点数的文件写入操作和缓冲机制的工作原理。
  */
-void fprintf_txt_double_data_to_file()
+void fprintf_double_to_text_file()
 {
     const double arr[] = { 1.2, 2.3, 3.4, 4.5, 5.6, 6.7, 7.8, 8.9, 9.0, 10.0 };
     const int len = sizeof(arr) / sizeof(arr[0]);
@@ -80,7 +80,7 @@ void fprintf_txt_double_data_to_file()
  * 并将其以文本格式写入到file_str.txt文件中。演示了字符串的文件写入操作
  * 和缓冲机制的工作原理。
  */
-void fprintf_txt_str_data_to_file()
+void fprintf_str_to_text_file()
 {
     const char arr[3][10] = {
         { "tulun" },
@@ -121,7 +121,7 @@ void fprintf_txt_str_data_to_file()
  * 在每次写入一个整数后，使用ftell()函数获取并打印当前文件指针相对于文件开头的偏移量（以字节为单位）。
  * 用于演示ftell函数的使用方法和文件写入过程中偏移量的变化规律。
  */
-void fprintf_ftell_test()
+void fprintf_with_ftell_test()
 {
     const int arr[] = { 12, 23, 34, 45, 56, 67, 78, 89, 90, 100 };
     const int len = sizeof(arr) / sizeof(arr[0]);
@@ -161,7 +161,7 @@ void fprintf_ftell_test()
  * 演示了C语言中文本文件的读取操作，包括文件打开、错误检查、使用fscanf逐个数读取数据以及文件关闭。
  * 同时展示了文件读取过程中的缓冲机制：系统一次性从磁盘读取一块数据到缓冲区，程序从缓冲区获取数据。
  */
-void fscanf_txt_int_data_from_file()
+void fscanf_int_from_text_file()
 {
     int arr[10] = { 0 };
     FILE *fp = fopen("file_int.txt", "r");
@@ -199,7 +199,7 @@ void fscanf_txt_int_data_from_file()
  * 演示了C语言中二进制文件的写入操作，与文本文件写入不同，二进制写入直接保存内存中的原始数据，
  * 不使用格式化转换，效率更高且占用空间更小。适用于需要快速读写大量数据的场景。
  */
-void fwrite_bin_int_data_to_file()
+void fwrite_int_to_binary_file()
 {
     const int arr[] = { 12, 23, 34, 45, 56, 67, 78, 89, 90, 100 };
     const int len = sizeof(arr) / sizeof(arr[0]);
@@ -218,7 +218,7 @@ void fwrite_bin_int_data_to_file()
     fp = NULL;
 }
 
-void fread_bin_int_data_from_file()
+void fread_int_from_binary_file()
 {
     int arr[10] = { 0 };
     const int len = sizeof(arr) / sizeof(arr[0]);
@@ -250,7 +250,7 @@ void fread_bin_int_data_from_file()
  * 该函数系统地测试多种路径格式，包括合法路径、非法路径、特殊字符路径等，
  * 帮助理解fopen函数对不同路径格式的处理方式和错误信息。
  */
-void invalid_paths_test()
+void fopen_test_path_formats()
 {
     // 测试用例结构体
     typedef struct {
@@ -364,13 +364,13 @@ void invalid_paths_test()
 
 int main()
 {
-    //fprintf_txt_int_data_to_file();
-    //fprintf_txt_double_data_to_file();
-    //fprintf_txt_str_data_to_file();
-    //fprintf_ftell_test();
-    //fscanf_txt_int_data_from_file();
-    //fwrite_bin_int_data_to_file();
-    //fread_bin_int_data_from_file();
-    invalid_paths_test();
+    //fprintf_int_to_text_file();
+    //fprintf_double_to_text_file
+    //fprintf_str_to_text_file();
+    //fprintf_with_ftell_test();
+    //fscanf_int_from_text_file();
+    //fwrite_int_to_binary_file();
+    //fread_int_from_binary_file();
+    //fopen_test_path_formats();
     return 0;
 }
