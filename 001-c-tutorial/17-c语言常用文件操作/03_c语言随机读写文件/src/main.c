@@ -36,6 +36,8 @@ void fwrite_bin_int_data_to_file()
  */
 void seek_fread_bin_int_data_from_file()
 {
+    int arr[10] = { 0 };
+    const int len = sizeof(arr) / sizeof(arr[0]);
     int val = 0;
     int pos;
     FILE *fp = fopen("file_bin.txt", "rb");
@@ -54,6 +56,7 @@ void seek_fread_bin_int_data_from_file()
          */
         fseek(fp, pos * sizeof(int), SEEK_SET);
         fread(&val, sizeof(int), 1, fp);
+        fread(arr, sizeof(int), len, fp);
         printf("%d %x \n", val, val);
     }
     fclose(fp);
@@ -82,7 +85,7 @@ void seek_fwrite_bin_int_data_to_file()
     /**
      * 计算字节偏移量并定位文件指针
      * pos为整数索引，需乘以sizeof(int)转换为字节偏移
-     * 第三个参数 SEEK_SET 是文件定位的起始位置
+     * 第三个参数 SEEK_SET 代表偏移时从文件起始位置开始偏移
      */
     fseek(fp, pos, SEEK_SET);
     fwrite(arr, sizeof(int), len, fp);
@@ -90,6 +93,13 @@ void seek_fwrite_bin_int_data_to_file()
     fp = NULL;
 }
 
+/**
+ * 获取二进制文件的长度（字节数）
+ *
+ * 该函数打开file_bin.txt二进制文件，通过fseek将文件指针定位到文件末尾，
+ * 然后使用ftell获取当前文件指针位置（即文件大小），最后打印文件长度。
+ * 演示了如何使用fseek和ftell组合来获取文件大小的方法。
+ */
 void seek_fread_bin_int_data_get_file_len()
 {
     FILE *fp = fopen("file_bin.txt", "rb");
@@ -104,16 +114,36 @@ void seek_fread_bin_int_data_get_file_len()
      * 第三个参数 SEEK_END 是文件定位的末尾位置
      */
     int len = ftell(fp);
-    printf("file size is = %d byte!", len);
+    printf("file len is = %d byte!", len);
+    fclose(fp);
+    fp = NULL;
+}
+
+void seek_rewind_fread_bin_int_data_from_file()
+{
+    int arr[10] = { 0 };
+    const int len = sizeof(arr) / sizeof(arr[0]);
+    FILE *fp = fopen("file_bin.txt", "rb");
+    if (fp == NULL)
+    {
+        return;
+    }
+    // 从文件开头偏移4字节(一个 int 是4个字节，所以效果就是跳过数组的第一个元素)
+    fseek(fp, 4, SEEK_SET);
+    fread(arr, sizeof(int), len, fp);
+    // 重置文件指针到开头
+    rewind(fp);
+    fread(arr, sizeof(int), len, fp);
     fclose(fp);
     fp = NULL;
 }
 
 int main()
 {
-    //fwrite_bin_int_data_to_file();
+    fwrite_bin_int_data_to_file();
     //seek_fread_bin_int_data_from_file();
     //seek_fwrite_bin_int_data_to_file();
-    seek_fread_bin_int_data_get_file_len();
+    //seek_fread_bin_int_data_get_file_len();
+    seek_rewind_fread_bin_int_data_from_file();
     return 0;
 }
