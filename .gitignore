@@ -371,3 +371,4 @@ cmake-build-debug/
 main.dSYM/
 
 student.txt
+file*.txt
