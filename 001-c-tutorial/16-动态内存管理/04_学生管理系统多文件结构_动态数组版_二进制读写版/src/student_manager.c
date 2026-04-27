@@ -70,15 +70,23 @@ void load_student_from_file(StudentManager *p_student_manager)
 	}
 	if(n > p_student_manager->max_capacity)
     {
-    	// 新的数组容量为 Student.txt 中元素个数的2倍
-    	int new_max_capacity = n * 2;
-    	p_student_manager->student_list = realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student));
-		if (p_student_manager->student_list == NULL)
+		// 1. 计算新容量
+		int new_max_capacity = n * 2;
+
+		// 2. 使用临时指针接收 realloc 的返回值，用于防止原指针丢失
+		Student *temp_list = realloc(p_student_manager->student_list, new_max_capacity * sizeof(Student));
+
+		// 3. 检查是否分配成功
+		if (temp_list == NULL)
 		{
+			// 如果失败，原有的 p_student_manager->student_list 依然安全，可以做清理或日志记录
+			// free(p_student_manager->student_list); // 根据具体业务决定是否在这里释放旧内存
 			exit(EXIT_FAILURE);
 		}
-		// 容量同步
-    	p_student_manager->max_capacity = new_max_capacity;
+
+		// 4. 分配成功后，再更新原指针和容量
+		p_student_manager->student_list = temp_list;
+		p_student_manager->max_capacity = new_max_capacity;
     }
 	// 当前元素个数同步
 	p_student_manager->current_count = n;

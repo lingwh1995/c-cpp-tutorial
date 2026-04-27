@@ -102,7 +102,7 @@ void print_color(enum Color color)
  * 1. c语言标准只规定了各种数据类型的占据空间的大小关系，没有规定各种数据类型占据的具体字节数
  * 2. long类型在window平台，占据4个字节，在linux/macos平台占据8个字节，因为window为了兼容16位系统中编写的代码，只能将long的长度规定为4字节
  * 3. 永远不要依赖long是4字节还是8字节，跨平台最安全写法
- * 	  #include<stdint.h>
+ * 	  #include <stdint.h>
  *
  * 	  int32_t // 一定是4字节
  * 	  int64_t // 一定是8字节

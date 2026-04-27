@@ -1,6 +1,6 @@
-#include<stdio.h>
-#include<stdbool.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
 
 /**
  * 基于函数指针实现对不同数据类型的数组进行冒泡排序
