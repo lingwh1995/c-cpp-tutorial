@@ -39,7 +39,7 @@
 void getchar_test_1()
 {
 	printf("请输入单个字符: \n");
-	char c = getchar();
+	const char c = getchar();
 	printf("字符类型输出: c = %c\n", c);
 	printf("ASCII码输出: c = %d\n", c);
 }

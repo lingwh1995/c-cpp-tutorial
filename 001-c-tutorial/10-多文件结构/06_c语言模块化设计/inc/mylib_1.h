@@ -1,5 +1,11 @@
 #ifndef MYLIB_1_H
 #define MYLIB_1_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <assert.h>
+
 /*
  * 初始化数组
  * @param *arr 代表数组的指针

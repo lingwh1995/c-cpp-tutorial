@@ -361,14 +361,21 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+# eclipse
 /.metadata/
 .settings
 .classpath
+
+# clion
 .idea
 *.exe
 main
 cmake-build-debug/
 main.dSYM/
+
+# qtcreator
+build/
+.qtcreator
 
 student.txt
 file*.txt

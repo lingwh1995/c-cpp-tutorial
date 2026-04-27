@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "../inc/mylib.h"
 
 int fun1()

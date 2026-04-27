@@ -1,6 +1,4 @@
 #include "../inc/mylib_2.h"
-#include <time.h>
-#include <assert.h>
 
 /*
  * 从数组中查找当前值，查找到返回数组索引，查找不到返回-1

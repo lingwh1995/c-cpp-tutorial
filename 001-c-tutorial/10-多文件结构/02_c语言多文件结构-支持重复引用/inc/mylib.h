@@ -6,6 +6,9 @@
 //#pragma once
 #ifndef MYLIB_H
 #define MYLIB_H
+
+#include <stdio.h>
+
 /*
 	正确的使用头文件的方法:
 		只在头文件中使用extern关键字声明全局变量和函数，全局变量赋值和函数体写在源文件中
@@ -25,5 +28,6 @@ int add(int a, int b)
 	return a + b;
 }
 */
-
+int fun1();
+int fun2();
 #endif // !MYLIB_H

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "../inc/mylib_2.h"
 #define ARSIZE 100
 

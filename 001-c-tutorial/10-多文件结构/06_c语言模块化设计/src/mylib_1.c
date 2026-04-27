@@ -1,6 +1,4 @@
 #include "../inc/mylib_1.h"
-#include <time.h>
-#include <assert.h>
 
 /*
  * 初始化数组

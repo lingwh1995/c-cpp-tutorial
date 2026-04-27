@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
+#include "../inc/mylib.h"
 
 // 测试多文件结构
 #if 0

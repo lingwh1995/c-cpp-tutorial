@@ -1,5 +1,8 @@
 #ifndef MYLIB_H
 #define MYLIB_H
+
+#include <stdio.h>
+
 // 声明其他文件中的一个全局变量
 extern int gi_in_other_file;
 // 声明其他文件中的一个全局常量
