@@ -6,19 +6,23 @@
 
 /*
  * 标准输入
- * 1. getchar()：输入单个字符，保存到字符变量中
- * 2. gets()：输入一行数据，保存到字符串变量中 => 已废弃不推荐
+ * 1. getchar()：接收用户输入的单个字符，保存到字符变量中
+ * 2. gets()：接收用户输入的多个字符，保存到字符串变量中 => C11已废弃不推荐，推荐使用 gets_s()
  * 3. scanf()：格式化输入函数，一次可以输入多个数据，保存到多个变量中
+ *    scanf()何时结束本次输入： 遇到空格/回车/换行都会停止读取，结束本次输入
+ *
  *    解决c4996 scanf警告：
  *    1. 在.c文件第一行引入宏定义: #define _CRT_SECURE_NO_WARNINGS
  *    2. 在.c文件第一行引入预编译指令: #pragma warning(disable:4996)
  *
  *    gets()和scanf()区别
- *    1. gets()接收的字符串中间可以有空格,scanf()接收的字符串中间不能有空格
- *    2. get()会清空缓冲区的换行符,scanf()不会清空缓冲区的换行符
+ *    1. gets()接收的字符串中间可以有空，scanf()接收的字符串中间不能有空格
+ *    2. get()会清空缓冲区的换行符，scanf()不会清空缓冲区的换行符
  * 4. gets_s() / fgets()：输入一行数据，保存到字符串变量中 => 推荐
  *    gets_s() windows平台编译器
- *    fgets()   linux平台编译器
+ *    fgets()  linux平台编译器
+ *
+*     gets_s()合适结束本次输入： 遇到换行会停止读取，结束本次输入
  *
  * 标准输出
  * 1. putchar()：输出单个字符，返回值为输出的数值
@@ -35,6 +39,7 @@
 
 /*
  * 测试getchar()
+ * 特别注意： getchar() 返回的是int，不是字符
  */
 void getchar_test_1()
 {
@@ -152,7 +157,7 @@ void scanf_test_4()
 }
 
 /*
- * 测试get()和scanf()
+ * 测试gets()和scanf()
  *	输入数据: i love you
  *  gets()接收到: i love you
  *  scanf()接收到: i
@@ -171,7 +176,7 @@ void gets_and_scanf_test_1()
 }
 
 /*
- * 测试get()和scanf()
+ * 测试gets()和scanf()
  *  1.程序运行结果
  *		请输入数据:
  *		a
@@ -179,7 +184,7 @@ void gets_and_scanf_test_1()
  *		1
  *		c = 1
  *		c =
- *  2.get()会清空缓冲区的换行符,scanf()不会清空缓冲区的换行符
+ *  2.gets()会清空缓冲区的换行符,scanf()不会清空缓冲区的换行符
  */
 void gets_and_scanf_test_2()
 {
@@ -247,6 +252,20 @@ void printf_test()
 }
 
 /*
+ * 测试printf()和puts()
+ *   字符串的结尾为\0，\0之后的内容不会被识别成字符串
+ */
+void printf_and_puts_test()
+{
+	char str[] = {"tunlun hello \0 world"};
+	// tunlun hello
+	printf("%s\n", str);
+	// tunlun hello
+	puts(str);
+	puts(str);
+}
+
+/*
  * ASCII码形式输出和转义字符串输出
  */
 void ascii_printf_and_escape_printf_test()
@@ -274,8 +293,8 @@ void ascii_printf_and_escape_printf_test()
 
 	/**
 	 * 8进制和16进制转义
-	 *      8进制: \102
-	 *      16进制: \x42
+	 *  8进制: \102
+	 *  16进制: \x42
 	 */
 	printf("字符'B'的十进制表示:%d\n", 'B');
 	printf("字符'B'(八进制数0102)的十进制表示:%d\n", 0102);
@@ -296,8 +315,8 @@ void calc_area_of_triangle()
 	printf("三角形面积 s = %f", s);
 }
 
-
 #if 0
+#endif
 // 标准输入输出的基本测试
 int main()
 {
@@ -305,7 +324,7 @@ int main()
 	//gets_test_1();
 	//gets_test_2();
 	//gets_s_test_1();
-	fgets_test_1();
+	//fgets_test_1();
 	//scanf_test_1();
 	//scanf_test_2();
 	//scanf_test_3();
@@ -315,8 +334,8 @@ int main()
 	//putchar_test();
 	//puts_test();
 	//printf_test();
+	printf_and_puts_test();
 	//ascii_printf_and_escape_printf_test();
     //calc_area_of_triangle();
 	return 0;
 }
-#endif
