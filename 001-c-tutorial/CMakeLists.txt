@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.28)
 project(C_Tutorial_Master C)
 
+# 让中间目标文件去掉 .c 后缀：main.c.obj → main.obj
+set(CMAKE_C_OUTPUT_EXTENSION_REPLACE 1)
+
 # 统一全局配置
 set(CMAKE_C_STANDARD 23)
 
