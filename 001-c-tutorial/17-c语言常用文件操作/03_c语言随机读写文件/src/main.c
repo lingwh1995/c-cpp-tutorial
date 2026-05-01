@@ -39,7 +39,7 @@ void fwrite_int_to_binary_file_with_seek()
     printf("请输入要随机写入数组的索引位置:\n");
     scanf("%d", &pos);
     /**
-     * 计算字节偏移量并定位文件指针
+     * 计算字节偏移量并定位文件指针， fseek()移动一位，可以理解为在在遍历数组时，数组的指针执行了 p++ 操作
      * pos为整数索引，需乘以sizeof(int)转换为字节偏移
      * 第三个参数 SEEK_SET 代表偏移时从文件起始位置开始偏移
      */
@@ -68,7 +68,7 @@ void fread_int_from_binary_file_with_seek()
     {
         val = -1;
         /**
-         * 计算字节偏移量并定位文件指针
+         * 计算字节偏移量并定位文件指针， fseek()移动一位，可以理解为在在遍历数组时，数组的指针执行了 p++ 操作
          * pos为整数索引，需乘以sizeof(int)转换为字节偏移
          * 第三个参数 SEEK_SET 是文件定位的起始位置
          */
@@ -93,7 +93,7 @@ void fread_get_file_len_use_seek_ftell()
     }
     fseek(fp, 0, SEEK_END);
     /**
-     * 计算字节偏移量并定位文件指针
+     * 计算字节偏移量并定位文件指针， fseek()移动一位，可以理解为在在遍历数组时，数组的指针执行了 p++ 操作
      * pos为整数索引，需乘以sizeof(int)转换为字节偏移
      * 第三个参数 SEEK_END 是文件定位的末尾位置
      */

@@ -170,9 +170,11 @@ void fputc_test()
     }
 
     fclose(fpi);
-    fpi = NULL;
     fclose(fpo);
-    fpo = NULL;
+    
+    // 函数即将结束，指针马上销毁，赋 NULL 无意义，所以注释掉
+    // fpi = NULL;
+    // fpo = NULL;
     printf("%s", "完成写入......\n");
 }
 
@@ -220,9 +222,11 @@ void fputs_test()
         fputs(buf, fpo);
     }
     fclose(fpi);
-    fpi = NULL;
     fclose(fpo);
-    fpo = NULL;
+
+    // 函数即将结束，指针马上销毁，赋 NULL 无意义，所以注释掉
+    // fpi = NULL;
+    // fpo = NULL;
     printf("%s", "完成写入......\n");
 }
 
