@@ -89,7 +89,7 @@ void fprintf_str_to_text_file()
     };
     const int len = sizeof(arr) / sizeof(arr[0]);
     // 打开一个文件流对象
-    FILE *fp = fopen("file_str.txt", "w");
+    FILE *fp = fopen("file_input.txt", "w");
     if (fp == NULL)
     {
         printf("error opening file\n");
