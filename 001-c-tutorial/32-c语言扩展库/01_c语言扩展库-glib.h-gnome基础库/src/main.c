@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <glib.h>
 
 /**
@@ -15,31 +16,69 @@
  *    - linux
  *       sudo apt-get update
  *       sudo apt-get install libglib2.0-dev
- * 4. conan方式安装
- *    - 编写 conanfile.txt 和 CMakeLists.txt
- *    - pip install conan                                     # 安装conan
- *    - conan remote add conancenter https://center.conan.io  # 设置仓库
- *    - conan install . --output-folder=cmake-build-debug --build=missing # 安装依赖（在conanfile.txt同级别目录下执行）
-
  */
-int main()
-{
-    // 动态数组
-    GArray *array = g_array_new(FALSE, FALSE, sizeof(int));
-    g_array_append_val(array, 10);
-    g_array_append_val(array, 20);
+// 打印链表数据的辅助函数
+void print_list_item(gpointer data, gpointer user_data) {
+    g_print(" -> %s", (char*)data);
+}
 
-    // 哈希表
-    GHashTable *hash = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(hash, "key", "value");
+int main() {
+    // ==========================================
+    // 1. 测试 GLib 基本类型与打印
+    // ==========================================
+    g_print("=== 1. GLib Base Types Test ===\n");
+    gint my_int = 42;
+    gchar* my_str = "Hello UCRT64 & GLib!";
+    g_print("Integer: %d, String: %s\n\n", my_int, my_str);
 
-    // 字符串操作
-    gchar *str = g_strdup("Hello");
-    gchar *upper = g_ascii_strup(str, -1);
+    // ==========================================
+    // 2. 测试 动态数组 (GArray)
+    // ==========================================
+    g_print("=== 2. GArray Test ===\n");
+    // 创建一个存储 int 类型的动态数组，清零并设置边界安全检查
+    GArray *array = g_array_new(FALSE, FALSE, sizeof(gint));
 
-    g_free(str);
-    g_free(upper);
+    // 牢记：g_array_append_val 必须传入变量（左值）
+    gint val1 = 10, val2 = 20, val3 = 30;
+    g_array_append_val(array, val1);
+    g_array_append_val(array, val2);
+    g_array_append_val(array, val3);
+
+    g_print("GArray length: %d\n", array->len);
+    for (guint i = 0; i < array->len; i++) {
+        // 使用 g_array_index 宏安全读取数据
+        g_print("  Index %d: %d\n", i, g_array_index(array, gint, i));
+    }
+
+    // 释放数组内存
     g_array_free(array, TRUE);
-    g_hash_table_destroy(hash);
+    g_print("\n");
+
+    // ==========================================
+    // 3. 测试 双向链表 (GList)
+    // ==========================================
+    g_print("=== 3. GList Test ===\n");
+    GList *list = NULL;
+
+    // 往链表中追加字符串数据
+    list = g_list_append(list, "Apple");
+    list = g_list_append(list, "Banana");
+    list = g_list_append(list, "Cherry");
+
+    g_print("GList current items:");
+    // 遍历链表
+    g_list_foreach(list, print_list_item, NULL);
+    g_print("\n");
+
+    // 查找测试
+    GList *found = g_list_find_custom(list, "Banana", (GCompareFunc)g_strcmp0);
+    if (found) {
+        g_print("  Find custom success: %s exists in list.\n", (char*)found->data);
+    }
+
+    // 释放整个链表
+    g_list_free(list);
+    g_print("==================================\n");
+
     return 0;
 }
