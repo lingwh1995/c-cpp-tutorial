@@ -35,22 +35,22 @@ foreach(S_FILE ${SRCS})
         set(TARGET_NAME "${MY_ID}_${F_NAME}")
 
         if(NOT TARGET "${TARGET_NAME}")
-            add_executable("${TARGET_NAME}" ${SRCS} ${INCS})
+            add_executable(${TARGET_NAME} ${SRCS} ${INCS})
 
-            set_target_properties("${TARGET_NAME}" PROPERTIES
+            set_target_properties(${TARGET_NAME} PROPERTIES
                     OUTPUT_NAME "${MY_ID}_${F_NAME_WE}"
             )
 
-            target_include_directories("${TARGET_NAME}" PRIVATE
+            target_include_directories(${TARGET_NAME} PRIVATE
                     "${CMAKE_CURRENT_SOURCE_DIR}/inc"
                     "${CMAKE_CURRENT_SOURCE_DIR}/src"
             )
 
             # 无论搜到几个库，它们各自的头文件和库路径都会被自动并入这些全局变量中
             target_include_directories("${TARGET_NAME}" PRIVATE ${GLOBAL_LIBS_INCLUDE_DIRS})
-            target_compile_options("${TARGET_NAME}" PRIVATE ${GLOBAL_LIBS_CFLAGS_OTHER})
-            target_link_directories("${TARGET_NAME}" PRIVATE ${GLOBAL_LIBS_LIBRARY_DIRS})
-            target_link_libraries("${TARGET_NAME}" PRIVATE ${GLOBAL_LIBS_LIBRARIES})
+            target_compile_options(${TARGET_NAME} PRIVATE ${GLOBAL_LIBS_CFLAGS_OTHER})
+            target_link_directories(${TARGET_NAME} PRIVATE ${GLOBAL_LIBS_LIBRARY_DIRS})
+            target_link_libraries(${TARGET_NAME} PRIVATE ${GLOBAL_LIBS_LIBRARIES})
 
             message(STATUS "Loaded: ${TARGET_NAME}")
         endif()
