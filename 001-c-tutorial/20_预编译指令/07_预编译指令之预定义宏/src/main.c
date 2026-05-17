@@ -23,8 +23,27 @@
 #line 100 "tulun.c"
 
 #if 0
+#endif
 int main()
 {
+#ifdef __STDC__
+    printf("标准C编译器\n");
+#else
+    printf("非标准C编译器\n");
+#endif
+
+#ifdef __STDC__
+    // 标准C编译器标识
+    printf("标准C编译器\n");
+#endif
+
+// C++ 编译器标识宏
+#ifdef __cplusplus
+    printf("C++编译器\n");
+#else
+    printf("C编译器\n");
+#endif
+
     // 当前文件名
     printf("%s \n", __FILE__);
     // 源文件行号
@@ -35,6 +54,6 @@ int main()
     printf("%s \n", __TIME__);
     // 标准C编译器标识
     printf("%d \n", __STDC__);
+
     return 0;
 }
-#endif

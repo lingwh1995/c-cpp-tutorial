@@ -22,7 +22,6 @@
 void print_arr(const int *arr, int len);
 
 #if 0
-#endif
 int main()
 {
     const int nums[] = { 1, 3, 5, 7, 9 };
@@ -35,6 +34,7 @@ int main()
     print_arr(NULL, len);
     return 0;
 }
+#endif
 
 void print_arr(const int *arr, const int len)
 {
