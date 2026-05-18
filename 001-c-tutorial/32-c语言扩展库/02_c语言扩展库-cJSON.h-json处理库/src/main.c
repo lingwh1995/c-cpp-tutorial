@@ -2,6 +2,23 @@
 #include <stdlib.h>
 #include <cJSON.h>
 
+/**
+ * cJSON - JSON 处理库
+ *
+ * 1. 官网
+ *    https://github.com/DaveGamble/cJSON
+ * 2. 功能
+ *    轻量级 JSON 解析器和生成器，支持 C 语言
+ * 3. 普通方式安装
+ *    - windows(打开 MSYS2 UCRT64 的终端，执行以下命令)
+ *       pacman -Syu                                # 更新系统
+ *       pacman -S mingw-w64-ucrt-x86_64-cjson -y   # 安装cJSON
+ *       pacman -Qs cjson                           # 检查是否安装成功
+ *    - linux
+ *       sudo apt-get update
+ *       sudo apt-get install libcjson-dev
+ */
+
 // 1. 测试生成 JSON 字符串
 void test_create_json() {
     printf("--- 开始测试：生成 JSON ---\n");
