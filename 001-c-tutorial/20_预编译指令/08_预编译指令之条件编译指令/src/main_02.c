@@ -10,7 +10,15 @@
 
 /**
  * 多分支条件编译指令
+ *   #if
+ *     ......
+ *   #elif
+ *     ......
+ *   #else
+ *     ......
+ *   #endif
  */
+#if 0
 int main()
 {
 #if CURRENT_PLATFORM == PLATFORM_WINDOWS
@@ -45,3 +53,4 @@ int main()
 
     return 0;
 }
+#endif

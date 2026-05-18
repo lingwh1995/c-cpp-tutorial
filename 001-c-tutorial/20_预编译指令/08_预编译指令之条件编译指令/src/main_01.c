@@ -5,6 +5,11 @@
 
 /**
  * 单分支条件编译指令
+ *   #if
+ *     ......
+ *   #else
+ *     ......
+ *   #endif
  */
 
 int *get_mem(int n)
@@ -31,9 +36,11 @@ void free_mem(int *p)
 #endif
 }
 
+#if 0
 int main()
 {
     int *p = get_mem(10);
     printf("p = %p\n", p);
     return 0;
 }
+#endif
