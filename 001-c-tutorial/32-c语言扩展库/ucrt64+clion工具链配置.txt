@@ -1,0 +1,4 @@
+1. 如果出现配置 Toolset 时，系统无法识别到 ucrt64 中的工具链，一直使用的内置的工具链，使用超级管理员打开 clion 即可
+2. 此问题排查思路
+   我抓取了 clion 自身的运行日志，然后交给 gemini 分析，gemini 分析出可能是受 windows defender 影响，我改为使用超
+   级管理员打开 clion 后解决了问题
