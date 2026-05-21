@@ -5,7 +5,8 @@
 // 自定义的 ASSERT 类函数宏
 #define ASSERT(expr) \
     do { \
-        if (!(expr)) { \
+        if (!(expr)) \
+        { \
             fprintf(stderr, "Assertion failed: %s\n", #expr); \
             fprintf(stderr, "File: %s, Line: %d\n", __FILE__, __LINE__); \
             fprintf(stderr, "Function: %s\n", __func__); \

@@ -241,7 +241,8 @@ void str2i_test()
     }
 }
 
-void cleanup(void) {
+void cleanup()
+{
 	printf("cleanup function called......\n");
 }
 

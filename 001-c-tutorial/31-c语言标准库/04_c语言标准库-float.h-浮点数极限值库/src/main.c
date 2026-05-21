@@ -1,7 +1,8 @@
 #include <float.h>
 #include <stdio.h>
 
-int main() {
+int main()
+{
     // 浮点数极限
     printf("FLT_MAX: %f\n", FLT_MAX);
     printf("DBL_MAX: %lf\n", DBL_MAX);

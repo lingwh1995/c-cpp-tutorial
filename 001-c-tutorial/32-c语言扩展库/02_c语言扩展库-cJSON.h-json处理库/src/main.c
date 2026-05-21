@@ -17,10 +17,12 @@
  *    - linux
  *       sudo apt-get update
  *       sudo apt-get install libcjson-dev
+ *  4. clion中如果配置 ToolSet 失败，出现无法是被出 ucrt64 的问题，使用管理员账户打开 clion 再进行配置
  */
 
 // 1. 测试生成 JSON 字符串
-void test_create_json() {
+void test_create_json()
+{
     printf("--- 开始测试：生成 JSON ---\n");
 
     // 创建根对象 {}
@@ -52,7 +54,8 @@ void test_create_json() {
 }
 
 // 2. 测试解析 JSON 字符串
-void test_parse_json() {
+void test_parse_json()
+{
     printf("--- 开始测试：解析 JSON ---\n");
 
     // 模拟一段接收到的 JSON 字符串
@@ -64,24 +67,28 @@ void test_parse_json() {
 
     // 解析字符串到 cJSON 结构体
     cJSON *root = cJSON_Parse(json_raw);
-    if (root == NULL) {
+    if (root == NULL)
+    {
         printf("JSON 解析失败！\n");
         return;
     }
 
     // 安全地获取字段值
     cJSON *name = cJSON_GetObjectItemCaseSensitive(root, "name");
-    if (cJSON_IsString(name) && (name->valuestring != NULL)) {
+    if (cJSON_IsString(name) && (name->valuestring != NULL))
+    {
         printf("解析成功 -> 姓名: %s\n", name->valuestring);
     }
 
     cJSON *age = cJSON_GetObjectItemCaseSensitive(root, "age");
-    if (cJSON_IsNumber(age)) {
+    if (cJSON_IsNumber(age))
+    {
         printf("解析成功 -> 年龄: %d\n", age->valueint);
     }
 
     cJSON *is_developer = cJSON_GetObjectItemCaseSensitive(root, "is_developer");
-    if (cJSON_IsBool(is_developer)) {
+    if (cJSON_IsBool(is_developer))
+    {
         printf("解析成功 -> 是否为开发者: %s\n", cJSON_IsTrue(is_developer) ? "是" : "否");
     }
 
@@ -89,7 +96,8 @@ void test_parse_json() {
     cJSON_Delete(root);
 }
 
-int main() {
+int main()
+{
     // 运行测试
     test_create_json();
     test_parse_json();
