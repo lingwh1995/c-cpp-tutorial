@@ -16,6 +16,7 @@
  *    gobject 系统文档：https://docs.gtk.org/gobject/
  *    gio 输入输出库文档：https://docs.gtk.org/gio/
  *    gmodule 动态加载文档：https://docs.gtk.org/gmodule/
+ *    ibm技术博客 https://developer.ibm.com/tutorials/l-glib/
  * 3. 功能
  *    数据结构、实用函数、事件循环、线程等
  * 4. 普通方式安装
