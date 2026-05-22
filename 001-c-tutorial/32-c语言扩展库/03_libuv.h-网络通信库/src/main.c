@@ -1635,6 +1635,7 @@ static ChapterEntry chapters[] = {
     {"15", "工具函数",           chapter15_utilities_test},
 };
 
+#if 0
 int main(int argc, char **argv)
 {
     printf("libuv 渐进式学习代码\n");
@@ -1660,3 +1661,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+# endif
