@@ -5,6 +5,7 @@
 //#include <glib/gstdio.h>      // 如果要引入子模块，这种是标准写法
 #include <string.h>
 #include <sys/stat.h>
+#include <locale.h>
 
 /**
  * GLib - GNOME 基础库
@@ -942,6 +943,13 @@ void chapter12_gio_advanced_test()
 #endif
 int main()
 {
+    // 强制 GLib 使用 UTF-8 输出（macOS 专属修复）
+    g_setenv("LC_ALL", "zh_CN.UTF-8", TRUE);
+    g_setenv("LANG", "zh_CN.UTF-8", TRUE);
+
+    // 同时设置系统区域
+    setlocale(LC_ALL, "zh_CN.UTF-8");
+
     g_print("----------------------------------------------\n");
     g_print("GLib 渐进式教学示例代码\n");
     g_print("严格遵循 GLib 2.80+ 官方文档\n");
