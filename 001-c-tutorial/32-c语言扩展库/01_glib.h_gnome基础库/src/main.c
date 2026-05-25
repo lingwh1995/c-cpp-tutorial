@@ -107,9 +107,9 @@ FIX_GLIB_UTF8_LOCALE();
 // }
 
 /**
- * 第1章：GLib 基础数据类型
+ * 第1章：GLib 基础数据类型与常用宏
  */
-void chapter1_basic_types_test()
+void chapter1_basic_types_and_macros_test()
 {
     g_print("--- 第1章：GLib 基础数据类型 ---\n\n");
 
@@ -145,7 +145,7 @@ void chapter1_basic_types_test()
     const gboolean bf = FALSE;
     g_print("gboolean bt = %s\n", bt ? "TRUE" : "FALSE");
     g_print("gboolean bf = %s\n", bf ? "TRUE" : "FALSE");
-    g_print("gboolean TRUE=%d, FALSE=%d\n", TRUE, FALSE);
+    g_print("gboolean TRUE = %d, FALSE = %d\n", TRUE, FALSE);
 
     // gpointer - void*
     const gint value = 42;
@@ -185,6 +185,9 @@ void chapter1_basic_types_test()
     const gdouble d = 3.141592653589793;
     g_print("gfloat = %.2f, gdouble = %.15f\n", f, d);
 
+    // 1.2 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
+    g_print("\n1.2 常用宏定义\n");
+
     // G_MININT/G_MAXINT 取值范围宏
     g_print("gint 取值范围 %d ~ %d\n", G_MININT, G_MAXINT);
     // G_MAXUINT 取值范围宏
@@ -203,9 +206,6 @@ void chapter1_basic_types_test()
     g_print("gssize 取值范围 %" G_GSSIZE_FORMAT " ~ %" G_GSSIZE_FORMAT "\n", G_MINSSIZE, G_MAXSSIZE);
     g_print("gsize 最大值 %" G_GSIZE_FORMAT "\n", G_MAXSIZE);
 
-    // 1.2 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
-    g_print("\n1.2 常用宏定义\n");
-
     // 布尔值
     g_print("TRUE: %d, FALSE: %d\n", TRUE, FALSE);
 
@@ -214,49 +214,39 @@ void chapter1_basic_types_test()
 
     // 类型转换宏
     gint a = 10;
-    gpointer p = GINT_TO_POINTER(a);
-    gint b = GPOINTER_TO_INT(p);
-    g_print("GINT_TO_POINTER/GPOINTER_TO_INT: %d -> %p -> %d\n", a, p, b);
-
-    // 最大值最小值宏
-    g_print("G_MAXINT: %d\n", G_MAXINT);
-    g_print("G_MININT: %d\n", G_MININT);
-    g_print("G_MAXUINT: %u\n", G_MAXUINT);
+    gpointer ptr_a = GINT_TO_POINTER(a);
+    gint b = GPOINTER_TO_INT(ptr_a);
+    g_print("GINT_TO_POINTER/GPOINTER_TO_INT: %d -> %p -> %d\n", a, ptr_a, b);
 
     // 数学宏
-    g_print("ABS(-10): %d\n", ABS(-10));
-    g_print("MIN(5, 10): %d\n", MIN(5, 10));
-    g_print("MAX(5, 10): %d\n", MAX(5, 10));
-    g_print("CLAMP(15, 5, 10): %d\n", CLAMP(15, 5, 10));
+    g_print("ABS(-10) = %d\n", ABS(-10));
+    g_print("MIN(5, 10) = %d\n", MIN(5, 10));
+    g_print("MAX(5, 10) = %d\n", MAX(5, 10));
+    g_print("CLAMP(15, 5, 10) = %d\n", CLAMP(15, 5, 10));
 
     // 字节序宏
-    g_print("G_BYTE_ORDER: %d (G_LITTLE_ENDIAN: %d, G_BIG_ENDIAN: %d)\n",
+    g_print("G_BYTE_ORDER = %d (G_LITTLE_ENDIAN: %d, G_BIG_ENDIAN: %d)\n",
             G_BYTE_ORDER, G_LITTLE_ENDIAN, G_BIG_ENDIAN);
 
     // 字符串化宏
-    g_print("G_STRINGIFY(hello): %s\n", G_STRINGIFY(hello));
+    g_print("G_STRINGIFY(hello) = %s\n", G_STRINGIFY(hello));
 
     // 结构体成员偏移宏
     g_print("G_STRUCT_OFFSET(struct stat, st_size) = %zu\n", (size_t)G_STRUCT_OFFSET(struct stat, st_size));
 
+    // 数组元素个数宏
+    gint g_array[] = { 1, 2, 3, 4, 5 };
+    g_print("G_N_ELEMENTS(g_array) = %zu\n", G_N_ELEMENTS(g_array));
 
-
-
-
-
-    // gint sample_array[] = { 1, 2, 3, 4, 5 };
-    // g_print("G_N_ELEMENTS(sample_array) = %zu\n", G_N_ELEMENTS(sample_array));
-    //
-    // // G_LIKELY 和 G_UNLIKELY 是编译器优化提示，通常用于条件判断
-    // if (G_LIKELY(1))
-    // {
-    //     g_print("G_LIKELY(1): 分支很可能执行\n");
-    // }
-    // if (G_UNLIKELY(0))
-    // {
-    //     g_print("G_UNLIKELY(0): 分支不太可能执行\n");
-    // }
-    // g_print("\n");
+    // G_LIKELY 和 G_UNLIKELY 是编译器优化提示宏，通常用于条件判断
+    if (G_LIKELY(1))
+    {
+        g_print("G_LIKELY(1): 分支很可能执行\n");
+    }
+    if (G_UNLIKELY(0))
+    {
+        g_print("G_UNLIKELY(0): 分支不太可能执行\n");
+    }
 }
 
 /**
@@ -266,25 +256,25 @@ void chapter2_memory_management_test()
 {
     g_print("--- 第2章：内存管理 ---\n\n");
 
-    // 2.1 基本内存分配（官方文档：glib-Memory-Allocation.html）
+    // 2.1 基本内存分配 官方文档：https://docs.gtk.org/glib/memory.html
     g_print("2.1 基本内存分配\n");
-    gpointer mem1 = g_malloc(100);
+    const gpointer mem1 = g_malloc(100);  // 分配内存
     g_print("g_malloc(100) = %p\n", mem1);
-    g_free(mem1);  // 安全：g_free(NULL) 什么也不做
+    g_free(mem1);   // 释放内存
 
-    gpointer mem2 = g_malloc0(100);  // 分配并清零
+    const gpointer mem2 = g_malloc0(100);  // 分配并清零
     g_print("g_malloc0(100) = %p, 第一个字节: %d\n", mem2, ((guchar*)mem2)[0]);
-    g_free(mem2);
+    g_free(mem2);   // 释放内存
 
-    gpointer mem3 = g_realloc(NULL, 100);  // 等价于 g_malloc(100)
+    const gpointer mem3 = g_realloc(NULL, 100);  // 等价于 g_malloc(100)
     g_print("g_realloc(NULL, 100) = %p\n", mem3);
-    gpointer mem4 = g_realloc(mem3, 200);  // 重新分配
+    const gpointer mem4 = g_realloc(mem3, 200);  // 重新分配
     g_print("g_realloc(mem3, 200) = %p\n", mem4);
-    g_free(mem4);
+    g_free(mem4);   // 释放内存
 
     // 2.2 对齐内存分配（GLib 2.72+）
     g_print("\n2.2 对齐内存分配\n");
-    gpointer aligned_mem = g_aligned_alloc(1, 100, 16);  // 1块×100字节，16字节对齐
+    gpointer aligned_mem = g_aligned_alloc(1, 100, 16);  // 1块 × 100字节，16字节对齐
     g_print("g_aligned_alloc(1, 100, 16) = %p\n", aligned_mem);
     g_aligned_free(aligned_mem);  // 必须使用对应的释放函数
 
@@ -1056,8 +1046,8 @@ void chapter12_gio_advanced_test()
 int main()
 {
     // 第1-4章：GLib 核心
-    chapter1_basic_types_test();
-    // chapter2_memory_management_test();
+    // chapter1_basic_types_and_macros_test();
+    chapter2_memory_management_test();
     // chapter3_glib_string_handling_test();
     // chapter4_data_structures_test();
     //
