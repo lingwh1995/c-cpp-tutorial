@@ -113,44 +113,150 @@ void chapter1_basic_types_test()
 {
     g_print("--- 第1章：GLib 基础数据类型 ---\n\n");
 
-    // 1.1 基本数据类型（官方文档：glib-Basic-Types.html）
+    // 1.1 基本数据类型 官方文档：https://docs.gtk.org/glib/types.html
     g_print("1.1 基本数据类型\n");
-    g_print("gboolean: TRUE=%d, FALSE=%d\n", TRUE, FALSE);
-    g_print("gchar: %zu bytes\n", sizeof(gchar));
-    g_print("gint: %zu bytes, 范围: %d ~ %d\n", sizeof(gint), G_MININT, G_MAXINT);
-    g_print("guint: %zu bytes, 最大值: %u\n", sizeof(guint), G_MAXUINT);
-    g_print("glong: %zu bytes, 范围: %ld ~ %ld\n", sizeof(glong), G_MINLONG, G_MAXLONG);
-    g_print("gulong: %zu bytes, 最大值: %lu\n", sizeof(gulong), G_MAXULONG);
-    g_print("gint64: %zu bytes, 范围: %" G_GINT64_FORMAT " ~ %" G_GINT64_FORMAT "\n",
-            sizeof(gint64), G_MININT64, G_MAXINT64);
-    g_print("guint64: %zu bytes, 最大值: %" G_GUINT64_FORMAT "\n",
-            sizeof(guint64), G_MAXUINT64);
-    g_print("gsize: %zu bytes, 最大值: %zu\n", sizeof(gsize), G_MAXSIZE);
-    g_print("gssize: %zu bytes, 范围: %zd ~ %zd\n\n", sizeof(gssize), G_MINSSIZE, G_MAXSSIZE);
 
-    // 1.2 指针类型
-    g_print("1.2 指针类型\n");
-    gpointer ptr = GINT_TO_POINTER(42);
-    g_print("GINT_TO_POINTER(42) = %p\n", ptr);
-    g_print("GPOINTER_TO_INT(ptr) = %d\n\n", GPOINTER_TO_INT(ptr));
+    // gchar - char
+    const gchar c = 'a';
+    g_print("gchar c = %c\n", c);
 
-    // 1.3 宏定义
-    g_print("1.3 常用宏\n");
-    g_print("G_STRUCT_OFFSET(struct stat, st_size) = %zu\n", G_STRUCT_OFFSET(struct stat, st_size));
+    // guchar - unsigned char
+    const guchar uc = 'a';
+    g_print("gchar uc = %c\n", uc);
 
-    gint sample_array[] = {1, 2, 3, 4, 5};
-    g_print("G_N_ELEMENTS(sample_array) = %zu\n", G_N_ELEMENTS(sample_array));
+    // gint - int
+    const gint i = 25;
+    g_print("gint i = %d\n", i);
 
-    // G_LIKELY 和 G_UNLIKELY 是编译器优化提示，通常用于条件判断
-    if (G_LIKELY(1))
-    {
-        g_print("G_LIKELY(1): 分支很可能执行\n");
-    }
-    if (G_UNLIKELY(0))
-    {
-        g_print("G_UNLIKELY(0): 分支不太可能执行\n");
-    }
-    g_print("\n");
+    // guint - unsigned int
+    const guint ui = 100;
+    g_print("guint ui = %u\n", ui);
+
+    // glong - long
+    const glong l = 123456789L;
+    g_print("glong l = %ld\n", l);
+
+    // gulong - unsigned long
+    const glong ul = 123456789L;
+    g_print("glong ul = %lu\n", ul);
+
+    // gboolean - 布尔类型，取值为 TRUE 或 FALSE
+    const gboolean bt = TRUE;
+    const gboolean bf = FALSE;
+    g_print("gboolean bt = %s\n", bt ? "TRUE" : "FALSE");
+    g_print("gboolean bf = %s\n", bf ? "TRUE" : "FALSE");
+    g_print("gboolean TRUE=%d, FALSE=%d\n", TRUE, FALSE);
+
+    // gpointer - void*
+    const gint value = 42;
+    gpointer ptr = &value;
+    g_print("gpointer 指向值 %d\n", *(gint *)ptr);
+
+    // gconstpointer - const void *
+    gconstpointer cptr = &value;
+    g_print("gconstpointer 指向值 %d\n", *(gint *)cptr);
+
+    // gsize - sizeof(无符号类型)
+    const gsize gs = sizeof(gint);
+    g_print("gsize sizeof(gint) = %" G_GSIZE_FORMAT "\n", gs);
+
+    // gssize - sizeof(有符号类型)
+    const gssize gss = sizeof(guint);
+    g_print("gssize sizeof(guint) = %" G_GSIZE_FORMAT "\n", gss);
+
+    // gint8/gint16/gint32/gint64 - 固定宽度整型
+    const gint8  i8  = 127;
+    const gint16 i16 = 32767;
+    const gint32 i32 = 2147483647;
+    const gint64 i64 = G_GINT64_CONSTANT(9223372036854775807);
+    g_print("gint8 = %d, gint16 = %d, gint32 = %d\n", i8, i16, i32);
+    g_print("gint64 = %" G_GINT64_FORMAT "\n", i64);
+
+    // guint8/guint16/guint32/guint64 - 固定宽度无符号整型
+    const guint8  u8  = 255;
+    const guint16 u16 = 65535;
+    const guint32 u32 = 4294967295U;
+    const guint64 u64 = G_GUINT64_CONSTANT(18446744073709551615);
+    g_print("guint8 = %u, guint16 = %u, guint32 = %u\n", u8, u16, u32);
+    g_print("guint64 = %" G_GUINT64_FORMAT "\n", u64);
+
+    // gfloat/gdouble - 浮点类型
+    const gfloat  f = 3.14f;
+    const gdouble d = 3.141592653589793;
+    g_print("gfloat = %.2f, gdouble = %.15f\n", f, d);
+
+    // G_MININT/G_MAXINT 取值范围宏
+    g_print("gint 取值范围 %d ~ %d\n", G_MININT, G_MAXINT);
+    // G_MAXUINT 取值范围宏
+    g_print("G_MAXUINT = %u\n", G_MAXUINT);
+
+    // G_MINLONG/G_MAXLONG 取值范围宏
+    g_print("glong 取值范围 %ld ~ %ld\n", G_MINLONG, G_MAXLONG);
+    // G_MAXULONG 取值范围宏
+    g_print("G_MAXULONG = %lu\n", G_MAXULONG);
+
+    // G_MININT64/G_MAXINT64 取值范围宏（64 位整数）
+    g_print("gint64 取值范围 %" G_GINT64_FORMAT " ~ %" G_GINT64_FORMAT "\n", G_MININT64, G_MAXINT64);
+    g_print("guint64 最大值 %" G_GUINT64_FORMAT "\n", G_MAXUINT64);
+
+    // G_MINSSIZE/G_MAXSSIZE 取值范围宏
+    g_print("gssize 取值范围 %" G_GSSIZE_FORMAT " ~ %" G_GSSIZE_FORMAT "\n", G_MINSSIZE, G_MAXSSIZE);
+    g_print("gsize 最大值 %" G_GSIZE_FORMAT "\n", G_MAXSIZE);
+
+    // 1.2 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
+    g_print("\n1.2 常用宏定义\n");
+
+    // 布尔值
+    g_print("TRUE: %d, FALSE: %d\n", TRUE, FALSE);
+
+    // NULL指针
+    g_print("NULL: %p\n", NULL);
+
+    // 类型转换宏
+    gint a = 10;
+    gpointer p = GINT_TO_POINTER(a);
+    gint b = GPOINTER_TO_INT(p);
+    g_print("GINT_TO_POINTER/GPOINTER_TO_INT: %d -> %p -> %d\n", a, p, b);
+
+    // 最大值最小值宏
+    g_print("G_MAXINT: %d\n", G_MAXINT);
+    g_print("G_MININT: %d\n", G_MININT);
+    g_print("G_MAXUINT: %u\n", G_MAXUINT);
+
+    // 数学宏
+    g_print("ABS(-10): %d\n", ABS(-10));
+    g_print("MIN(5, 10): %d\n", MIN(5, 10));
+    g_print("MAX(5, 10): %d\n", MAX(5, 10));
+    g_print("CLAMP(15, 5, 10): %d\n", CLAMP(15, 5, 10));
+
+    // 字节序宏
+    g_print("G_BYTE_ORDER: %d (G_LITTLE_ENDIAN: %d, G_BIG_ENDIAN: %d)\n",
+            G_BYTE_ORDER, G_LITTLE_ENDIAN, G_BIG_ENDIAN);
+
+    // 字符串化宏
+    g_print("G_STRINGIFY(hello): %s\n", G_STRINGIFY(hello));
+
+    // 结构体成员偏移宏
+    g_print("G_STRUCT_OFFSET(struct stat, st_size) = %zu\n", (size_t)G_STRUCT_OFFSET(struct stat, st_size));
+
+
+
+
+
+
+    // gint sample_array[] = { 1, 2, 3, 4, 5 };
+    // g_print("G_N_ELEMENTS(sample_array) = %zu\n", G_N_ELEMENTS(sample_array));
+    //
+    // // G_LIKELY 和 G_UNLIKELY 是编译器优化提示，通常用于条件判断
+    // if (G_LIKELY(1))
+    // {
+    //     g_print("G_LIKELY(1): 分支很可能执行\n");
+    // }
+    // if (G_UNLIKELY(0))
+    // {
+    //     g_print("G_UNLIKELY(0): 分支不太可能执行\n");
+    // }
+    // g_print("\n");
 }
 
 /**
@@ -949,33 +1055,23 @@ void chapter12_gio_advanced_test()
 #endif
 int main()
 {
-    g_print("----------------------------------------------\n");
-    g_print("GLib 渐进式教学示例代码\n");
-    g_print("严格遵循 GLib 2.80+ 官方文档\n");
-    g_print("----------------------------------------------\n\n");
-
     // 第1-4章：GLib 核心
     chapter1_basic_types_test();
-    chapter2_memory_management_test();
-    chapter3_glib_string_handling_test();
-    chapter4_data_structures_test();
-
-    // 第5-8章：GObject 系统
-    chapter5_gobject_basics_test();
-    chapter6_gobject_properties_test();
-    chapter6_gobject_properties_test();
-    chapter7_gobject_signals_test();
-    chapter8_gobject_advanced_test();
-
-    // 第9-12章：GIO 库
-    chapter9_gio_file_operations_test();
-    chapter10_gio_main_loop_test();
-    chapter11_gio_networking_test();
-    chapter12_gio_advanced_test();
-
-
-    g_print("\n---------------------------------------------=\n");
-    g_print("所有示例运行完成！\n");
-    g_print("---------------------------------------------=\n");
+    // chapter2_memory_management_test();
+    // chapter3_glib_string_handling_test();
+    // chapter4_data_structures_test();
+    //
+    // // 第5-8章：GObject 系统
+    // chapter5_gobject_basics_test();
+    // chapter6_gobject_properties_test();
+    // chapter6_gobject_properties_test();
+    // chapter7_gobject_signals_test();
+    // chapter8_gobject_advanced_test();
+    //
+    // // 第9-12章：GIO 库
+    // chapter9_gio_file_operations_test();
+    // chapter10_gio_main_loop_test();
+    // chapter11_gio_networking_test();
+    // chapter12_gio_advanced_test();
     return 0;
 }
