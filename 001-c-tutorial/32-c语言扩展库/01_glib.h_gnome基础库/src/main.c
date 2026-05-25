@@ -284,10 +284,73 @@ void chapter2_memory_management_test()
     g_print("g_alloca(100) = %p\n", stack_mem);
 
     // 2.4 内存切片分配器（高效小内存分配）
+    /**
+     * g_slice_alloc() 和 malloc() 分配方式区别
+     * 1. 性能差异
+     *    g_slice_alloc()
+     *      使用预分配的内存池
+     *      分配速度更快，特别是对于小内存块
+     *      减少了系统调用次数
+     *    malloc()
+     *      每次都需要向操作系统请求内存
+     *      相对较慢，尤其是频繁调用时
+     *
+     * 2. 内存管理方式
+     *    g_slice_alloc()
+     *      gpointer slice = g_slice_alloc(64);  // 从64字节池中获取
+     *      g_slice_free1(64, slice);            // 返回到池中而非真正释放
+     *    malloc()/free()
+     *      void *ptr = malloc(64);   // 直接向系统申请
+     *      free(ptr);                // 直接归还给系统
+     *
+     * 3. 内存碎片处理
+     *    g_slice_alloc()
+     *      通过重用相同大小的内存块减少碎片
+     *      更适合大量相同大小对象的场景
+     *    malloc()/free()
+     *      容易产生内存碎片
+     *      长时间运行后可能影响性能
+     *
+     * 4. 应用场景对比
+     *    g_slice_alloc()
+     *      小对象频繁分配: 如链表节点、结构体等小对象
+     *      typedef struct Node {
+     *          int data;
+     *          struct Node* next;
+     *      } Node;
+     *
+     *      Node* node = g_slice_alloc(sizeof(Node));  // 快速分配
+     *      // ... 使用节点 ...
+     *      g_slice_free1(sizeof(Node), node);         // 快速释放
+     *      // 使用传统分配
+     *      Node* node = malloc(sizeof(Node));         // 相对较慢
+     *      // ... 使用节点 ...
+     *      free(node);                                // 相对较慢
+     *
+     *    malloc()/free()
+     *      不同大小混合分配
+     */
     g_print("\n2.4 内存切片分配器\n");
-    gpointer slice = g_slice_alloc(64);
+    gpointer slice = g_slice_alloc(64);   // 分配64字节的内存块
+    /**
+     * 首次调用 gpointer slice = g_slice_alloc(64);  时， glib 内部会执行如下操作：
+     *
+     * 1. 检查是否有64字节的内存池
+     * 2. 如果没有，则创建64字节规格的池，具体操作是 向系统申请一大块内存（比如几KB），将这块大内存分割成多个64字节的小块，建立空闲链表管理这些小块
+     * 3. 如果有，则从空闲链表中取出一个小块，并返回给调用者
+     * 4. 如果池中64字节块用完了，触发再次向系统申请大块内存，然后分割成更多64字节块
+     *
+     * // 第一次调用 - 只创建64字节的池
+     * gpointer s1 = g_slice_alloc(64);   // 创建64字节池
+     * // 第二次调用不同规格 - 创建新的池
+     * gpointer s2 = g_slice_alloc(128);  // 创建128字节池
+     * // 第三次调用已有规格 - 直接使用现有池
+     * gpointer s3 = g_slice_alloc(64);   // 直接使用64字节池
+     * // ... 假设池中64字节块用完了 ...
+     * gpointer s3 = g_slice_alloc(64);   // 触发再次向系统申请大块内存，然后分割成更多64字节块
+     */
     g_print("g_slice_alloc(64) = %p\n", slice);
-    g_slice_free1(64, slice);
+    g_slice_free1(64, slice);   // 释放内存块
 }
 
 /**
