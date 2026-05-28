@@ -280,7 +280,7 @@ void chapter2_memory_management_test()
 
     // 2.3 临时内存分配（栈分配）
     g_print("\n2.3 临时内存分配\n");
-    gchar* stack_mem = g_alloca(100);  // 从栈分配，自动释放
+    gchar *stack_mem = g_alloca(100);  // 从栈分配，自动释放
     g_print("g_alloca(100) = %p\n", stack_mem);
 
     // 2.4 内存切片分配器（高效小内存分配）
@@ -316,7 +316,7 @@ void chapter2_memory_management_test()
      *      小对象频繁分配: 如链表节点、结构体等小对象
      *      typedef struct Node {
      *          int data;
-     *          struct Node* next;
+     *          struct Node *next;
      *      } Node;
      *
      *      Node* node = g_slice_alloc(sizeof(Node));  // 快速分配
@@ -360,64 +360,97 @@ void chapter3_glib_string_handling_test()
 {
     g_print("\n--- 第3章：字符串处理 ---\n\n");
 
-    // 3.1 字符串操作（官方文档：glib-Strings.html）
+    // 3.1 普通字符串操作（官方文档：https://docs.gtk.org/glib/string-utils.html）
     g_print("3.1 基本字符串操作\n");
-    const gchar* str1 = "Hello";
-    const gchar* str2 = "World";
+    const gchar *str1 = "Hello";
+    const gchar *str2 = "World";
 
-    gchar* concat = g_strconcat(str1, ", ", str2, "!", NULL);
-    g_print("g_strconcat: %s\n", concat);
+    gchar *concat = g_strconcat(str1, ", ", str2, "!", NULL);
+    g_print("g_strconcat = %s\n", concat);
     g_free(concat);
 
-    gchar* dup = g_strdup(str1);
-    g_print("g_strdup: %s\n", dup);
+    gchar *dup = g_strdup(str1);
+    g_print("g_strdup = %s\n", dup);
     g_free(dup);
 
-    gchar* substr = g_strndup(str1, 3);
-    g_print("g_strndup(3): %s\n", substr);
+    gchar *substr = g_strndup(str1, 3);
+    g_print("g_strndup(3) = %s\n", substr);
     g_free(substr);
 
-    gchar* upper = g_ascii_strup(str1, -1);
-    g_print("g_ascii_strup: %s\n", upper);
+    gchar *upper = g_ascii_strup(str1, -1);
+    g_print("g_ascii_strup = %s\n", upper);
     g_free(upper);
 
-    gchar* lower = g_ascii_strdown(str1, -1);
-    g_print("g_ascii_strdown: %s\n", lower);
+    gchar *lower = g_ascii_strdown(str1, -1);
+    g_print("g_ascii_strdown = %s\n", lower);
     g_free(lower);
 
-    // 3.2 安全字符串比较
-    g_print("\n3.2 安全字符串比较\n");
-    g_print("g_strcmp0(\"apple\", \"banana\"): %d\n", g_strcmp0("apple", "banana"));
-    g_print("g_strcmp0(NULL, \"\"): %d (NULL视为空字符串)\n", g_strcmp0(NULL, ""));
-    g_print("g_ascii_strcasecmp(\"Apple\", \"apple\"): %d\n", g_ascii_strcasecmp("Apple", "apple"));
+    gchar buffer[20];
+    gsize cpy = g_strlcpy(buffer, "Hello", sizeof(buffer));
+    g_print("g_strlcpy: copied %zu bytes, buffer = \"%s\"\n", cpy, buffer);
 
-    // 3.3 UTF-8 字符串处理（官方文档：glib-Unicode-Manipulation.html）
+    gsize cat = g_strlcat(buffer, ", World!", sizeof(buffer));
+    g_print("g_strlcat: appended %zu bytes, buffer = \"%s\"\n", cat, buffer);
+
+    const gchar *str = "apple,banana,cherry,orange";
+    gchar **split = g_strsplit(str, ",", -1);
+    g_print("original str: %s\n", str);
+    g_print("split str: ");
+    for (gint i = 0; split[i] != NULL; i++)
+    {
+        g_print("[%s]", split[i]);
+    }
+    g_print("\n");
+
+    gchar *join = g_strjoin(" - ", "Red", "Green", "Blue", NULL);
+    g_print("joined with ' - ': %s\n", join);
+    g_free(join); // 释放拼接后的字符串
+
+    gchar *joinv = g_strjoinv(" | ", split);
+    g_print("joinv with ' | ': %s\n", joinv);
+    g_free(joinv); // 释放拼接后的字符串
+    g_strfreev(split); // 释放字符串数组
+
+    gint cmp0 = g_strcmp0("hello", "world");
+    g_print("g_strcmp0(\"hello\", \"world\") = %d\n", cmp0);
+    cmp0 = g_strcmp0(NULL, "");
+    g_print("g_strcmp0(NULL, \"\") = %d\n", cmp0);
+    cmp0 = g_strcmp0("test", "test");
+    g_print("g_strcmp0(\"test\", \"test\") = %d\n", cmp0);
+
+    // 3.2 动态字符串操作（官方文档：https://docs.gtk.org/glib/struct.String.html）
+    g_print("\n3.2 GString 动态字符串\n");
+    GString *gstr = g_string_new("Hello");
+    g_string_append(gstr, ", ");
+    g_string_append(gstr, "GLib!");
+    g_print("gstr 内容: %s, 长度: %zu, 分配大小: %zu\n", gstr->str, gstr->len, gstr->allocated_len);
+
+    g_string_prepend(gstr, "Wow! ");
+    g_print("prepend: %s\n", gstr->str);
+
+    g_string_insert(gstr, 5, " amazing ");
+    g_print("insert: %s\n", gstr->str);
+
+    // g_string_printf() ≈ sprintf() + 自动内存管理
+    g_string_printf(gstr, "格式化: %d, %s", 42, "test");
+    g_print("gsprintf: %s\n", gstr->str);
+
+    /**
+    * g_string_free() 有两个参数：
+    *   第一个参数：GString* 指针
+    *   第二个参数：gboolean free_segment
+    *     TRUE：同时释放 GString 结构体 和 内部的字符串数据
+    *     FALSE：只释放 GString 结构体，保留字符串数据（返回字符串指针）
+     */
+    g_string_free(gstr, TRUE);
+
+    // 3.3 UTF-8 字符串处理（官方文档：https://docs.gtk.org/glib/unicode.html）
     g_print("\n3.3 UTF-8 字符串处理\n");
-    const gchar* utf8_str = "你好，世界！";
+    const gchar *utf8_str = "你好，世界！";
     g_print("UTF-8字符串: %s\n", utf8_str);
     g_print("字节长度(strlen): %zu\n", strlen(utf8_str));
     g_print("字符长度(g_utf8_strlen): %ld\n", g_utf8_strlen(utf8_str, -1));
     g_print("是否有效UTF-8: %s\n", g_utf8_validate(utf8_str, -1, NULL) ? "是" : "否");
-
-    // 3.4 GString 动态字符串（官方文档：glib-Strings.html#GString）
-    g_print("\n3.4 GString 动态字符串\n");
-    GString* gstr = g_string_new("Hello");
-    g_string_append(gstr, ", ");
-    g_string_append(gstr, "GLib!");
-    g_print("GString内容: %s\n", gstr->str);
-    g_print("GString长度: %zu\n", gstr->len);
-    g_print("GString分配大小: %zu\n", gstr->allocated_len);
-
-    g_string_prepend(gstr, "Wow! ");
-    g_print("prepend后: %s\n", gstr->str);
-
-    g_string_insert(gstr, 5, " amazing");
-    g_print("insert后: %s\n", gstr->str);
-
-    g_string_printf(gstr, "格式化: %d, %s", 42, "test");
-    g_print("printf后: %s\n", gstr->str);
-
-    g_string_free(gstr, TRUE);  // TRUE表示同时释放字符串数据
 }
 
 /**
@@ -1110,8 +1143,8 @@ int main()
 {
     // 第1-4章：GLib 核心
     // chapter1_basic_types_and_macros_test();
-    chapter2_memory_management_test();
-    // chapter3_glib_string_handling_test();
+    // chapter2_memory_management_test();
+    chapter3_glib_string_handling_test();
     // chapter4_data_structures_test();
     //
     // // 第5-8章：GObject 系统
