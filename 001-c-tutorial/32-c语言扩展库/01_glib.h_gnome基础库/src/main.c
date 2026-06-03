@@ -618,7 +618,7 @@ void chapter4_data_structures_test()
         g_print("%d ", g_array_index(arr, gint, i));
     }
     g_print("\n");
-    // 在指定位置插入
+    // 在指定位置插入元素
     val = 15; g_array_insert_val(arr, 1, val);
     g_print("插入后: ");
     for (guint i = 0; i < arr->len; i++) {
@@ -626,7 +626,7 @@ void chapter4_data_structures_test()
     }
     g_print("\n");
 
-    // 移除元素
+    // 在指定位置删除元素
     g_array_remove_index(arr, 2);
     g_print("删除索引2后: ");
     for (guint i = 0; i < arr->len; i++) {
@@ -641,84 +641,272 @@ void chapter4_data_structures_test()
 /**
  * 第5章：GObject 类型系统基础
  */
-// 定义一个简单的 GObject 派生类
+
+// -------------------------- 第一部分：定义类的"结构" --------------------------
+
+// 1. 声明：我们要创建一个叫Person的类
+#define PERSON_TYPE (person_get_type())
+// GObject 类型系统的核心安全保障 - 安全的类型转换
+#define PERSON(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), PERSON_TYPE, Person))
+
+// 2. 定义Person对象长什么样（实例结构体）
+typedef struct _Person Person;
+struct _Person {
+    // 父类必须放第一行位置，这是GObject继承体系的硬性要求
+    GObject parent;
+    // 我们自己加的属性：名字
+    gchar* name;
+};
+
+// 3. 定义Person类的"公共信息"（类结构体）
+typedef struct _PersonClass PersonClass;
+struct _PersonClass {
+    // 结构体首成员必须是父类的结构体，依靠结构体内存布局实现继承，GObject硬性规范
+    GObjectClass parent_class;
+};
+
+// 4. 这个宏帮我们自动完成90%的类型注册工作
+G_DEFINE_TYPE(Person, person, G_TYPE_OBJECT)
+
+// -------------------------- 第二部分：类的初始化 --------------------------
+
+// 每个新Person对象创建时，都会调用这个函数
+static void person_init(Person* self)
+{
+    // 默认名字是 "张三"
+    self->name = g_strdup("张三");
+    g_print("一个新的Person对象诞生了\n");
+}
+
+// 整个Person类第一次被使用时，调用一次这个函数
+static void person_class_init(PersonClass* klass)
+{
+    g_print("Person类初始化完成（整个程序只执行一次）\n");
+}
+
+// -------------------------- 第三部分：给类添加"方法" --------------------------
+
+// 方法1：设置名字
+void person_set_name(Person* self, const gchar* new_name)
+{
+    // 安全检查：确保传入的确实是Person对象
+    g_return_if_fail(PERSON(self));
+
+    // 释放旧名字，保存新名字
+    g_free(self->name);
+    self->name = g_strdup(new_name);
+}
+
+// 方法2：获取名字
+const gchar* person_get_name(Person* self)
+{
+    g_return_val_if_fail(PERSON(self), NULL);
+    return self->name;
+}
+
+// -------------------------- 第四部分：测试程序 --------------------------
+
+void chapter5_gobject_basics_test_1()
+{
+    g_print("----- GObject入门程序开始 -----\n\n");
+
+    // 1. 创建一个Person对象
+    Person* zhangsan = g_object_new(PERSON_TYPE, NULL);
+
+    // 2. 使用对象的方法
+    g_print("默认名字: %s\n", person_get_name(zhangsan));
+    person_set_name(zhangsan, "张三");
+    g_print("修改后的名字: %s\n", person_get_name(zhangsan));
+
+    // 3. 用完一定要释放
+    g_object_unref(zhangsan);
+    g_print("对象已释放\n");
+
+    g_print("\n----- 程序结束 -----\n");
+}
+
+// -------------------------------- 结束 --------------------------------
+
+/*
+ * MY_TYPE_OBJECT: 获取MyObject对象对应的GType类型值
+ * 本质调用my_object_get_type()，该函数完成GObject类型注册并返回唯一类型ID
+ * 后续类型判断、类型转换宏都依赖这个类型ID
+ */
 #define MY_TYPE_OBJECT (my_object_get_type())
+
+/*
+ * MY_OBJECT(obj): 安全类型转换宏，将GObject*指针转为MyObject*
+ * 参数obj: GObject基类对象指针
+ * 内部先校验obj的实际类型，类型不符触发断言异常、程序终止；校验通过则强制转型
+ */
 #define MY_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), MY_TYPE_OBJECT, MyObject))
+
+/*
+ * MY_IS_OBJECT(obj): 判断obj是否为MyObject类型的实例对象
+ * 参数obj: 待检测的GObject对象指针
+ * 返回布尔值，TRUE表示是MyObject实例，FALSE表示不是；仅做判断不会使程序崩溃
+ */
 #define MY_IS_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), MY_TYPE_OBJECT))
 
+/*
+ * 前向声明实例结构体别名：_MyObject是结构体内部标签名，MyObject是对外使用的类型名
+ * 用于代表MyObject的实例对象（每个g_object_new创建出来的实体）
+ */
 typedef struct _MyObject MyObject;
+
+/*
+ * 前向声明类结构体别名：_MyObjectClass是内部标签，MyObjectClass对外使用
+ * Class结构体存放类信息、虚函数、方法，所有MyObject实例共用同一份Class
+ */
 typedef struct _MyObjectClass MyObjectClass;
 
 struct _MyObject {
+    // 父类必须放首位置，这是GObject继承体系的硬性要求
     GObject parent_instance;
+
+    // 实例私有数据
     gint value;
 };
 
 struct _MyObjectClass {
     GObjectClass parent_class;
+
+    // 类级别的虚函数可以在这里声明
+    // void (*some_virtual_method)(MyObject *self);
 };
 
-GType my_object_get_type(void);
+/*
+ * G_DEFINE_TYPE 宏自动完成以下工作：
+ * 1. 声明并实现 my_object_get_type() 函数
+ * 2. 定义父类指针 my_object_parent_class
+ * 3. 注册类型到GObject类型系统
+ * 4. 关联实例初始化函数和类初始化函数
+ */
+G_DEFINE_TYPE(MyObject, my_object, G_TYPE_OBJECT)
 
-static void my_object_class_init(MyObjectClass* klass)
-{
-    // 类初始化代码
-}
-
+/*
+ * 实例初始化函数：每个新创建的对象都会调用一次
+ * 用于初始化实例的成员变量，分配实例级别的资源
+ */
 static void my_object_init(MyObject* self)
 {
     self->value = 0;
+    g_print("MyObject 实例初始化完成: %p\n", self);
 }
 
-G_DEFINE_TYPE(MyObject, my_object, G_TYPE_OBJECT)
+/*
+ * 类初始化函数：该类第一次被使用时调用一次
+ * 用于初始化类结构体，设置虚函数、信号、属性等
+ */
+static void my_object_class_init(MyObjectClass* klass)
+{
+    GObjectClass* gobject_class = G_OBJECT_CLASS(klass);
 
-// 公共方法
+    g_print("MyObject 类初始化完成\n");
+
+    // 在这里可以重写GObject的虚函数，例如：
+    // gobject_class->finalize = my_object_finalize;
+    // gobject_class->set_property = my_object_set_property;
+    // gobject_class->get_property = my_object_get_property;
+}
+
+/*
+ * 公共方法：设置对象的value属性
+ * 使用g_return_if_fail进行参数校验，确保传入的是有效的MyObject实例
+ */
 void my_object_set_value(MyObject* self, gint value)
 {
     g_return_if_fail(MY_IS_OBJECT(self));
     self->value = value;
 }
 
+/*
+ * 公共方法：获取对象的value属性
+ * 使用g_return_val_if_fail进行参数校验，失败时返回默认值0
+ */
 gint my_object_get_value(MyObject* self)
 {
     g_return_val_if_fail(MY_IS_OBJECT(self), 0);
     return self->value;
 }
 
-void chapter5_gobject_basics_test()
+/*
+ * 弱引用回调函数：当对象被销毁时自动调用
+ */
+static void weak_ref_notify(gpointer data, GObject* where_the_object_was)
+{
+    g_print("弱引用回调: 对象 %p 已被销毁\n", where_the_object_was);
+}
+
+void chapter5_gobject_basics_test_2()
 {
     g_print("\n--- 第5章：GObject 类型系统基础 ---\n\n");
 
-    // 5.1. GObject 基本概念（官方文档：gobject-Type-Information.html）
+    // 5.1. GObject 基本概念
     g_print("5.1 GObject 基本概念\n");
-    g_print("G_TYPE_OBJECT: %s\n", g_type_name(G_TYPE_OBJECT));
-    g_print("MY_TYPE_OBJECT: %s\n", g_type_name(MY_TYPE_OBJECT));
-    g_print("类型是否有效: %s\n", g_type_is_a(MY_TYPE_OBJECT, G_TYPE_OBJECT) ? "是" : "否");
+    g_print("G_TYPE_OBJECT: %s (类型ID: %lu)\n",
+            g_type_name(G_TYPE_OBJECT), (gulong)G_TYPE_OBJECT);
+    g_print("MY_TYPE_OBJECT: %s (类型ID: %lu)\n",
+            g_type_name(MY_TYPE_OBJECT), (gulong)MY_TYPE_OBJECT);
+    g_print("MyObject 是否继承自 GObject: %s\n",
+            g_type_is_a(MY_TYPE_OBJECT, G_TYPE_OBJECT) ? "是" : "否");
+    g_print("GObject 是否继承自 MyObject: %s\n",
+            g_type_is_a(G_TYPE_OBJECT, MY_TYPE_OBJECT) ? "是" : "否");
 
-    // 5.2. 创建和销毁对象（官方文档：gobject-The-Base-Object-Type.html）
+    // 5.2. 创建和销毁对象
     g_print("\n5.2 创建和销毁对象\n");
     MyObject* obj = g_object_new(MY_TYPE_OBJECT, NULL);
     g_print("创建对象: %p\n", obj);
 
     my_object_set_value(obj, 42);
-    g_print("对象值: %d\n", my_object_get_value(obj));
+    g_print("设置对象值为: %d\n", my_object_get_value(obj));
 
-    g_object_unref(obj);  // 释放对象
+    g_object_unref(obj);  // 引用计数减为0，对象被销毁
     g_print("对象已释放\n");
 
     // 5.3. 引用计数
     g_print("\n5.3 引用计数\n");
     MyObject* obj2 = g_object_new(MY_TYPE_OBJECT, NULL);
+
+    // 注意：不推荐直接访问ref_count成员，这是内部实现细节
+    // 这里仅用于演示目的，实际代码中应避免这样做
     g_print("初始引用计数: %d\n", (int)obj2->parent_instance.ref_count);
 
     g_object_ref(obj2);
-    g_print("ref后引用计数: %d\n", (int)obj2->parent_instance.ref_count);
+    g_print("g_object_ref 后引用计数: %d\n", (int)obj2->parent_instance.ref_count);
 
     g_object_unref(obj2);
-    g_print("unref后引用计数: %d\n", (int)obj2->parent_instance.ref_count);
+    g_print("第一次 g_object_unref 后引用计数: %d\n", (int)obj2->parent_instance.ref_count);
 
     g_object_unref(obj2);  // 引用计数变为0，对象被销毁
+    g_print("第二次 g_object_unref 后，对象已销毁\n");
+
+    // 5.4. 弱引用
+    g_print("\n5.4 弱引用\n");
+    MyObject* obj3 = g_object_new(MY_TYPE_OBJECT, NULL);
+
+    // 添加弱引用（需要转换为 GObject* 类型）
+    g_object_weak_ref(G_OBJECT(obj3), weak_ref_notify, NULL);
+    g_print("已为对象 %p 添加弱引用\n", obj3);
+
+    // 释放对象，此时会触发弱引用回调
+    g_object_unref(obj3);
+
+    // 5.5. 类型转换和类型检查
+    g_print("\n5.5 类型转换和类型检查\n");
+    GObject* generic_obj = g_object_new(MY_TYPE_OBJECT, NULL);
+
+    // 安全类型转换
+    MyObject* typed_obj = MY_OBJECT(generic_obj);
+    g_print("GObject* 转换为 MyObject* 成功: %p\n", typed_obj);
+
+    // 类型检查
+    g_print("generic_obj 是否是 MyObject 类型: %s\n",
+            MY_IS_OBJECT(generic_obj) ? "是" : "否");
+
+    g_object_unref(generic_obj);
 }
+
 
 /**
  * 第6章：GObject 属性
@@ -1234,7 +1422,8 @@ int main()
     // chapter4_data_structures_test();
 
     // 第5-8章：GObject 系统
-    chapter5_gobject_basics_test();
+    chapter5_gobject_basics_test_1();
+    chapter5_gobject_basics_test_2();
     // chapter6_gobject_properties_test();
     // chapter6_gobject_properties_test();
     // chapter7_gobject_signals_test();

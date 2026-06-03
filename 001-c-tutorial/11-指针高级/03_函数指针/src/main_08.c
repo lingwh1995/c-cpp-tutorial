@@ -6,7 +6,7 @@
 // 结构体 + typedef简化结构体定义 方式一
 /*
 // 定义一个结构体
-struct person_s
+struct Person
 {
 	int id,
 	char[] name,
@@ -14,7 +14,7 @@ struct person_s
 };
 
 // 使用typedef简化结构体定义
-typedef struct person_s person;
+typedef struct Person person;
 */
 
 // （匿名）结构体 + typedef简化结构体定义
