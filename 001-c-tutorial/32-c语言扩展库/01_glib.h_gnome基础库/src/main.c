@@ -365,14 +365,17 @@ void chapter3_glib_string_handling_test()
     const gchar *str1 = "Hello";
     const gchar *str2 = "World";
 
+    // 字符串拼接
     gchar *concat = g_strconcat(str1, ", ", str2, "!", NULL);
     g_print("g_strconcat = %s\n", concat);
     g_free(concat);
 
+    // 字符串复制
     gchar *dup = g_strdup(str1);
     g_print("g_strdup = %s\n", dup);
     g_free(dup);
 
+    // 字符串复制（复制前n个字符串）
     gchar *substr = g_strndup(str1, 3);
     g_print("g_strndup(3) = %s\n", substr);
     g_free(substr);
@@ -381,17 +384,21 @@ void chapter3_glib_string_handling_test()
     g_print("g_ascii_strup = %s\n", upper);
     g_free(upper);
 
+    // 字符串转小写 第二个参数 -1：整串全部转为小写  >0：仅转换前面 length 个字符
     gchar *lower = g_ascii_strdown(str1, -1);
     g_print("g_ascii_strdown = %s\n", lower);
     g_free(lower);
 
+    // 字符串复制（复制前n个字符）
     gchar buffer[20];
     gsize cpy = g_strlcpy(buffer, "Hello", sizeof(buffer));
     g_print("g_strlcpy: copied %zu bytes, buffer = \"%s\"\n", cpy, buffer);
 
+    // 字符串拼接
     gsize cat = g_strlcat(buffer, ", World!", sizeof(buffer));
     g_print("g_strlcat: appended %zu bytes, buffer = \"%s\"\n", cat, buffer);
 
+    // 字符串分割成数组
     const gchar *str = "apple,banana,cherry,orange";
     gchar **split = g_strsplit(str, ",", -1);
     g_print("original str: %s\n", str);
@@ -402,15 +409,18 @@ void chapter3_glib_string_handling_test()
     }
     g_print("\n");
 
+    // 字符串拼接
     gchar *join = g_strjoin(" - ", "Red", "Green", "Blue", NULL);
     g_print("joined with ' - ': %s\n", join);
     g_free(join); // 释放拼接后的字符串
 
+    // 字符串拼接
     gchar *joinv = g_strjoinv(" | ", split);
     g_print("joinv with ' | ': %s\n", joinv);
     g_free(joinv); // 释放拼接后的字符串
     g_strfreev(split); // 释放字符串数组
 
+    // 字符串比较
     gint cmp0 = g_strcmp0("hello", "world");
     g_print("g_strcmp0(\"hello\", \"world\") = %d\n", cmp0);
     cmp0 = g_strcmp0(NULL, "");
@@ -420,14 +430,18 @@ void chapter3_glib_string_handling_test()
 
     // 3.2 动态字符串操作（官方文档：https://docs.gtk.org/glib/struct.String.html）
     g_print("\n3.2 GString 动态字符串\n");
+    // 创建一个 GString
     GString *gstr = g_string_new("Hello");
+    // 追加字符串
     g_string_append(gstr, ", ");
     g_string_append(gstr, "GLib!");
     g_print("gstr 内容: %s, 长度: %zu, 分配大小: %zu\n", gstr->str, gstr->len, gstr->allocated_len);
 
+    // 在头部插入字符串
     g_string_prepend(gstr, "Wow! ");
     g_print("prepend: %s\n", gstr->str);
 
+    // 插入字符串
     g_string_insert(gstr, 5, " amazing ");
     g_print("insert: %s\n", gstr->str);
 
@@ -460,9 +474,27 @@ void chapter4_data_structures_test()
 {
     g_print("\n--- 第4章：数据结构 ---\n\n");
 
-    // 4.1 单链表 GList（官方文档：glib-Doubly-Linked-Lists.html）
+    // 4.1 单向链表 GList（官方文档：https://docs.gtk.org/glib/struct.SList.html）
+    g_print("\n-- GSList 单向链表 --\n");
+    GSList *slist = NULL;
+    slist = g_slist_append(slist, "first");
+    slist = g_slist_append(slist, "second");
+    slist = g_slist_prepend(slist, "zero");
+    g_print("GSList 长度: %u\n", g_slist_length(slist));
+    g_print("GSList 内容: ");
+    for (GSList *iter = slist; iter != NULL; iter = iter->next) {
+        g_print("[%s] ", (gchar *)iter->data);
+    }
+    g_print("\n");
+    g_print("GSList 第2个元素: %s\n", (gchar *)g_slist_nth_data(slist, 1));
+    slist = g_slist_remove(slist, "second");
+    g_print("删除 \"second\" 后长度: %u\n", g_slist_length(slist));
+    g_slist_free(slist);
+
+    // 4.2 双向链表 GList（官方文档：https://docs.gtk.org/glib/struct.List.html）
     g_print("4.1 单链表 GList\n");
     GList* list = NULL;
+    // 添加元素
     list = g_list_append(list, "apple");
     list = g_list_append(list, "banana");
     list = g_list_append(list, "cherry");
@@ -472,11 +504,18 @@ void chapter4_data_structures_test()
     g_print("最后一个元素: %s\n", (gchar*)g_list_last(list)->data);
     g_print("索引1的元素: %s\n", (gchar*)g_list_nth_data(list, 1));
 
-    // 遍历链表
-    g_print("遍历链表: ");
-    for (GList* l = list; l != NULL; l = l->next)
-    {
-        g_print("%s ", (gchar*)l->data);
+    // 正向遍历链表
+    g_print("GList 正向遍历链表: ");
+    for (GList *iter = list; iter != NULL; iter = iter->next) {
+        g_print("[%s] ", (gchar *)iter->data);
+    }
+    g_print("\n");
+
+    // 反向遍历链表
+    GList *last = g_list_last(list);
+    g_print("GList 反向遍历链表: ");
+    for (GList *iter = last; iter != NULL; iter = iter->prev) {
+        g_print("[%s] ", (gchar *)iter->data);
     }
     g_print("\n");
 
@@ -489,9 +528,10 @@ void chapter4_data_structures_test()
     }
     g_print("\n");
 
-    g_list_free(list);  // 只释放链表节点，不释放数据
+    // 只释放链表节点，不释放数据
+    g_list_free(list);
 
-    // 4.2 指针数组 GPtrArray（官方文档：glib-Pointer-Arrays.html）
+    // 4.3 指针数组 GPtrArray（官方文档：https://docs.gtk.org/glib/struct.PtrArray.html）
     g_print("\n4.2 指针数组 GPtrArray\n");
     GPtrArray* ptr_array = g_ptr_array_new();
     g_ptr_array_add(ptr_array, g_strdup("first"));
@@ -499,7 +539,7 @@ void chapter4_data_structures_test()
     g_ptr_array_add(ptr_array, g_strdup("third"));
 
     g_print("数组长度: %u\n", ptr_array->len);
-    g_print("索引1的元素: %s\n", (gchar*)g_ptr_array_index(ptr_array, 1));
+    g_print("索引为 1 的元素: %s\n", (gchar*)g_ptr_array_index(ptr_array, 1));
 
     // 遍历数组
     g_print("遍历数组: ");
@@ -513,16 +553,22 @@ void chapter4_data_structures_test()
     g_ptr_array_foreach(ptr_array, (GFunc)g_free, NULL);
     g_ptr_array_free(ptr_array, TRUE);
 
-    // 4.3 哈希表 GHashTable（官方文档：glib-Hash-Tables.html）
+    // 4.4 哈希表 GHashTable（官方文档：glib-Hash-Tables.html）
     g_print("\n4.3 哈希表 GHashTable\n");
+    // 创建哈希表
     GHashTable* hash = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(hash, "apple", "red");
     g_hash_table_insert(hash, "banana", "yellow");
     g_hash_table_insert(hash, "cherry", "red");
+    g_hash_table_insert(hash, "orange", "orange");
 
-    g_print("哈希表大小: %u\n", g_hash_table_size(hash));
+    g_print("哈希表大小（删除前）: %u\n", g_hash_table_size(hash));
     g_print("apple的颜色: %s\n", (gchar*)g_hash_table_lookup(hash, "apple"));
     g_print("grape是否存在: %s\n", g_hash_table_contains(hash, "grape") ? "是" : "否");
+
+    // 根据 key 删除
+    g_hash_table_remove(hash, "orange");
+    g_print("哈希表大小（删除后）: %u\n", g_hash_table_size(hash));
 
     // 遍历哈希表
     g_print("遍历哈希表: ");
@@ -531,15 +577,22 @@ void chapter4_data_structures_test()
     g_hash_table_iter_init(&iter, hash);
     while (g_hash_table_iter_next(&iter, &key, &value))
     {
-        g_print("%s=%s ", (gchar*)key, (gchar*)value);
+        g_print("%s = %s ", (gchar*)key, (gchar*)value);
     }
     g_print("\n");
 
-    g_hash_table_destroy(hash);  // 释放哈希表
+    // 根据 key 替换值
+    g_hash_table_replace(hash, g_strdup("apple"), g_strdup("green"));
+    g_print("替换后 \"apple\": %s\n", (gchar *)g_hash_table_lookup(hash, "apple"));
 
-    // 4.4 队列 GQueue（官方文档：glib-Double-Ended-Queues.html）
+    // 释放哈希表
+    g_hash_table_destroy(hash);
+
+    // 4.5 队列 GQueue（官方文档：glib-Double-Ended-Queues.html）
     g_print("\n4.4 队列 GQueue\n");
+    // 创建队列
     GQueue* queue = g_queue_new();
+    // 给队列尾部添加元素
     g_queue_push_tail(queue, "first");
     g_queue_push_tail(queue, "second");
     g_queue_push_tail(queue, "third");
@@ -549,7 +602,40 @@ void chapter4_data_structures_test()
     g_print("出队: %s\n", (gchar*)g_queue_pop_head(queue));
     g_print("出队后长度: %u\n", g_queue_get_length(queue));
 
+    // 释放队列
     g_queue_free(queue);
+
+    // 4.6. GArray: 动态数组
+    g_print("\n-- GArray 动态数组 --\n");
+    GArray *arr = g_array_new(FALSE, FALSE, sizeof(gint));
+    gint val;
+    val = 10; g_array_append_val(arr, val);
+    val = 20; g_array_append_val(arr, val);
+    val = 30; g_array_append_val(arr, val);
+    g_print("GArray 长度: %u\n", arr->len);
+    g_print("GArray 内容: ");
+    for (guint i = 0; i < arr->len; i++) {
+        g_print("%d ", g_array_index(arr, gint, i));
+    }
+    g_print("\n");
+    // 在指定位置插入
+    val = 15; g_array_insert_val(arr, 1, val);
+    g_print("插入后: ");
+    for (guint i = 0; i < arr->len; i++) {
+        g_print("%d ", g_array_index(arr, gint, i));
+    }
+    g_print("\n");
+
+    // 移除元素
+    g_array_remove_index(arr, 2);
+    g_print("删除索引2后: ");
+    for (guint i = 0; i < arr->len; i++) {
+        g_print("%d ", g_array_index(arr, gint, i));
+    }
+    g_print("\n");
+
+    // 释放动态数组
+    g_array_free(arr, TRUE);
 }
 
 /**
@@ -1144,8 +1230,8 @@ int main()
     // 第1-4章：GLib 核心
     // chapter1_basic_types_and_macros_test();
     // chapter2_memory_management_test();
-    chapter3_glib_string_handling_test();
-    // chapter4_data_structures_test();
+    // chapter3_glib_string_handling_test();
+    chapter4_data_structures_test();
     //
     // // 第5-8章：GObject 系统
     // chapter5_gobject_basics_test();
