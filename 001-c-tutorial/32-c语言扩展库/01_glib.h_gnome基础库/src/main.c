@@ -113,7 +113,7 @@ void chapter1_basic_types_and_macros_test()
 {
     g_print("--- 第1章：GLib 基础数据类型 ---\n\n");
 
-    // 1.1 基本数据类型 官方文档：https://docs.gtk.org/glib/types.html
+    // 1.1. 基本数据类型 官方文档：https://docs.gtk.org/glib/types.html
     g_print("1.1 基本数据类型\n");
 
     // gchar - char
@@ -185,7 +185,7 @@ void chapter1_basic_types_and_macros_test()
     const gdouble d = 3.141592653589793;
     g_print("gfloat = %.2f, gdouble = %.15f\n", f, d);
 
-    // 1.2 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
+    // 1.2. 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
     g_print("\n1.2 常用宏定义\n");
 
     // G_MININT/G_MAXINT 取值范围宏
@@ -256,7 +256,7 @@ void chapter2_memory_management_test()
 {
     g_print("--- 第2章：内存管理 ---\n\n");
 
-    // 2.1 基本内存分配 官方文档：https://docs.gtk.org/glib/memory.html
+    // 2.1. 基本内存分配 官方文档：https://docs.gtk.org/glib/memory.html
     g_print("2.1 基本内存分配\n");
     const gpointer mem1 = g_malloc(100);  // 分配内存
     g_print("g_malloc(100) = %p\n", mem1);
@@ -272,18 +272,18 @@ void chapter2_memory_management_test()
     g_print("g_realloc(mem3, 200) = %p\n", mem4);
     g_free(mem4);   // 释放内存
 
-    // 2.2 对齐内存分配（GLib 2.72+）
+    // 2.2. 对齐内存分配（GLib 2.72+）
     g_print("\n2.2 对齐内存分配\n");
     gpointer aligned_mem = g_aligned_alloc(1, 100, 16);  // 1块 × 100字节，16字节对齐
     g_print("g_aligned_alloc(1, 100, 16) = %p\n", aligned_mem);
     g_aligned_free(aligned_mem);  // 必须使用对应的释放函数
 
-    // 2.3 临时内存分配（栈分配）
+    // 2.3. 临时内存分配（栈分配）
     g_print("\n2.3 临时内存分配\n");
     gchar *stack_mem = g_alloca(100);  // 从栈分配，自动释放
     g_print("g_alloca(100) = %p\n", stack_mem);
 
-    // 2.4 内存切片分配器（高效小内存分配）
+    // 2.4. 内存切片分配器（高效小内存分配）
     /**
      * g_slice_alloc() 和 malloc() 分配方式区别
      * 1. 性能差异
@@ -360,7 +360,7 @@ void chapter3_glib_string_handling_test()
 {
     g_print("\n--- 第3章：字符串处理 ---\n\n");
 
-    // 3.1 普通字符串操作（官方文档：https://docs.gtk.org/glib/string-utils.html）
+    // 3.1. 普通字符串操作（官方文档：https://docs.gtk.org/glib/string-utils.html）
     g_print("3.1 基本字符串操作\n");
     const gchar *str1 = "Hello";
     const gchar *str2 = "World";
@@ -428,7 +428,7 @@ void chapter3_glib_string_handling_test()
     cmp0 = g_strcmp0("test", "test");
     g_print("g_strcmp0(\"test\", \"test\") = %d\n", cmp0);
 
-    // 3.2 动态字符串操作（官方文档：https://docs.gtk.org/glib/struct.String.html）
+    // 3.2. 动态字符串操作（官方文档：https://docs.gtk.org/glib/struct.String.html）
     g_print("\n3.2 GString 动态字符串\n");
     // 创建一个 GString
     GString *gstr = g_string_new("Hello");
@@ -458,7 +458,7 @@ void chapter3_glib_string_handling_test()
      */
     g_string_free(gstr, TRUE);
 
-    // 3.3 UTF-8 字符串处理（官方文档：https://docs.gtk.org/glib/unicode.html）
+    // 3.3. UTF-8 字符串处理（官方文档：https://docs.gtk.org/glib/unicode.html）
     g_print("\n3.3 UTF-8 字符串处理\n");
     const gchar *utf8_str = "你好，世界！";
     g_print("UTF-8字符串: %s\n", utf8_str);
@@ -474,7 +474,7 @@ void chapter4_data_structures_test()
 {
     g_print("\n--- 第4章：数据结构 ---\n\n");
 
-    // 4.1 单向链表 GList（官方文档：https://docs.gtk.org/glib/struct.SList.html）
+    // 4.1. 单向链表 GList（官方文档：https://docs.gtk.org/glib/struct.SList.html）
     g_print("\n-- GSList 单向链表 --\n");
     GSList *slist = NULL;
     slist = g_slist_append(slist, "first");
@@ -491,7 +491,7 @@ void chapter4_data_structures_test()
     g_print("删除 \"second\" 后长度: %u\n", g_slist_length(slist));
     g_slist_free(slist);
 
-    // 4.2 双向链表 GList（官方文档：https://docs.gtk.org/glib/struct.List.html）
+    // 4.2. 双向链表 GList（官方文档：https://docs.gtk.org/glib/struct.List.html）
     g_print("4.1 单链表 GList\n");
     GList* list = NULL;
     // 添加元素
@@ -531,7 +531,7 @@ void chapter4_data_structures_test()
     // 只释放链表节点，不释放数据
     g_list_free(list);
 
-    // 4.3 指针数组 GPtrArray（官方文档：https://docs.gtk.org/glib/struct.PtrArray.html）
+    // 4.3. 指针数组 GPtrArray（官方文档：https://docs.gtk.org/glib/struct.PtrArray.html）
     g_print("\n4.2 指针数组 GPtrArray\n");
     GPtrArray* ptr_array = g_ptr_array_new();
     g_ptr_array_add(ptr_array, g_strdup("first"));
@@ -553,7 +553,7 @@ void chapter4_data_structures_test()
     g_ptr_array_foreach(ptr_array, (GFunc)g_free, NULL);
     g_ptr_array_free(ptr_array, TRUE);
 
-    // 4.4 哈希表 GHashTable（官方文档：glib-Hash-Tables.html）
+    // 4.4. 哈希表 GHashTable（官方文档：glib-Hash-Tables.html）
     g_print("\n4.3 哈希表 GHashTable\n");
     // 创建哈希表
     GHashTable* hash = g_hash_table_new(g_str_hash, g_str_equal);
@@ -588,7 +588,7 @@ void chapter4_data_structures_test()
     // 释放哈希表
     g_hash_table_destroy(hash);
 
-    // 4.5 队列 GQueue（官方文档：glib-Double-Ended-Queues.html）
+    // 4.5. 队列 GQueue（官方文档：glib-Double-Ended-Queues.html）
     g_print("\n4.4 队列 GQueue\n");
     // 创建队列
     GQueue* queue = g_queue_new();
@@ -1231,10 +1231,10 @@ int main()
     // chapter1_basic_types_and_macros_test();
     // chapter2_memory_management_test();
     // chapter3_glib_string_handling_test();
-    chapter4_data_structures_test();
-    //
-    // // 第5-8章：GObject 系统
-    // chapter5_gobject_basics_test();
+    // chapter4_data_structures_test();
+
+    // 第5-8章：GObject 系统
+    chapter5_gobject_basics_test();
     // chapter6_gobject_properties_test();
     // chapter6_gobject_properties_test();
     // chapter7_gobject_signals_test();
