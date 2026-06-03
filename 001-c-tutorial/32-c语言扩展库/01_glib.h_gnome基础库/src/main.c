@@ -689,13 +689,13 @@ void chapter5_gobject_basics_test()
 {
     g_print("\n--- 第5章：GObject 类型系统基础 ---\n\n");
 
-    // 5.1 GObject 基本概念（官方文档：gobject-Type-Information.html）
+    // 5.1. GObject 基本概念（官方文档：gobject-Type-Information.html）
     g_print("5.1 GObject 基本概念\n");
     g_print("G_TYPE_OBJECT: %s\n", g_type_name(G_TYPE_OBJECT));
     g_print("MY_TYPE_OBJECT: %s\n", g_type_name(MY_TYPE_OBJECT));
     g_print("类型是否有效: %s\n", g_type_is_a(MY_TYPE_OBJECT, G_TYPE_OBJECT) ? "是" : "否");
 
-    // 5.2 创建和销毁对象（官方文档：gobject-The-Base-Object-Type.html）
+    // 5.2. 创建和销毁对象（官方文档：gobject-The-Base-Object-Type.html）
     g_print("\n5.2 创建和销毁对象\n");
     MyObject* obj = g_object_new(MY_TYPE_OBJECT, NULL);
     g_print("创建对象: %p\n", obj);
@@ -706,7 +706,7 @@ void chapter5_gobject_basics_test()
     g_object_unref(obj);  // 释放对象
     g_print("对象已释放\n");
 
-    // 5.3 引用计数
+    // 5.3. 引用计数
     g_print("\n5.3 引用计数\n");
     MyObject* obj2 = g_object_new(MY_TYPE_OBJECT, NULL);
     g_print("初始引用计数: %d\n", (int)obj2->parent_instance.ref_count);
@@ -840,7 +840,7 @@ void chapter6_gobject_properties_test()
 {
     g_print("\n--- 第6章：GObject 属性 ---\n\n");
 
-    // 6.1 属性基本操作（官方文档：gobject-GObject-Properties.html）
+    // 6.1. 属性基本操作（官方文档：gobject-GObject-Properties.html）
     g_print("6.1 属性基本操作\n");
 
     // 创建对象并设置属性
@@ -975,7 +975,7 @@ void chapter7_gobject_signals_test()
 {
     g_print("\n--- 第7章：GObject 信号 ---\n\n");
 
-    // 7.1 信号基本操作（官方文档：gobject-Signals.html）
+    // 7.1. 信号基本操作（官方文档：gobject-Signals.html）
     g_print("7.1 信号基本操作\n");
 
     MySignalObject* obj = g_object_new(MY_TYPE_SIGNAL_OBJECT, NULL);
@@ -1003,12 +1003,12 @@ void chapter8_gobject_advanced_test()
 {
     g_print("\n--- 第8章：GObject 高级特性 ---\n\n");
 
-    // 8.1 接口（官方文档：gobject-Interfaces.html）
+    // 8.1. 接口（官方文档：gobject-Interfaces.html）
     g_print("8.1 接口\n");
     g_print("G_TYPE_INTERFACE: %s\n", g_type_name(G_TYPE_INTERFACE));
     g_print("G_TYPE_INITIALLY_UNOWNED: %s\n", g_type_name(G_TYPE_INITIALLY_UNOWNED));
 
-    // 8.2 弱引用
+    // 8.2. 弱引用
     g_print("\n8.2 弱引用\n");
     GObject* obj = g_object_new(G_TYPE_OBJECT, NULL);
     gpointer weak_data = GINT_TO_POINTER(123);
@@ -1049,7 +1049,7 @@ void chapter9_gio_file_operations_test()
 {
     g_print("\n--- 第9章：GIO 基础与文件操作 ---\n\n");
 
-    // 9.1 GFile 基本操作（官方文档：gio-GFile.html）
+    // 9.1. GFile 基本操作（官方文档：gio-GFile.html）
     g_print("9.1 GFile 基本操作\n");
 
     // 创建 GFile 对象
@@ -1148,7 +1148,7 @@ void chapter10_gio_main_loop_test()
 {
     g_print("\n--- 第10章：GIO 主循环 ---\n\n");
 
-    // 10.1 主循环基础（官方文档：gio-The-Main-Event-Loop.html）
+    // 10.1. 主循环基础（官方文档：gio-The-Main-Event-Loop.html）
     g_print("10.1 主循环基础\n");
 
     GMainLoop* loop = g_main_loop_new(NULL, FALSE);
@@ -1176,7 +1176,7 @@ void chapter11_gio_networking_test()
 {
     g_print("\n--- 第11章：GIO 网络编程 ---\n\n");
 
-    // 11.1 网络地址解析（官方文档：gio-GSocketAddress.html）
+    // 11.1. 网络地址解析（官方文档：gio-GSocketAddress.html）
     g_print("11.1 网络地址解析\n");
 
     GError* error = NULL;
@@ -1212,12 +1212,12 @@ void chapter12_gio_advanced_test()
 {
     g_print("\n--- 第12章：GIO 高级特性 ---\n\n");
 
-    // 12.1 异步操作（官方文档：gio-Asynchronous-IO.html）
+    // 12.1. 异步操作（官方文档：gio-Asynchronous-IO.html）
     g_print("12.1 异步操作\n");
     g_print("GIO 支持异步文件操作、网络操作等\n");
     g_print("异步操作通过 GAsyncResult 和回调函数实现\n");
 
-    // 12.2 数据流（官方文档：gio-IO-Streams.html）
+    // 12.2. 数据流（官方文档：gio-IO-Streams.html）
     g_print("\n12.2 数据流\n");
     g_print("GInputStream 和 GOutputStream 是所有 I/O 流的基类\n");
     g_print("支持文件流、网络流、内存流等\n");
