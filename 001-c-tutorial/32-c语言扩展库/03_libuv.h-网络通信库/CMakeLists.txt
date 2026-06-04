@@ -21,7 +21,7 @@ set(ENV{PKG_CONFIG_PATH} "D:/software/develop/msys64/ucrt64/lib/pkgconfig")
 #    就算以后你没装某一个库，它也只会打印个警告，然后继续正确加载已经安装的库！
 # 4. cJSON (在 msys2 中它的 pc 名字叫 libcjson)
 # =====================================================================
-pkg_check_modules(GLOBAL_LIBS libuv.h)
+pkg_check_modules(GLOBAL_LIBS libuv)
 
 file(GLOB_RECURSE SRCS CONFIGURE_DEPENDS "src/*.c")
 file(GLOB_RECURSE INCS CONFIGURE_DEPENDS "inc/*.h")

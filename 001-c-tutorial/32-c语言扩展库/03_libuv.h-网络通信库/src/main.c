@@ -22,33 +22,33 @@
 #endif
 
 // 第一部分：事件循环与基础句柄
-void chapter1_event_loop_test(void);
-void chapter2_handle_request_test(void);
-void chapter3_timer_test(void);
-void chapter4_idle_prepare_check_test(void);
+void chapter1_event_loop_test();
+void chapter2_handle_request_test();
+void chapter3_timer_test();
+void chapter4_idle_prepare_check_test();
 
 // 第二部分：I/O 操作
-void chapter5_file_system_test(void);
-void chapter6_tcp_test(void);
-void chapter7_udp_test(void);
+void chapter5_file_system_test();
+void chapter6_tcp_test();
+void chapter7_udp_test();
 
 // 第三部分：进程间通信与系统
-void chapter8_pipe_test(void);
-void chapter9_tty_test(void);
-void chapter10_signal_test(void);
-void chapter11_process_test(void);
+void chapter8_pipe_test();
+void chapter9_tty_test();
+void chapter10_signal_test();
+void chapter11_process_test();
 
 // 第四部分：高级特性
-void chapter12_async_test(void);
-void chapter13_thread_pool_test(void);
-void chapter14_dns_test(void);
-void chapter15_utilities_test(void);
+void chapter12_async_test();
+void chapter13_thread_pool_test();
+void chapter14_dns_test();
+void chapter15_utilities_test();
 
 /*
  * 第1章：事件循环 (Event Loop)
  * 参考：libuv documentation - The I/O loop
  */
-void chapter1_event_loop_test(void)
+void chapter1_event_loop_test()
 {
     printf("\n=== 第1章：事件循环示例 ===\n");
 
@@ -158,7 +158,7 @@ static void close_cb(uv_handle_t *handle)
     printf("  句柄关闭回调触发, 类型=%s\n", handle_type_name(handle->type));
 }
 
-void chapter2_handle_request_test(void)
+void chapter2_handle_request_test()
 {
     printf("\n=== 第2章：句柄与请求示例 ===\n");
 
@@ -260,7 +260,7 @@ static void on_timer_again(uv_timer_t *handle)
     }
 }
 
-void chapter3_timer_test(void)
+void chapter3_timer_test()
 {
     printf("\n=== 第3章：定时器示例 ===\n");
 
@@ -346,7 +346,7 @@ static void on_check(uv_check_t *handle)
     uv_prepare_stop((uv_prepare_t *)handle->data);
 }
 
-void chapter4_idle_prepare_check_test(void)
+void chapter4_idle_prepare_check_test()
 {
     printf("\n=== 第4章：空闲、准备、检查句柄示例 ===\n");
 
@@ -394,10 +394,10 @@ void chapter4_idle_prepare_check_test(void)
 static void fs_test_cb(uv_fs_t *req)
 {
     printf("  [fs回调] 请求类型: %s, 结果: %ld\n",
-            uv_fs_type_name(req->fs_type), (long)req->result);
+        uv_req_type_name(req->type), (long)req->result);
 }
 
-void chapter5_file_system_test(void)
+void chapter5_file_system_test()
 {
     printf("\n=== 第5章：文件系统操作示例 ===\n");
 
@@ -674,7 +674,7 @@ static void on_tcp_write2(uv_write_t *req, int status)
     free(req);
 }
 
-void chapter6_tcp_test(void)
+void chapter6_tcp_test()
 {
     printf("\n=== 第6章：TCP 网络示例 ===\n");
 
@@ -772,7 +772,7 @@ static void on_udp_send(uv_udp_send_t *req, int status)
     free(req);
 }
 
-void chapter7_udp_test(void)
+void chapter7_udp_test()
 {
     printf("\n=== 第7章：UDP 网络示例 ===\n");
 
@@ -916,7 +916,7 @@ static void on_pipe_connect(uv_connect_t *req, int status)
     free(req);
 }
 
-void chapter8_pipe_test(void)
+void chapter8_pipe_test()
 {
     printf("\n=== 第8章：管道示例 ===\n");
 
@@ -980,7 +980,7 @@ void chapter8_pipe_test(void)
  * 参考：libuv documentation - TTY
  */
 
-void chapter9_tty_test(void)
+void chapter9_tty_test()
 {
     printf("\n=== 第9章：TTY 示例 ===\n");
 
@@ -1052,7 +1052,7 @@ static void on_signal(uv_signal_t *handle, int signum)
     uv_signal_stop(handle);
 }
 
-void chapter10_signal_test(void)
+void chapter10_signal_test()
 {
     printf("\n=== 第10章：信号处理示例 ===\n");
 
@@ -1128,7 +1128,7 @@ static void on_process_read(uv_stream_t *stream, ssize_t nread, const uv_buf_t *
     if (buf->base) free(buf->base);
 }
 
-void chapter11_process_test(void)
+void chapter11_process_test()
 {
     printf("\n=== 第11章：进程管理示例 ===\n");
 
@@ -1240,7 +1240,7 @@ static void async_thread_func(void *arg)
     }
 }
 
-void chapter12_async_test(void)
+void chapter12_async_test()
 {
     printf("\n=== 第12章：异步通知示例 ===\n");
 
@@ -1274,10 +1274,11 @@ static uv_work_t work_reqs[3];
 static void on_work(uv_work_t *req)
 {
     int *data = (int *)req->data;
-    printf("  [线程池] 执行工作 #%d, 线程ID=%lu\n",
-            *data, (unsigned long)uv_thread_self());
-    uv_sleep(100);  /* 模拟耗时操作 */
-    *data *= 10;  /* 修改数据 */
+    printf("  [线程池] 执行工作 #%d, 线程ID=%p\n", *data, (void*)uv_thread_self());
+    // 模拟耗时操作
+    uv_sleep(100);
+    // 修改数据
+    *data *= 10;
 }
 
 static void on_work_done(uv_work_t *req, int status)
@@ -1287,7 +1288,7 @@ static void on_work_done(uv_work_t *req, int status)
             *data / 10, *data, status);
 }
 
-void chapter13_thread_pool_test(void)
+void chapter13_thread_pool_test()
 {
     printf("\n=== 第13章：线程池示例 ===\n");
 
@@ -1408,7 +1409,7 @@ static void on_getnameinfo(uv_getnameinfo_t *req, int status, const char *hostna
     }
 }
 
-void chapter14_dns_test(void)
+void chapter14_dns_test()
 {
     printf("\n=== 第14章：DNS 解析示例 ===\n");
 
@@ -1449,7 +1450,7 @@ void chapter14_dns_test(void)
  * 参考：libuv documentation - Miscellaneous utilities
  */
 
-void chapter15_utilities_test(void)
+void chapter15_utilities_test()
 {
     printf("\n=== 第15章：工具函数示例 ===\n");
 
@@ -1496,14 +1497,18 @@ void chapter15_utilities_test(void)
     uint64_t constrained_mem = uv_get_constrained_memory();
     printf("受限内存: %llu MB\n", (unsigned long long)(constrained_mem / (1024 * 1024)));
 
-    /* -- 资源限制 -- */
+    // 资源限制
     printf("\n-- 资源限制 --\n");
-    uv_rlimit_t rlimit;
-    if (uv_getrlimit(RLIMIT_NOFILE, &rlimit) == 0) {
+#ifdef _WIN32
+    printf("Windows 下不支持 getrlimit\n");
+#else
+    struct rlimit rlimit;
+    if (getrlimit(RLIMIT_NOFILE, &rlimit) == 0) {
         printf("RLIMIT_NOFILE: soft=%llu, hard=%llu\n",
                 (unsigned long long)rlimit.rlim_cur,
                 (unsigned long long)rlimit.rlim_max);
     }
+#endif
 
     // 环境变量
     printf("\n-- 环境变量 --\n");
@@ -1553,8 +1558,8 @@ void chapter15_utilities_test(void)
     if (uv_cpu_info(&cpu_infos, &cpu_count) == 0) {
         printf("CPU 数量: %d\n", cpu_count);
         if (cpu_count > 0) {
-            printf("CPU #0: %s, 模型=%s, 速度=%d MHz\n",
-                    cpu_infos[0].name, cpu_infos[0].model, cpu_infos[0].speed);
+            printf("CPU #0: %s, 速度=%d MHz\n",
+                    cpu_infos[0].model, cpu_infos[0].speed);
         }
         uv_free_cpu_info(cpu_infos, cpu_count);
     }
@@ -1606,7 +1611,7 @@ void chapter15_utilities_test(void)
     printf("uv_fs_poll: 定期检查文件状态变化\n");
 }
 
-typedef void (*ChapterFunc)(void);
+typedef void (*ChapterFunc)();
 
 typedef struct {
     const char *number;
@@ -1619,14 +1624,14 @@ typedef struct {
 int main(int argc, char **argv)
 {
     // 第一部分：事件循环与基础句柄
-    chapter1_event_loop_test();
+    // chapter1_event_loop_test();
     // chapter2_handle_request_test();
     // chapter3_timer_test();
     // chapter4_idle_prepare_check_test();
 
     // 第二部分：I/O 操作
     // chapter5_file_system_test();
-    // chapter6_tcp_test();
+    chapter6_tcp_test();
     // chapter7_udp_test();
 
     // 第三部分：进程间通信与系统
