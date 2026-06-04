@@ -1509,9 +1509,19 @@ char *my_strdup(const char *str)
     {
         return NULL;
     }
-    int len = strlen(str) + 1;
-    char *dest = malloc(sizeof(char) * len);
-    strcpy(dest, str);
+    size_t len = strlen(str) + 1;
+    // 原版
+    //char *dest = malloc(sizeof(char) * len);
+    // 优化版 C 语言标准规定 sizeof(char) 永远等于 1
+    char *dest = malloc(len);
+    if (dest == NULL)
+    {
+        return NULL;
+    }
+    // strcpy 版
+    //strcpy(dest, str);
+    // memcpy 版
+    memcpy(dest, str, len);
     return dest;
 }
 
@@ -1520,14 +1530,14 @@ char *my_strdup(const char *str)
  */
 void my_strdup_test()
 {
-    const char *original = "Hello World!";
-    char *duplicate = my_strdup(original);
-    if(NULL != duplicate)
+    const char *str = "Hello World!";
+    char *strdup = my_strdup(str);
+    if(NULL != strdup)
     {
-        printf("original  = %s\n", original);
-        printf("duplicate = %s\n", duplicate);
+        printf("str  = %s\n", str);
+        printf("strdup = %s\n", strdup);
         // strdup使用malloc分配内存，因此要使用free函数来释放这块儿内存，以避免内存泄漏
-        free(duplicate);
+        free(strdup);
     }
     else
     {
@@ -1689,6 +1699,30 @@ void my_memcmp_test()
     printf("flag = %d\n", flag);
 }
 
+/**
+ * strcpy() 和 memcpy() 对比
+ */
+void strcpy_and_memcpy_test()
+{
+    char *str = "hello world!";
+    size_t len = strlen(str) + 1;
+    char *dest = malloc(len);
+    if (dest == NULL)
+    {
+        return;
+    }
+    // strcpy: 需要逐个字符检查 '\0'
+    strcpy(dest, str);
+    // 内部实现：逐字节复制，每次都要判断是否遇到 '\0'
+    // while ((*dest++ = *src++) != '\0');  ← 慢！
+
+    // memcpy: 知道确切长度，可以批量复制
+    memcpy(dest, str, len);
+    // 内部实现：可以直接按 4/8/16 字节批量复制
+
+    free(dest);
+}
+
 int main()
 {
     //strlen_test();
@@ -1730,10 +1764,11 @@ int main()
     //strlwr_test();
     //strupr_test();
     //strdup_test();
-    //my_strdup_test();
+    my_strdup_test();
 	//memset_test();
 	//my_memset_test();
     //memcmp_test();
     //my_memcmp_test();
+    //strcpy_and_memcpy_test();
 	return 0;
 }
