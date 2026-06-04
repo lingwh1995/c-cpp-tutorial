@@ -631,9 +631,8 @@ static void on_tcp_connection(uv_stream_t *server, int status)
     uv_tcp_init(server->loop, client);
 
     if (uv_accept(server, (uv_stream_t *)client) == 0) {
-        uv_read_start((uv_stream_t *)client,
-                      alloc_buffer,  /* 简化：用 malloc 分配缓冲区 */
-                      on_tcp_read);
+        // 简化： 用 malloc 分配缓冲区
+        uv_read_start((uv_stream_t *)client, alloc_buffer, on_tcp_read);
 
         // 发送欢迎消息
         uv_write_t *write_req = (uv_write_t *)malloc(sizeof(uv_write_t));
@@ -660,9 +659,7 @@ static void on_tcp_connect(uv_connect_t *req, int status)
     uv_write(write_req, req->handle, &buf, 1, on_tcp_write);
 
     // 开始读取响应
-    uv_read_start(req->handle,
-                  alloc_buffer,
-                  on_tcp_read);
+    uv_read_start(req->handle, alloc_buffer, on_tcp_read);
 
     // 短暂延迟后关闭
     free(req);
@@ -682,7 +679,7 @@ void chapter6_tcp_test()
     int r;
 
     // TCP 服务器
-    printf("-- TCP 服务器 --\n");
+    printf("-- [TCP] 服务器 --\n");
     uv_tcp_init(loop, &tcp_server);
 
     struct sockaddr_in addr;
@@ -693,7 +690,7 @@ void chapter6_tcp_test()
 
     r = uv_listen((uv_stream_t *)&tcp_server, 128, on_tcp_connection);
     if (r < 0) {
-        printf("TCP 监听失败: %s\n", uv_strerror(r));
+        printf("[TCP] 监听失败: %s\n", uv_strerror(r));
         return;
     }
 
@@ -703,19 +700,17 @@ void chapter6_tcp_test()
     printf("TCP 服务器监听端口: %d\n", ntohs(addr.sin_port));
 
     // TCP 客户端
-    printf("\n-- TCP 客户端 --\n");
+    printf("\n-- [TCP] 客户端 --\n");
     uv_tcp_init(loop, &tcp_client);
 
     uv_connect_t *connect_req = (uv_connect_t *)malloc(sizeof(uv_connect_t));
-    uv_tcp_connect(connect_req, &tcp_client,
-                   (const struct sockaddr *)&addr,
-                   on_tcp_connect);
+    uv_tcp_connect(connect_req, &tcp_client, (const struct sockaddr *)&addr, on_tcp_connect);
 
     // 运行事件循环让连接完成
     uv_run(loop, UV_RUN_DEFAULT);
 
     // TCP 选项
-    printf("\n-- TCP 选项 --\n");
+    printf("\n-- [TCP] 选项 --\n");
     uv_tcp_t demo_tcp;
     uv_tcp_init(loop, &demo_tcp);
 
@@ -1620,9 +1615,11 @@ typedef struct {
 } ChapterEntry;
 
 #if 0
-#endif
 int main(int argc, char **argv)
 {
+    // 禁用stdout缓冲，所有printf立即输出
+    setvbuf(stdout, NULL, _IONBF, 0);
+
     // 第一部分：事件循环与基础句柄
     // chapter1_event_loop_test();
     // chapter2_handle_request_test();
@@ -1647,3 +1644,4 @@ int main(int argc, char **argv)
     // chapter15_utilities_test();
     return 0;
 }
+#endif
