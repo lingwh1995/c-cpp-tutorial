@@ -255,19 +255,52 @@ void chapter1_basic_types_and_macros_test()
 void chapter2_memory_management_test()
 {
     g_print("--- 第2章：内存管理 ---\n\n");
-
     // 2.1. 基本内存分配 官方文档：https://docs.gtk.org/glib/memory.html
     g_print("2.1 基本内存分配\n");
-    // 分配内存
-    const gpointer mem1 = g_malloc(100);
-    g_print("g_malloc(100) = %p\n", mem1);
-    g_free(mem1);   // 释放内存
-
-    // 分配并初始化为0
-    const gpointer mem2 = g_malloc0(100);
-    g_print("g_malloc0(100) = %p, 第一个字节: %d\n", mem2, ((guchar*)mem2)[0]);
+    // g_malloc() / g_free() - 基本内存分配与释放
+    // 分配内存（g_malloc 在分配失败时直接终止程序（不同于 malloc 返回 NULL））
+    gint *int_ptr = g_malloc(sizeof(gint));
+    *int_ptr = 100;
+    g_print("g_malloc: *int_ptr = %d\n", *int_ptr);
     // 释放内存
-    g_free(mem2);
+    g_free(int_ptr);
+
+    // g_malloc0() - 分配并初始化为0
+    gint *zero_ptr = g_malloc0(sizeof(gint) * 5);
+    g_print("g_malloc0: 数组前n个元素 = [%d, %d, %d, %d]\n", zero_ptr[0], zero_ptr[1], zero_ptr[2], zero_ptr[3]);
+    // 释放内存
+    g_free(zero_ptr);
+
+    // g_try_malloc() - 分配失败时返回 NULL（不终止程序）
+    gpointer try_ptr = g_try_malloc(1024);
+    if (try_ptr != NULL) {
+        g_print("g_try_malloc: 成功分配 1024 字节\n");
+        g_free(try_ptr);
+    } else {
+        g_print("g_try_malloc: 分配失败\n");
+    }
+
+    // g_try_malloc0() - 尝试分配并清零
+    gpointer try0_ptr = g_try_malloc0(512);
+    if (try0_ptr != NULL) {
+        g_print("g_try_malloc0: 成功分配并清零 512 字节\n");
+        g_free(try0_ptr);
+    }
+
+    // g_new() - 类型安全的内存分配宏，等价于 (type *)g_malloc(n * sizeof(type))
+    gint *arr = g_new(gint, 3);
+    arr[0] = 10;
+    arr[1] = 20;
+    arr[2] = 30;
+    g_print("g_new: arr = [%d, %d, %d]\n", arr[0], arr[1], arr[2]);
+    // 释放内存
+    g_free(arr);
+
+    // g_new0() - 类型安全的零初始化分配
+    gint *zero_arr = g_new0(gint, 3);
+    g_print("g_new0: zero_arr = [%d, %d, %d]\n", zero_arr[0], zero_arr[1], zero_arr[2]);
+    // 释放内存
+    g_free(zero_arr);
 
     // 等价于 g_malloc(100)
     const gpointer mem3 = g_realloc(NULL, 100);
@@ -277,6 +310,16 @@ void chapter2_memory_management_test()
     g_print("g_realloc(mem3, 200) = %p\n", mem4);
     // 释放内存
     g_free(mem4);
+
+    // g_realloc() - 重新分配内存
+    gint *realloc_ptr = g_new(gint, 2);
+    realloc_ptr[0] = 1;
+    realloc_ptr[1] = 2;
+    realloc_ptr = (gint *)g_realloc(realloc_ptr, sizeof(gint) * 4);
+    realloc_ptr[2] = 3;
+    realloc_ptr[3] = 4;
+    g_print("g_realloc: 扩展后 = [%d, %d, %d]\n", realloc_ptr[0], realloc_ptr[1], realloc_ptr[2]);
+    g_free(realloc_ptr);
 
     // 2.2. 对齐内存分配（GLib 2.72+）
     g_print("\n2.2 对齐内存分配\n");
@@ -290,6 +333,18 @@ void chapter2_memory_management_test()
     // 从栈分配，自动释放
     gchar *stack_mem = g_alloca(100);
     g_print("g_alloca(100) = %p\n", stack_mem);
+
+    // g_steal_pointer() - 转移指针所有权并置空原指针
+    gchar *original = g_strdup("hello");
+    gchar *stolen = g_steal_pointer(&original);
+    g_print("g_steal_pointer: stolen = %s, original = %s\n", stolen, original ? original : "(null)");
+    g_free(stolen);
+
+    // g_clear_pointer() - 清除指针并释放资源
+    gint *clear_ptr = g_new(gint, 1);
+    *clear_ptr = 99;
+    g_clear_pointer(&clear_ptr, g_free);
+    g_print("g_clear_pointer: clear_ptr = %s\n", clear_ptr ? "非NULL" : "NULL");
 
     // 2.4. 内存切片分配器（高效小内存分配）
     /**
