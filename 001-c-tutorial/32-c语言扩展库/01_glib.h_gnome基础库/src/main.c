@@ -639,7 +639,7 @@ void chapter4_data_structures_test()
     g_print("\n-- GArray 动态数组 --\n");
     GArray *arr = g_array_new(FALSE, FALSE, sizeof(gint));
     gint val;
-    牢记：g_array_append_val 必须传入变量（左值）
+    // 牢记：g_array_append_val 必须传入变量（左值）
     val = 10;
     g_array_append_val(arr, val);
     val = 20;
@@ -1223,21 +1223,25 @@ void chapter6_gobject_senior_test_1()
     MyObject* owner_obj = g_object_new(MY_TYPE_OBJECT, NULL);
     g_print("创建对象，初始计数=%u，调用者拥有所有权\n", G_OBJECT(owner_obj)->ref_count);
 
-    // 注册切换引用：计数+1，同时绑定切换通知回调
-    // 此时计数从 1 → 2，自动触发一次“非最后引用”通知
-    g_object_add_toggle_ref(G_OBJECT(owner_obj), on_toggle_notify, "注册toggle引用");
+    // 统一使用 NULL 作为用户数据
+    gpointer user_data = NULL;
+
+    // 注册 toggle ref
+    g_object_add_toggle_ref(G_OBJECT(owner_obj), on_toggle_notify, user_data);
     g_print("注册切换引用后，计数=%u\n\n", G_OBJECT(owner_obj)->ref_count);
 
-    // 释放原始引用：计数从 2 → 1，自动触发“最后一个引用”通知
+    // 释放原始引用
     g_object_unref(owner_obj);
     g_print("\n释放原始引用后，计数=%u（仅剩toggle引用）\n", G_OBJECT(owner_obj)->ref_count);
 
-    // 重新引用对象：计数从 1 → 2，再次触发“非最后引用”通知
+    // 重新引用
     g_object_ref(owner_obj);
     g_print("重新引用后，计数=%u\n\n", G_OBJECT(owner_obj)->ref_count);
 
-    // 收尾清理：移除切换引用 + 释放剩余引用，对象销毁
-    g_object_remove_toggle_ref(G_OBJECT(owner_obj), on_toggle_notify, "移除toggle引用");
+    // 移除：回调 + 数据 和 add 完全一致
+    g_object_remove_toggle_ref(G_OBJECT(owner_obj), on_toggle_notify, user_data);
+
+    // 最后释放常规引用
     g_object_unref(owner_obj);
     g_print("清理完成，对象已销毁\n");
 
@@ -1769,7 +1773,7 @@ int main()
     // chapter5_type_system_test();
     // chapter6_gobject_basics_test_1();
     // chapter6_gobject_basics_test_2();
-    chapter6_gobject_senior_test_1();
+    // chapter6_gobject_senior_test_1();
     // chapter7_gobject_properties_test();
     // chapter8_gobject_advanced_test();
     // chapter9_gobject_signals_test();
