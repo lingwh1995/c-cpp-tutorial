@@ -1,0 +1,1895 @@
+#include <stdio.h>
+#include "../inc/glib_locale_fix.h"
+#include <glib-object.h>
+#include <gio/gio.h>
+//#include <glib/gstdio.h>      // 如果要引入子模块，这种是标准写法
+#include <string.h>
+#include <sys/stat.h>
+
+// 默认环境修复编码
+FIX_GLIB_UTF8_LOCALE();
+
+// 英文环境修复编码
+// FIX_GLIB_LOCALE("en_US.UTF-8");
+// 中文环境修复编码
+//FIX_GLIB_LOCALE("zh_CN.UTF-8");
+
+/**
+ * GLib - GNOME 基础库
+ *
+ * 1. 官网
+ *    https://developer.gnome.org/glib/
+ * 2. 官方文档
+ *    glib 核心库文档：https://docs.gtk.org/glib/
+ *    gobject 系统文档：https://docs.gtk.org/gobject/
+ *    gio 输入输出库文档：https://docs.gtk.org/gio/
+ *    gmodule 动态加载文档：https://docs.gtk.org/gmodule/
+ *    ibm技术博客 https://developer.ibm.com/tutorials/l-glib/
+ * 3. 功能
+ *    数据结构、实用函数、事件循环、线程等
+ * 4. 普通方式安装
+ *    - windows(打开 MSYS2 UCRT64 的终端，执行以下命令)
+ *       pacman -Syu                                # 更新系统
+ *       pacman -S mingw-w64-ucrt-x86_64-glib2 -y   # 安装glib2
+ *       pacman -Qs glib2                           # 检查是否安装成功
+ *    - linux
+ *       sudo apt-get update
+ *       sudo apt-get install libglib2.0-dev
+ * 4. clion中如果配置 ToolSet 失败，出现无法是被出 ucrt64 的问题，使用管理员账户打开 clion 再进行配置
+ */
+
+
+
+
+/*
+ * GLib 渐进式学习大纲（不含 GUI）
+ *
+ *  第一篇 入门基础篇
+ *    第 1 章  GLib 体系概述与环境搭建
+ *    第 2 章  基础类型与核心宏
+ *  第二篇 通用工具与数据结构篇
+ *    第 3 章  内存管理体系
+ *    第 4 章  字符串与文本处理
+ *    第 5 章  线性数据结构
+ *    第 6 章  关联与集合数据结构
+ *    第 7 章  日期、时间与计时
+ *    第 8 章  命令行与配置解析
+ *    第 9 章  通用工具函数集
+ *  第三篇 系统编程与并发篇
+ *    第 10 章 日志与错误处理体系
+ *    第 11 章 主事件循环 GMainLoop
+ *    第 12 章 线程编程基础
+ *    第 13 章 线程同步原语
+ *    第 14 章 并发组件与线程池
+ *    第 15 章 子进程管理
+ *    第 16 章 动态模块与插件架构
+ *  第四篇 GObject 对象系统篇
+ *    第 17 章 GType 类型系统基础
+ *    第 18 章 GObject 对象基础
+ *    第 19 章 属性系统
+ *    第 20 章 信号系统
+ *    第 21 章 GObject 子类化
+ *    第 22 章 接口系统 GInterface
+ *    第 23 章 GObject 高级特性
+ *    第 24 章 GVariant 类型系统
+ *  第五篇 GIO 输入输出与网络篇
+ *    第 25 章 GIO 基础与流体系
+ *    第 26 章 文件系统操作
+ *    第 27 章 异步 IO 编程模型
+ *    第 28 章 网络编程基础
+ *    第 29 章 网络客户端与服务端
+ *    第 30 章 D-Bus IPC 基础
+ *    第 31 章 D-Bus 高级编程
+ *    第 32 章 应用与资源管理
+ *    第 33 章 应用配置管理 GSettings
+ *  第六篇 高级特性与工程实践篇
+ *    第 34 章 跨平台适配与兼容性
+ *    第 35 章 性能优化与调试技巧
+ *    第 36 章 自定义扩展与组件封装
+ *    第 37 章 测试框架 GTest
+ *    第 38 章 综合项目实战
+ *
+ */
+
+
+
+    // /* 第一篇：入门基础篇 */
+    // g_print("[第 01 章] GLib 体系概述与环境搭建\n");   chapter_01_overview();
+    // g_print("[第 02 章] 基础类型与核心宏\n");           chapter_02_types_macros();
+    //
+    // /* 第二篇：通用工具与数据结构篇 */
+    // g_print("[第 03 章] 内存管理体系\n");               chapter_03_memory();
+    // g_print("[第 04 章] 字符串与文本处理\n");           chapter_04_strings();
+    // g_print("[第 05 章] 线性数据结构\n");               chapter_05_linear_data();
+    // g_print("[第 06 章] 关联与集合数据结构\n");         chapter_06_associative_data();
+    // g_print("[第 07 章] 日期、时间与计时\n");           chapter_07_datetime();
+    // g_print("[第 08 章] 命令行与配置解析\n");           chapter_08_option_keyfile();
+    // g_print("[第 09 章] 通用工具函数集\n");             chapter_09_utilities();
+    //
+    // /* 第三篇：系统编程与并发篇 */
+    // g_print("[第 10 章] 日志与错误处理体系\n");         chapter_10_error_logging();
+    // g_print("[第 11 章] 主事件循环 GMainLoop\n");       chapter_11_main_loop();
+    // g_print("[第 12 章] 线程编程基础\n");               chapter_12_threads();
+    // g_print("[第 13 章] 线程同步原语\n");               chapter_13_sync();
+    // g_print("[第 14 章] 并发组件与线程池\n");           chapter_14_threadpool();
+    // g_print("[第 15 章] 子进程管理\n");                 chapter_15_subprocess();
+    // g_print("[第 16 章] 动态模块与插件架构\n");         chapter_16_gmodule();
+    //
+    // /* 第四篇：GObject 对象系统篇 */
+    // g_print("[第 17 章] GType 类型系统基础\n");         chapter_17_gtype();
+    // g_print("[第 18 章] GObject 对象基础\n");           chapter_18_gobject();
+    // g_print("[第 19 章] 属性系统\n");                   chapter_19_properties();
+    // g_print("[第 20 章] 信号系统\n");                   chapter_20_signals();
+    // g_print("[第 21 章] GObject 子类化\n");             chapter_21_subclass();
+    // g_print("[第 22 章] 接口系统 GInterface\n");        chapter_22_interface();
+    // g_print("[第 23 章] GObject 高级特性\n");           chapter_23_gobject_advanced();
+    // g_print("[第 24 章] GVariant 类型系统\n");          chapter_24_gvariant();
+    //
+    // /* 第五篇：GIO 输入输出与网络篇 */
+    // g_print("[第 25 章] GIO 基础与流体系\n");           chapter_25_gio_streams();
+    // g_print("[第 26 章] 文件系统操作\n");               chapter_26_filesystem();
+    // g_print("[第 27 章] 异步 IO 编程模型\n");           chapter_27_async_io();
+    // g_print("[第 28 章] 网络编程基础\n");               chapter_28_networking();
+    // g_print("[第 29 章] 网络客户端与服务端\n");         chapter_29_network_service();
+    // g_print("[第 30 章] D-Bus IPC 基础\n");            chapter_30_dbus();
+    // g_print("[第 31 章] D-Bus 高级编程\n");             chapter_31_dbus_advanced();
+    // g_print("[第 32 章] 应用与资源管理\n");             chapter_32_app_resource();
+    // g_print("[第 33 章] 应用配置管理 GSettings\n");     chapter_33_gsettings();
+    //
+    // /* 第六篇：高级特性与工程实践篇 */
+    // g_print("[第 34 章] 跨平台适配与兼容性\n");         chapter_34_cross_platform();
+    // g_print("[第 35 章] 性能优化与调试技巧\n");         chapter_35_performance();
+    // g_print("[第 36 章] 自定义扩展与组件封装\n");       chapter_36_custom_extension();
+    // g_print("[第 37 章] 测试框架 GTest\n");             chapter_37_testing();
+    // g_print("[第 38 章] 综合项目实战\n");               chapter_38_project();
+    //
+    // g_print("\n====== 全部 38 章运行完成 ======\n");
+
+
+/**
+ * 第1章：GLib 基础数据类型与常用宏
+ */
+void chapter1_basic_types_and_macros_test()
+{
+    g_print("--- 第1章：GLib 基础数据类型 ---\n\n");
+
+    // 1.1. 基本数据类型 官方文档：https://docs.gtk.org/glib/types.html
+    g_print("1.1 基本数据类型\n");
+
+    // gchar - char
+    const gchar c = 'a';
+    g_print("gchar c = %c\n", c);
+
+    // guchar - unsigned char
+    const guchar uc = 'a';
+    g_print("gchar uc = %c\n", uc);
+
+    // gint - int
+    const gint i = 25;
+    g_print("gint i = %d\n", i);
+
+    // guint - unsigned int
+    const guint ui = 100;
+    g_print("guint ui = %u\n", ui);
+
+    // glong - long
+    const glong l = 123456789L;
+    g_print("glong l = %ld\n", l);
+
+    // gulong - unsigned long
+    const glong ul = 123456789L;
+    g_print("glong ul = %lu\n", ul);
+
+    // gboolean - 布尔类型，取值为 TRUE 或 FALSE
+    const gboolean bt = TRUE;
+    const gboolean bf = FALSE;
+    g_print("gboolean bt = %s\n", bt ? "TRUE" : "FALSE");
+    g_print("gboolean bf = %s\n", bf ? "TRUE" : "FALSE");
+    g_print("gboolean TRUE = %d, FALSE = %d\n", TRUE, FALSE);
+
+    // gpointer - void*
+    const gint value = 42;
+    gpointer ptr = &value;
+    g_print("gpointer 指向值 %d\n", *(gint *)ptr);
+
+    // gconstpointer - const void *
+    gconstpointer cptr = &value;
+    g_print("gconstpointer 指向值 %d\n", *(gint *)cptr);
+
+    // gsize - sizeof(无符号类型)
+    const gsize gs = sizeof(gint);
+    g_print("gsize sizeof(gint) = %" G_GSIZE_FORMAT "\n", gs);
+
+    // gssize - sizeof(有符号类型)
+    const gssize gss = sizeof(guint);
+    g_print("gssize sizeof(guint) = %" G_GSIZE_FORMAT "\n", gss);
+
+    // gint8/gint16/gint32/gint64 - 固定宽度整型
+    const gint8  i8  = 127;
+    const gint16 i16 = 32767;
+    const gint32 i32 = 2147483647;
+    const gint64 i64 = G_GINT64_CONSTANT(9223372036854775807);
+    g_print("gint8 = %d, gint16 = %d, gint32 = %d\n", i8, i16, i32);
+    g_print("gint64 = %" G_GINT64_FORMAT "\n", i64);
+
+    // guint8/guint16/guint32/guint64 - 固定宽度无符号整型
+    const guint8  u8  = 255;
+    const guint16 u16 = 65535;
+    const guint32 u32 = 4294967295U;
+    const guint64 u64 = G_GUINT64_CONSTANT(18446744073709551615);
+    g_print("guint8 = %u, guint16 = %u, guint32 = %u\n", u8, u16, u32);
+    g_print("guint64 = %" G_GUINT64_FORMAT "\n", u64);
+
+    // gfloat/gdouble - 浮点类型
+    const gfloat  f = 3.14f;
+    const gdouble d = 3.141592653589793;
+    g_print("gfloat = %.2f, gdouble = %.15f\n", f, d);
+
+    // 1.2. 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
+    g_print("\n1.2 常用宏定义\n");
+
+    // G_MININT/G_MAXINT 取值范围宏
+    g_print("gint 取值范围 %d ~ %d\n", G_MININT, G_MAXINT);
+    // G_MAXUINT 取值范围宏
+    g_print("G_MAXUINT = %u\n", G_MAXUINT);
+
+    // G_MINLONG/G_MAXLONG 取值范围宏
+    g_print("glong 取值范围 %ld ~ %ld\n", G_MINLONG, G_MAXLONG);
+    // G_MAXULONG 取值范围宏
+    g_print("G_MAXULONG = %lu\n", G_MAXULONG);
+
+    // G_MININT64/G_MAXINT64 取值范围宏（64 位整数）
+    g_print("gint64 取值范围 %" G_GINT64_FORMAT " ~ %" G_GINT64_FORMAT "\n", G_MININT64, G_MAXINT64);
+    g_print("guint64 最大值 %" G_GUINT64_FORMAT "\n", G_MAXUINT64);
+
+    // G_MINSSIZE/G_MAXSSIZE 取值范围宏
+    g_print("gssize 取值范围 %" G_GSSIZE_FORMAT " ~ %" G_GSSIZE_FORMAT "\n", G_MINSSIZE, G_MAXSSIZE);
+    g_print("gsize 最大值 %" G_GSIZE_FORMAT "\n", G_MAXSIZE);
+
+    // 布尔值
+    g_print("TRUE: %d, FALSE: %d\n", TRUE, FALSE);
+
+    // NULL指针
+    g_print("NULL: %p\n", NULL);
+
+    // 类型转换宏
+    gint a = 10;
+    gpointer ptr_a = GINT_TO_POINTER(a);
+    gint b = GPOINTER_TO_INT(ptr_a);
+    g_print("GINT_TO_POINTER/GPOINTER_TO_INT: %d -> %p -> %d\n", a, ptr_a, b);
+
+    // 数学宏
+    g_print("ABS(-10) = %d\n", ABS(-10));
+    g_print("MIN(5, 10) = %d\n", MIN(5, 10));
+    g_print("MAX(5, 10) = %d\n", MAX(5, 10));
+    g_print("CLAMP(15, 5, 10) = %d\n", CLAMP(15, 5, 10));
+
+    // 字节序宏
+    g_print("G_BYTE_ORDER = %d (G_LITTLE_ENDIAN: %d, G_BIG_ENDIAN: %d)\n",
+            G_BYTE_ORDER, G_LITTLE_ENDIAN, G_BIG_ENDIAN);
+
+    // 字符串化宏
+    g_print("G_STRINGIFY(hello) = %s\n", G_STRINGIFY(hello));
+
+    // 结构体成员偏移宏
+    g_print("G_STRUCT_OFFSET(struct stat, st_size) = %zu\n", (size_t)G_STRUCT_OFFSET(struct stat, st_size));
+
+    // 数组元素个数宏
+    gint g_array[] = { 1, 2, 3, 4, 5 };
+    g_print("G_N_ELEMENTS(g_array) = %zu\n", G_N_ELEMENTS(g_array));
+
+    // G_LIKELY 和 G_UNLIKELY 是编译器优化提示宏，通常用于条件判断
+    if (G_LIKELY(1))
+    {
+        g_print("G_LIKELY(1): 分支很可能执行\n");
+    }
+    if (G_UNLIKELY(0))
+    {
+        g_print("G_UNLIKELY(0): 分支不太可能执行\n");
+    }
+}
+
+/**
+ * 第2章：内存管理
+ */
+void chapter2_memory_management_test()
+{
+    g_print("--- 第2章：内存管理 ---\n\n");
+
+    // 2.1. 基本内存分配 官方文档：https://docs.gtk.org/glib/memory.html
+    g_print("2.1 基本内存分配\n");
+
+    // g_malloc() / g_free() - 基本内存分配与释放
+    // 分配内存（g_malloc 在分配失败时直接终止程序（不同于 malloc 返回 NULL））
+    gint *int_ptr = g_malloc(sizeof(gint));
+    *int_ptr = 100;
+    g_print("g_malloc: *int_ptr = %d\n", *int_ptr);
+    // 释放内存
+    g_free(int_ptr);
+
+    // g_malloc0() - 分配并初始化为0
+    gint *zero_ptr = g_malloc0(sizeof(gint) * 5);
+    g_print("g_malloc0: 数组前n个元素 = [%d, %d, %d, %d]\n", zero_ptr[0], zero_ptr[1], zero_ptr[2], zero_ptr[3]);
+    // 释放内存
+    g_free(zero_ptr);
+
+    // g_try_malloc() - 分配失败时返回 NULL（不终止程序）
+    gpointer try_ptr = g_try_malloc(1024);
+    if (try_ptr != NULL) {
+        g_print("g_try_malloc: 成功分配 1024 字节\n");
+        g_free(try_ptr);
+    } else {
+        g_print("g_try_malloc: 分配失败\n");
+    }
+
+    // g_try_malloc0() - 尝试分配并清零
+    gpointer try0_ptr = g_try_malloc0(512);
+    if (try0_ptr != NULL) {
+        g_print("g_try_malloc0: 成功分配并清零 512 字节\n");
+        g_free(try0_ptr);
+    }
+
+    // g_new() - 类型安全的内存分配宏，等价于 (type *)g_malloc(n * sizeof(type))
+    gint *arr = g_new(gint, 3);
+    arr[0] = 10;
+    arr[1] = 20;
+    arr[2] = 30;
+    g_print("g_new: arr = [%d, %d, %d]\n", arr[0], arr[1], arr[2]);
+    // 释放内存
+    g_free(arr);
+
+    // g_new0() - 类型安全的零初始化分配
+    gint *zero_arr = g_new0(gint, 3);
+    g_print("g_new0: zero_arr = [%d, %d, %d]\n", zero_arr[0], zero_arr[1], zero_arr[2]);
+    // 释放内存
+    g_free(zero_arr);
+
+    // 等价于 g_malloc(100)
+    const gpointer mem3 = g_realloc(NULL, 100);
+    g_print("g_realloc(NULL, 100) = %p\n", mem3);
+    // 重新分配
+    const gpointer mem4 = g_realloc(mem3, 200);
+    g_print("g_realloc(mem3, 200) = %p\n", mem4);
+    // 释放内存
+    g_free(mem4);
+
+    // g_realloc() - 重新分配内存
+    gint *realloc_ptr = g_new(gint, 2);
+    realloc_ptr[0] = 1;
+    realloc_ptr[1] = 2;
+    realloc_ptr = (gint *)g_realloc(realloc_ptr, sizeof(gint) * 4);
+    realloc_ptr[2] = 3;
+    realloc_ptr[3] = 4;
+    g_print("g_realloc: 扩展后 = [%d, %d, %d]\n", realloc_ptr[0], realloc_ptr[1], realloc_ptr[2]);
+    g_free(realloc_ptr);
+
+    // 2.2. 对齐内存分配（GLib 2.72+）
+    g_print("\n2.2 对齐内存分配\n");
+    // g_aligned_alloc() - 对齐内存分配
+    gpointer aligned_mem = g_aligned_alloc(1, 100, 16);  // 1块 × 100字节，16字节对齐
+    g_print("g_aligned_alloc(1, 100, 16) = %p\n", aligned_mem);
+    // 必须使用对应的释放函数
+    g_aligned_free(aligned_mem);
+
+    // 2.3. 临时内存分配（栈分配）
+    g_print("\n2.3 临时内存分配\n");
+    // g_alloca() - 在栈上分配，自动释放
+    gchar *stack_mem = g_alloca(100);
+    g_print("g_alloca(100) = %p\n", stack_mem);
+
+    // g_steal_pointer() - 转移指针所有权并置空原指针
+    gchar *original = g_strdup("hello");
+    gchar *stolen = g_steal_pointer(&original);
+    g_print("g_steal_pointer: stolen = %s, original = %s\n", stolen, original ? original : "(null)");
+    g_free(stolen);
+
+    // g_clear_pointer() - 清除指针并释放资源
+    gint *clear_ptr = g_new(gint, 1);
+    *clear_ptr = 99;
+    g_clear_pointer(&clear_ptr, g_free);
+    g_print("g_clear_pointer: clear_ptr = %s\n", clear_ptr ? "非NULL" : "NULL");
+
+    // 2.4. 内存切片分配器（高效小内存分配）
+    /**
+     * g_slice_alloc() 和 malloc() 分配方式区别
+     * 1. 性能差异
+     *    g_slice_alloc()
+     *      使用预分配的内存池
+     *      分配速度更快，特别是对于小内存块
+     *      减少了系统调用次数
+     *    malloc()
+     *      每次都需要向操作系统请求内存
+     *      相对较慢，尤其是频繁调用时
+     *
+     * 2. 内存管理方式
+     *    g_slice_alloc()
+     *      gpointer slice = g_slice_alloc(64);  // 从64字节池中获取
+     *      g_slice_free1(64, slice);            // 返回到池中而非真正释放
+     *    malloc()/free()
+     *      void *ptr = malloc(64);   // 直接向系统申请
+     *      free(ptr);                // 直接归还给系统
+     *
+     * 3. 内存碎片处理
+     *    g_slice_alloc()
+     *      通过重用相同大小的内存块减少碎片
+     *      更适合大量相同大小对象的场景
+     *    malloc()/free()
+     *      容易产生内存碎片
+     *      长时间运行后可能影响性能
+     *
+     * 4. 应用场景对比
+     *    g_slice_alloc()
+     *      小对象频繁分配: 如链表节点、结构体等小对象
+     *      typedef struct Node {
+     *          int data;
+     *          struct Node *next;
+     *      } Node;
+     *
+     *      Node* node = g_slice_alloc(sizeof(Node));  // 快速分配
+     *      // ... 使用节点 ...
+     *      g_slice_free1(sizeof(Node), node);         // 快速释放
+     *      // 使用传统分配
+     *      Node* node = malloc(sizeof(Node));         // 相对较慢
+     *      // ... 使用节点 ...
+     *      free(node);                                // 相对较慢
+     *
+     *    malloc()/free()
+     *      不同大小混合分配
+     */
+    g_print("\n2.4 内存切片分配器\n");
+    // 分配64字节的内存块
+    gpointer slice = g_slice_alloc(64);
+    /**
+     * 首次调用 gpointer slice = g_slice_alloc(64);  时， glib 内部会执行如下操作：
+     *
+     * 1. 检查是否有64字节的内存池
+     * 2. 如果没有，则创建64字节规格的池，具体操作是 向系统申请一大块内存（比如几KB），将这块大内存分割成多个64字节的小块，建立空闲链表管理这些小块
+     * 3. 如果有，则从空闲链表中取出一个小块，并返回给调用者
+     * 4. 如果池中64字节块用完了，触发再次向系统申请大块内存，然后分割成更多64字节块
+     *
+     * // 第一次调用 - 只创建64字节的池
+     * gpointer s1 = g_slice_alloc(64);   // 创建64字节池
+     * // 第二次调用不同规格 - 创建新的池
+     * gpointer s2 = g_slice_alloc(128);  // 创建128字节池
+     * // 第三次调用已有规格 - 直接使用现有池
+     * gpointer s3 = g_slice_alloc(64);   // 直接使用64字节池
+     * // ... 假设池中64字节块用完了 ...
+     * gpointer s3 = g_slice_alloc(64);   // 触发再次向系统申请大块内存，然后分割成更多64字节块
+     */
+    g_print("g_slice_alloc(64) = %p\n", slice);
+    // 释放内存块
+    g_slice_free1(64, slice);
+}
+
+/**
+ * 第3章：字符串处理
+ */
+void chapter3_glib_string_handling_test()
+{
+    g_print("\n--- 第3章：字符串处理 ---\n\n");
+
+    // 3.1. 普通字符串操作（官方文档：https://docs.gtk.org/glib/string-utils.html）
+    g_print("3.1 基本字符串操作\n");
+    const gchar *str1 = "Hello";
+    const gchar *str2 = "World";
+
+    // g_strconcat() - 连接多个字符串，以 NULL 结尾
+    gchar *concat = g_strconcat(str1, ", ", str2, "!", NULL);
+    g_print("g_strconcat = %s\n", concat);
+    g_free(concat);
+
+    // g_strdup() - 复制字符串
+    gchar *dup = g_strdup(str1);
+    g_print("g_strdup = %s\n", dup);
+    g_free(dup);
+
+    // g_strndup() - 复制字符串的前 n 个字符
+    gchar *ndup = g_strndup(str1, 3);
+    g_print("g_strndup(3) = %s\n", ndup);
+    g_free(ndup);
+
+    // g_ascii_strup() - 将字符串中的 ASCII 字母字符转换为大写形式
+    gchar *upper = g_ascii_strup(str1, -1);
+    g_print("g_ascii_strup = %s\n", upper);
+    g_free(upper);
+
+    // g_ascii_strdown() - 字符串转小写 第二个参数 -1：整串全部转为小写  >0：仅转换前面 length 个字符
+    gchar *lower = g_ascii_strdown(str1, -1);
+    g_print("g_ascii_strdown = %s\n", lower);
+    g_free(lower);
+
+    // g_strdup_printf() - 格式化字符串并分配内存
+    gchar *formatted = g_strdup_printf("值: %d, 名称: %s", 42, "test");
+    g_print("g_strdup_printf: formatted = %s\n", formatted);
+    g_free(formatted);
+
+    // g_strlcpy() - 字符串复制（复制前n个字符）
+    gchar buffer[20];
+    gsize lcpy = g_strlcpy(buffer, "Hello", sizeof(buffer));
+    g_print("g_strlcpy: copied %zu bytes, buffer = \"%s\"\n", lcpy, buffer);
+
+    // g_strlcat() - 字符串拼接
+    gsize lcat = g_strlcat(buffer, ", World!", sizeof(buffer));
+    g_print("g_strlcat: appended %zu bytes, buffer = \"%s\"\n", lcat, buffer);
+
+    // g_strsplit() - 将字符串分割成数组
+    const gchar *str = "apple,banana,cherry,orange";
+    gchar **split = g_strsplit(str, ",", -1);
+    g_print("original str: %s\n", str);
+    g_print("split str: ");
+    for (gint i = 0; split[i] != NULL; i++)
+    {
+        g_print("[%s]", split[i]);
+    }
+    // 释放字符串数组
+    g_strfreev(split);
+    g_print("\n");
+
+    // g_strjoinv() - 将字符串数组拼接为字符串
+    const gchar *colors[] = {"red", "green", "blue", NULL};
+    gchar *joinv = g_strjoinv(" | ", (gchar **)colors);
+    g_print("joinv with ' | ': %s\n", joinv);
+    // 释放拼接后的字符串
+    g_free(joinv);
+
+    // g_strjoin() - 将多个字符串拼接一个字符串
+    gchar *join = g_strjoin(" - ", "Red", "Green", "Blue", NULL);
+    g_print("joined with ' - ': %s\n", join);
+    // 释放拼接后的字符串
+    g_free(join);
+
+    // g_strcmp0() - 安全的字符串比较（会处理 NULL 指针）
+    gint cmp0 = g_strcmp0("hello", "world");
+    g_print("g_strcmp0(\"hello\", \"world\") = %d\n", cmp0);
+    // NULL 安全比较，NULL 被视为空字符串
+    cmp0 = g_strcmp0(NULL, "");
+    g_print("g_strcmp0(NULL, \"\") = %d\n", cmp0);
+    cmp0 = g_strcmp0("test", "test");
+    g_print("g_strcmp0(\"test\", \"test\") = %d\n", cmp0);
+
+
+    // g_str_equal() / g_str_hash() - 常用于 GHashTable 的字符串比较/哈希
+    const gchar *ha = "key";
+    const gchar *hb = "key";
+    g_print("g_str_equal: %s\n", g_str_equal(ha, hb) ? "相等" : "不等");
+    g_print("g_str_hash: %u\n", (guint)g_str_hash(ha));
+
+    // g_strstrip() - 去除首尾空白字符（原地修改）
+    gchar *strip_str = g_strdup("  hello world  ");
+    g_strstrip(strip_str);
+    g_print("g_strstrip: \"%s\"\n", strip_str);
+    g_free(strip_str);
+
+    // g_str_has_prefix() / g_str_has_suffix() - 前缀/后缀检查
+    const gchar *path = "/usr/local/bin/app";
+    g_print("g_str_has_prefix(\"/usr\"): %s\n", g_str_has_prefix(path, "/usr") ? "是" : "否");
+    g_print("g_str_has_suffix(\"app\"): %s\n", g_str_has_suffix(path, "app") ? "是" : "否");
+
+    // 3.2. 动态字符串操作（官方文档：https://docs.gtk.org/glib/struct.String.html）
+    g_print("\n3.2 GString 动态字符串\n");
+    // 创建一个 GString
+    GString *gstr = g_string_new("Hello");
+    // 追加字符串
+    g_string_append(gstr, ", ");
+    g_string_append(gstr, "GLib!");
+    g_print("gstr 内容: %s, 长度: %zu, 分配大小: %zu\n", gstr->str, gstr->len, gstr->allocated_len);
+
+    // 在头部插入字符串
+    g_string_prepend(gstr, "Wow! ");
+    g_print("prepend: %s\n", gstr->str);
+
+    // 插入字符串
+    g_string_insert(gstr, 5, " amazing ");
+    g_print("insert: %s\n", gstr->str);
+
+    // g_string_printf() ≈ sprintf() + 自动内存管理
+    g_string_printf(gstr, "格式化: %d, %s", 42, "test");
+    g_print("gsprintf: %s\n", gstr->str);
+
+    /**
+    * g_string_free() - 释放动态字符串
+    * 有两个参数：
+    *   第一个参数：GString* 指针
+    *   第二个参数：gboolean free_segment
+    *     TRUE：同时释放 GString 结构体 和 内部的字符串数据
+    *     FALSE：只释放 GString 结构体，保留字符串数据（返回字符串指针）
+     */
+    g_string_free(gstr, TRUE);
+
+    // 3.3. UTF-8 字符串处理（官方文档：https://docs.gtk.org/glib/unicode.html）
+    g_print("\n3.3 UTF-8 字符串处理\n");
+    const gchar *utf8_str = "你好，世界！";
+    g_print("UTF-8字符串: %s\n", utf8_str);
+    g_print("字节长度(strlen): %zu\n", strlen(utf8_str));
+    g_print("字符长度(g_utf8_strlen): %ld\n", g_utf8_strlen(utf8_str, -1));
+    g_print("是否有效UTF-8: %s\n", g_utf8_validate(utf8_str, -1, NULL) ? "是" : "否");
+}
+
+/**
+ * 第4章：数据结构
+ */
+void chapter4_data_structures_test()
+{
+    g_print("\n--- 第4章：数据结构 ---\n\n");
+
+    // 4.1. 单向链表 GList（官方文档：https://docs.gtk.org/glib/struct.SList.html）
+    g_print("\n-- GSList 单向链表 --\n");
+    GSList *slist = NULL;
+    slist = g_slist_append(slist, "first");
+    slist = g_slist_append(slist, "second");
+    slist = g_slist_prepend(slist, "zero");
+    g_print("GSList 长度: %u\n", g_slist_length(slist));
+    g_print("GSList 内容: ");
+    for (GSList *iter = slist; iter != NULL; iter = iter->next) {
+        g_print("[%s] ", (gchar *)iter->data);
+    }
+    g_print("\n");
+    g_print("GSList 第2个元素: %s\n", (gchar *)g_slist_nth_data(slist, 1));
+    slist = g_slist_remove(slist, "second");
+    g_print("删除 \"second\" 后长度: %u\n", g_slist_length(slist));
+    g_slist_free(slist);
+
+    // 4.2. 双向链表 GList（官方文档：https://docs.gtk.org/glib/struct.List.html）
+    g_print("4.1 单链表 GList\n");
+    GList* list = NULL;
+    // 添加元素
+    list = g_list_append(list, "apple");
+    list = g_list_append(list, "banana");
+    list = g_list_append(list, "cherry");
+
+    g_print("链表长度: %u\n", g_list_length(list));
+    g_print("第一个元素: %s\n", (gchar*)g_list_first(list)->data);
+    g_print("最后一个元素: %s\n", (gchar*)g_list_last(list)->data);
+    g_print("索引1的元素: %s\n", (gchar*)g_list_nth_data(list, 1));
+
+    // 正向遍历链表
+    g_print("GList 正向遍历链表: ");
+    for (GList *iter = list; iter != NULL; iter = iter->next) {
+        g_print("[%s] ", (gchar *)iter->data);
+    }
+    g_print("\n");
+
+    // 反向遍历链表
+    GList *last = g_list_last(list);
+    g_print("GList 反向遍历链表: ");
+    for (GList *iter = last; iter != NULL; iter = iter->prev) {
+        g_print("[%s] ", (gchar *)iter->data);
+    }
+    g_print("\n");
+
+    // 排序链表
+    list = g_list_sort(list, (GCompareFunc)g_strcmp0);
+    g_print("排序后: ");
+    for (GList* l = list; l != NULL; l = l->next)
+    {
+        g_print("%s ", (gchar*)l->data);
+    }
+    g_print("\n");
+
+    // 只释放链表节点，不释放数据
+    g_list_free(list);
+
+    // 4.3. 指针数组 GPtrArray（官方文档：https://docs.gtk.org/glib/struct.PtrArray.html）
+    g_print("\n4.2 指针数组 GPtrArray\n");
+    GPtrArray* ptr_array = g_ptr_array_new();
+    g_ptr_array_add(ptr_array, g_strdup("first"));
+    g_ptr_array_add(ptr_array, g_strdup("second"));
+    g_ptr_array_add(ptr_array, g_strdup("third"));
+
+    g_print("数组长度: %u\n", ptr_array->len);
+    g_print("索引为 1 的元素: %s\n", (gchar*)g_ptr_array_index(ptr_array, 1));
+
+    // 遍历数组
+    g_print("遍历数组: ");
+    for (guint i = 0; i < ptr_array->len; i++)
+    {
+        g_print("%s ", (gchar*)g_ptr_array_index(ptr_array, i));
+    }
+    g_print("\n");
+
+    // 释放数组及其元素
+    g_ptr_array_foreach(ptr_array, (GFunc)g_free, NULL);
+    g_ptr_array_free(ptr_array, TRUE);
+
+    // 4.4. 哈希表 GHashTable（官方文档：glib-Hash-Tables.html）
+    g_print("\n4.3 哈希表 GHashTable\n");
+    // 创建哈希表
+    GHashTable* hash = g_hash_table_new(g_str_hash, g_str_equal);
+    g_hash_table_insert(hash, "apple", "red");
+    g_hash_table_insert(hash, "banana", "yellow");
+    g_hash_table_insert(hash, "cherry", "red");
+    g_hash_table_insert(hash, "orange", "orange");
+
+    g_print("哈希表大小（删除前）: %u\n", g_hash_table_size(hash));
+    g_print("apple的颜色: %s\n", (gchar*)g_hash_table_lookup(hash, "apple"));
+    g_print("grape是否存在: %s\n", g_hash_table_contains(hash, "grape") ? "是" : "否");
+
+    // 根据 key 删除
+    g_hash_table_remove(hash, "orange");
+    g_print("哈希表大小（删除后）: %u\n", g_hash_table_size(hash));
+
+    // 遍历哈希表
+    g_print("遍历哈希表: ");
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, hash);
+    while (g_hash_table_iter_next(&iter, &key, &value))
+    {
+        g_print("%s = %s ", (gchar*)key, (gchar*)value);
+    }
+    g_print("\n");
+
+    // 根据 key 替换值
+    g_hash_table_replace(hash, g_strdup("apple"), g_strdup("green"));
+    g_print("替换后 \"apple\": %s\n", (gchar *)g_hash_table_lookup(hash, "apple"));
+
+    // 释放哈希表
+    g_hash_table_destroy(hash);
+
+    // 4.5. 队列 GQueue（官方文档：glib-Double-Ended-Queues.html）
+    g_print("\n4.4 队列 GQueue\n");
+    // 创建队列
+    GQueue* queue = g_queue_new();
+    // 给队列尾部添加元素
+    g_queue_push_tail(queue, "first");
+    g_queue_push_tail(queue, "second");
+    g_queue_push_tail(queue, "third");
+
+    g_print("队列长度: %u\n", g_queue_get_length(queue));
+    g_print("队头元素: %s\n", (gchar*)g_queue_peek_head(queue));
+    g_print("出队: %s\n", (gchar*)g_queue_pop_head(queue));
+    g_print("出队后长度: %u\n", g_queue_get_length(queue));
+
+    // 释放队列
+    g_queue_free(queue);
+
+    // 4.6. GArray: 动态数组
+    g_print("\n-- GArray 动态数组 --\n");
+    GArray *arr = g_array_new(FALSE, FALSE, sizeof(gint));
+    gint val;
+    // 牢记：g_array_append_val 必须传入变量（左值）
+    val = 10;
+    g_array_append_val(arr, val);
+    val = 20;
+    g_array_append_val(arr, val);
+    val = 30;
+    g_array_append_val(arr, val);
+    g_print("GArray 长度: %u\n", arr->len);
+    g_print("GArray 内容: ");
+    for (guint i = 0; i < arr->len; i++) {
+        g_print("%d ", g_array_index(arr, gint, i));
+    }
+    g_print("\n");
+    // 在指定位置插入元素
+    val = 15; g_array_insert_val(arr, 1, val);
+    g_print("插入后: ");
+    for (guint i = 0; i < arr->len; i++) {
+        g_print("%d ", g_array_index(arr, gint, i));
+    }
+    g_print("\n");
+
+    // 在指定位置删除元素
+    g_array_remove_index(arr, 2);
+    g_print("删除索引2后: ");
+    for (guint i = 0; i < arr->len; i++) {
+        g_print("%d ", g_array_index(arr, gint, i));
+    }
+    g_print("\n");
+
+    // 释放动态数组
+    g_array_free(arr, TRUE);
+}
+
+/**
+ * 第5章：GType 类型注册、类型检查和类型转换机制
+ */
+#define MY_TYPE_BASIC (my_basic_get_type())
+G_DECLARE_FINAL_TYPE(MyBasic, my_basic, MY, BASIC, GObject)
+
+struct _MyBasic
+{
+    GObject parent_instance;
+    gint value;
+};
+
+G_DEFINE_TYPE(MyBasic, my_basic, G_TYPE_OBJECT)
+
+static void my_basic_class_init(MyBasicClass *klass)
+{
+    g_print("  MyBasic: 类初始化 (class_init)\n");
+}
+
+static void my_basic_init(MyBasic *self)
+{
+    self->value = 0;
+    g_print("  MyBasic: 实例初始化 (instance_init), value = %d\n", self->value);
+}
+
+void chapter5_type_system_test()
+{
+    g_print("\n=== 第5章：类型系统示例 ===\n");
+
+    /* 基本类型查询 */
+    g_print("G_TYPE_INT 的名称: %s\n", g_type_name(G_TYPE_INT));
+    g_print("G_TYPE_STRING 的名称: %s\n", g_type_name(G_TYPE_STRING));
+    g_print("G_TYPE_OBJECT 的名称: %s\n", g_type_name(G_TYPE_OBJECT));
+
+    /* 通过名称查找类型 */
+    GType t = g_type_from_name("gint");
+    g_print("g_type_from_name(\"gint\") = %lu\n", (gulong)t);
+    g_print("是否等于 G_TYPE_INT: %s\n", t == G_TYPE_INT ? "是" : "否");
+
+    /* 类型层级关系 */
+    g_print("G_TYPE_OBJECT 的父类型: %s\n", g_type_name(g_type_parent(G_TYPE_OBJECT)));
+    g_print("G_TYPE_OBJECT 是否是 G_TYPE_FUNDAMENTAL: %s\n", g_type_fundamental(G_TYPE_OBJECT) == G_TYPE_OBJECT ? "是" : "否");
+
+
+    /* 类型检查 */
+    g_print("G_TYPE_OBJECT 是接口吗: %s\n", G_TYPE_IS_INTERFACE(G_TYPE_OBJECT) ? "是" : "否");
+    g_print("G_TYPE_OBJECT 是实例化类型吗: %s\n", G_TYPE_IS_INSTANTIATABLE(G_TYPE_OBJECT) ? "是" : "否");
+    g_print("G_TYPE_OBJECT 是可派生的吗: %s\n", G_TYPE_IS_DERIVABLE(G_TYPE_OBJECT) ? "是" : "否");
+
+    /* 自定义类型注册与检查 */
+    g_print("\n-- 自定义类型 MyBasic --\n");
+    GType my_type = MY_TYPE_BASIC;
+    g_print("MyBasic 类型名称: %s\n", g_type_name(my_type));
+    g_print("MyBasic 的父类型: %s\n", g_type_name(g_type_parent(my_type)));
+
+    /* 类型转换检查 */
+    g_print("MyBasic 是否派生自 GObject: %s\n", g_type_is_a(my_type, G_TYPE_OBJECT) ? "是" : "否");
+
+
+    /* G_TYPE_CHECK_INSTANCE / G_TYPE_CHECK_CLASS */
+    MyBasic *obj = g_object_new(MY_TYPE_BASIC, NULL);
+    g_print("obj 是否是 GObject: %s\n", G_IS_OBJECT(obj) ? "是" : "否");
+    g_print("obj 是否是 MyBasic: %s\n", MY_IS_BASIC(obj) ? "是" : "否");
+
+
+    /* 类型转换 */
+    GObject *gobj = G_OBJECT(obj);
+    g_print("G_OBJECT(obj) 转换成功, 类型: %s\n", G_OBJECT_TYPE_NAME(gobj));
+
+    /* G_TYPE_INSTANCE_GET_CLASS */
+    MyBasicClass *klass = G_TYPE_INSTANCE_GET_CLASS(obj, MY_TYPE_BASIC, MyBasicClass);
+    g_print("获取类结构体: %s\n", klass ? "成功" : "失败");
+
+    g_object_unref(obj);
+
+    /* 打印类型继承链 */
+    g_print("\n-- MyBasic 继承链 --\n");
+    GType current = my_type;
+    while (current != 0) {
+        g_print("  %s\n", g_type_name(current));
+        current = g_type_parent(current);
+    }
+}
+
+/**
+ * 第6章：GObject 类型系统基础
+ */
+// ------------------------ GObject入门程序1开始 -------------------------
+
+// 定义带属性的 GObject 子类
+#define MY_TYPE_PERSON (my_person_get_type())
+G_DECLARE_FINAL_TYPE(MyPerson, my_person, MY, PERSON, GObject)
+
+struct _MyPerson
+{
+    GObject parent_instance;
+    gchar *name;
+    gint age;
+};
+
+enum
+{
+    PROP_PERSON_0,
+    PROP_PERSON_NAME,
+    PROP_PERSON_AGE,
+    N_PROP_PERSON
+};
+
+static GParamSpec *person_props[N_PROP_PERSON] = {NULL, };
+
+G_DEFINE_TYPE(MyPerson, my_person, G_TYPE_OBJECT)
+
+static void my_person_set_property(GObject *object, guint prop_id,
+                                   const GValue *value, GParamSpec *pspec)
+{
+    MyPerson *self = MY_PERSON(object);
+    switch (prop_id) {
+    case PROP_PERSON_NAME:
+        g_free(self->name);
+        self->name = g_value_dup_string(value);
+        break;
+    case PROP_PERSON_AGE:
+        self->age = g_value_get_int(value);
+        break;
+    default:
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+    }
+}
+
+static void my_person_get_property(GObject *object, guint prop_id,
+                                   GValue *value, GParamSpec *pspec)
+{
+    MyPerson *self = MY_PERSON(object);
+    switch (prop_id) {
+    case PROP_PERSON_NAME:
+        g_value_set_string(value, self->name);
+        break;
+    case PROP_PERSON_AGE:
+        g_value_set_int(value, self->age);
+        break;
+    default:
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+    }
+}
+
+static void my_person_dispose(GObject *object)
+{
+    MyPerson *self = MY_PERSON(object);
+    g_print("  MyPerson dispose: name = %s\n", self->name ? self->name : "(null)");
+    G_OBJECT_CLASS(my_person_parent_class)->dispose(object);
+}
+
+static void my_person_finalize(GObject *object)
+{
+    MyPerson *self = MY_PERSON(object);
+    g_free(self->name);
+    g_print("  MyPerson finalize: 对象已销毁\n");
+    G_OBJECT_CLASS(my_person_parent_class)->finalize(object);
+}
+
+static void my_person_class_init(MyPersonClass *klass)
+{
+    GObjectClass *gobj_class = G_OBJECT_CLASS(klass);
+    gobj_class->set_property = my_person_set_property;
+    gobj_class->get_property = my_person_get_property;
+    gobj_class->dispose = my_person_dispose;
+    gobj_class->finalize = my_person_finalize;
+
+    person_props[PROP_PERSON_NAME] =
+        g_param_spec_string("name", "Name", "Person's name", "",
+                            G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+    person_props[PROP_PERSON_AGE] =
+        g_param_spec_int("age", "Age", "Person's age", 0, 200, 0,
+                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+
+    g_object_class_install_properties(gobj_class, N_PROP_PERSON, person_props);
+}
+
+static void my_person_init(MyPerson *self)
+{
+    self->name = NULL;
+    self->age = 0;
+    g_print("  MyPerson 实例初始化\n");
+}
+
+void chapter6_gobject_basics_test_1(void)
+{
+    g_print("\n=== 第6章：对象基础示例 ===\n");
+
+    /* 使用 g_object_new 创建对象 */
+    g_print("-- 创建对象 --\n");
+    MyPerson *person = g_object_new(MY_TYPE_PERSON, NULL);
+    g_print("对象创建完成\n");
+
+    /* 使用构造属性创建对象 */
+    g_print("\n-- 使用构造属性创建 --\n");
+    MyPerson *person2 = g_object_new(MY_TYPE_PERSON,
+                                     "name", "Alice",
+                                     "age", 30,
+                                     NULL);
+    gchar *name = NULL;
+    gint age = 0;
+    g_object_get(person2, "name", &name, "age", &age, NULL);
+    g_print("person2: name = %s, age = %d\n", name, age);
+    g_free(name);
+
+    /* 设置属性 */
+    g_print("\n-- 设置属性 --\n");
+    g_object_set(person, "name", "Bob", "age", 25, NULL);
+    g_object_get(person, "name", &name, "age", &age, NULL);
+    g_print("person: name = %s, age = %d\n", name, age);
+    g_free(name);
+
+    /* 使用 g_object_set_property / g_object_get_property */
+    g_print("\n-- 使用 GValue 设置/获取属性 --\n");
+    GValue val = G_VALUE_INIT;
+    g_value_init(&val, G_TYPE_STRING);
+    g_value_set_string(&val, "Charlie");
+    g_object_set_property(G_OBJECT(person), "name", &val);
+    g_value_unset(&val);
+
+    g_value_init(&val, G_TYPE_STRING);
+    g_object_get_property(G_OBJECT(person), "name", &val);
+    g_print("通过 GValue 获取 name = %s\n", g_value_get_string(&val));
+    g_value_unset(&val);
+
+    /* 查询属性 */
+    g_print("\n-- 查询对象属性 --\n");
+    guint n_props = 0;
+    GParamSpec **props = g_object_class_list_properties(
+        G_OBJECT_GET_CLASS(person), &n_props);
+    g_print("MyPerson 有 %u 个属性:\n", n_props);
+    for (guint i = 0; i < n_props; i++) {
+        g_print("  - %s (%s)\n", props[i]->name, g_type_name(props[i]->value_type));
+    }
+    g_free(props);
+
+    /* 销毁对象 */
+    g_print("\n-- 销毁对象 --\n");
+    g_object_unref(person);
+    g_object_unref(person2);
+}
+
+// ------------------------ GObject入门程序2结束 -------------------------
+
+// ------------------------ GObject入门程序2开始 -------------------------
+// ------------------------ 第一部分：定义类的"结构" ----------------------
+
+// 1. 声明：我们要创建一个叫Person的类
+#define PERSON_TYPE (person_get_type())
+// GObject 类型系统的核心安全保障 - 安全的类型转换
+#define PERSON(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), PERSON_TYPE, Person))
+
+// 2. 定义Person对象长什么样（实例结构体）
+typedef struct _Person Person;
+struct _Person {
+    // 父类必须放第一行位置，这是GObject继承体系的硬性要求
+    GObject parent;
+    // 我们自己加的属性：名字
+    gchar* name;
+};
+
+// 3. 定义Person类的"公共信息"（类结构体）
+typedef struct _PersonClass PersonClass;
+struct _PersonClass {
+    // 结构体首成员必须是父类的结构体，依靠结构体内存布局实现继承，GObject硬性规范
+    GObjectClass parent_class;
+};
+
+/**
+ * 4. 这个宏帮我们自动完成90%的类型注册工作（定义的函数名必须与 G_DEFINE_TYPE 中的前缀匹配，前缀 "person"）
+ * @param Person            大写类型名
+ * @param person            小写前缀
+ * @param G_TYPE_OBJECT     父类类型
+ */
+G_DEFINE_TYPE(Person, person, G_TYPE_OBJECT)
+
+// -------------------------- 第二部分：类的初始化 --------------------------
+
+// 实例初始化函数（定义的函数名必须与 G_DEFINE_TYPE 中的前缀匹配） - 每个新Person对象创建时，都会调用这个函数
+static void person_init(Person* self)
+{
+    // 默认名字是 "张三"
+    self->name = g_strdup("张三");
+    g_print("一个新的Person对象诞生了\n");
+}
+
+// 类初始化函数（定义的函数名必须与 G_DEFINE_TYPE 中的前缀匹配） - 整个Person类第一次被使用时，调用一次这个函数
+static void person_class_init(PersonClass* klass)
+{
+    g_print("Person类初始化完成（整个程序只执行一次）\n");
+}
+
+// -------------------------- 第三部分：给类添加"方法" --------------------------
+
+// 方法1：设置名字（不是必须以 person 开头或以 set_name 结尾，只是推荐这样命名）
+void person_set_name(Person* self, const gchar* new_name)
+{
+    // 安全检查：确保传入的确实是Person对象
+    g_return_if_fail(PERSON(self));
+
+    // 安全检查：新旧值相同则不做任何操作
+    if (self->name && new_name && strcmp(self->name, new_name) == 0) {
+        return;
+    }
+
+    // 释放旧名字，保存新名字
+    g_free(self->name);
+    self->name = g_strdup(new_name);
+}
+
+// 方法2：获取名字（不是必须以 person 开头或以 get_name 结尾，只是推荐这样命名）
+const gchar* person_get_name(Person* self)
+{
+    g_return_val_if_fail(PERSON(self), NULL);
+    return self->name;
+}
+
+// -------------------------- 第四部分：测试程序 --------------------------
+
+void chapter6_gobject_basics_test_2()
+{
+    g_print("\n--- 第6章：GObject 类型系统基础 ---\n\n");
+
+    g_print("----- GObject入门程序开始 -----\n\n");
+    // 1. 创建一个Person对象
+    Person* zhangsan = g_object_new(PERSON_TYPE, NULL);
+
+    // 2. 使用对象的方法
+    g_print("默认名字: %s\n", person_get_name(zhangsan));
+    person_set_name(zhangsan, "张三");
+    g_print("修改后的名字: %s\n", person_get_name(zhangsan));
+
+    // 3. 用完一定要释放
+    g_object_unref(zhangsan);
+    g_print("对象已释放\n");
+
+    g_print("\n----- GObject入门程序结束 -----\n");
+}
+
+// ------------------------ GObject入门程序2结束 -------------------------
+
+// ------------------------- GObject高级程序开始 -------------------------
+
+/*
+ * MY_TYPE_OBJECT: 获取MyObject对象对应的GType类型值
+ * 本质调用my_object_get_type()，该函数完成GObject类型注册并返回唯一类型ID
+ * 后续类型判断、类型转换宏都依赖这个类型ID
+ *
+ * 宏标准命名规范 [大写前缀]_TYPE_[大写类名
+ * 宏参数命名规范 [小写模块名]_[小写类名]_get_type(void)
+ */
+#define MY_TYPE_OBJECT (my_object_get_type())
+
+/*
+ * MY_OBJECT(obj): 安全类型转换宏，将GObject*指针转为MyObject*
+ * 参数obj: GObject基类对象指针
+ * 内部先校验obj的实际类型，类型不符触发断言异常、程序终止；校验通过则强制转型
+ */
+#define MY_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), MY_TYPE_OBJECT, MyObject))
+
+// 转成类结构体MyObjectClass*
+#define MY_OBJECT_CLASS(klass)   G_TYPE_CHECK_CLASS_CAST((klass),MY_TYPE_OBJECT,MyObjectClass)
+
+/*
+ * IS_MY_OBJECT(obj): 判断obj是否为MyObject类型的实例对象
+ * 参数obj: 待检测的GObject对象指针
+ * 返回布尔值，TRUE表示是MyObject实例，FALSE表示不是；仅做判断不会使程序崩溃
+ */
+#define IS_MY_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), MY_TYPE_OBJECT))
+
+/*
+ * 前向声明实例结构体别名：_MyObject是结构体内部标签名，MyObject是对外使用的类型名
+ * 用于代表MyObject的实例对象（每个g_object_new创建出来的实体）
+ */
+typedef struct _MyObject MyObject;
+
+/*
+ * 前向声明类结构体别名：_MyObjectClass是内部标签，MyObjectClass对外使用
+ * Class结构体存放类信息、虚函数、方法，所有MyObject实例共用同一份Class
+ */
+typedef struct _MyObjectClass MyObjectClass;
+
+struct _MyObject {
+    // 父类必须放首位置，这是GObject继承体系的硬性要求
+    GObject parent_instance;
+
+    // 实例私有数据
+    gint value;
+};
+
+struct _MyObjectClass {
+    GObjectClass parent_class;
+
+    // 类级别的虚函数可以在这里声明
+    // void (*some_virtual_method)(MyObject *self);
+};
+
+/*
+ * G_DEFINE_TYPE 宏自动完成以下工作：
+ * 1. 声明并实现 my_object_get_type() 函数
+ * 2. 定义父类指针 my_object_parent_class
+ * 3. 注册类型到GObject类型系统
+ * 4. 关联实例初始化函数和类初始化函数
+ */
+G_DEFINE_TYPE(MyObject, my_object, G_TYPE_OBJECT)
+
+/*
+ * 实例初始化函数：每个新创建的对象都会调用一次
+ * 用于初始化实例的成员变量，分配实例级别的资源
+ */
+static void my_object_init(MyObject* self)
+{
+    self->value = 0;
+    // g_print("MyObject 实例初始化完成: %p\n", self);
+}
+
+/*
+ * 类初始化函数：该类第一次被使用时调用一次
+ * 用于初始化类结构体，设置虚函数、信号、属性等
+ */
+static void my_object_class_init(MyObjectClass* klass)
+{
+    GObjectClass* gobject_class = G_OBJECT_CLASS(klass);
+
+    g_print("MyObject 类初始化完成\n");
+
+    // 在这里可以重写GObject的虚函数，例如：
+    // gobject_class->finalize = my_object_finalize;
+    // gobject_class->set_property = my_object_set_property;
+    // gobject_class->get_property = my_object_get_property;
+}
+
+/*
+ * 公共方法：设置对象的value属性
+ * 使用g_return_if_fail进行参数校验，确保传入的是有效的MyObject实例
+ */
+void my_object_set_value(MyObject* self, gint value)
+{
+    g_return_if_fail(IS_MY_OBJECT(self));
+    self->value = value;
+}
+
+/*
+ * 公共方法：获取对象的value属性
+ * 使用g_return_val_if_fail进行参数校验，失败时返回默认值0
+ */
+gint my_object_get_value(MyObject* self)
+{
+    g_return_val_if_fail(IS_MY_OBJECT(self), 0);
+    return self->value;
+}
+
+/*
+ * 弱引用回调函数：当对象被销毁时自动调用
+ */
+static void weak_ref_notify(gpointer data, GObject* where_the_object_was)
+{
+    g_print("弱引用回调: 对象 %p 已被销毁\n", where_the_object_was);
+}
+
+/**
+ * 切换引用回调函数：引用计数在 1 和 2 之间切换时自动触发
+ */
+static void on_toggle_notify(gpointer data, GObject *obj, gboolean is_last_ref)
+{
+    g_print("[切换通知] %s | 是否仅剩1个引用: %s\n", (char *)data, is_last_ref ? "是" : "否");
+}
+
+
+void chapter6_gobject_senior_test_1()
+{
+    g_print("\n----- GObject高级程序开始 -----\n\n");
+
+    // 6.1. GObject 基本概念
+    g_print("6.1 GObject 基本概念\n");
+    g_print("G_TYPE_OBJECT: %s (类型ID: %lu)\n", g_type_name(G_TYPE_OBJECT), (gulong)G_TYPE_OBJECT);
+    g_print("MY_TYPE_OBJECT: %s (类型ID: %lu)\n", g_type_name(MY_TYPE_OBJECT), (gulong)MY_TYPE_OBJECT);
+    g_print("MyObject 是否继承自 GObject: %s\n", g_type_is_a(MY_TYPE_OBJECT, G_TYPE_OBJECT) ? "是" : "否");
+    g_print("GObject 是否继承自 MyObject: %s\n", g_type_is_a(G_TYPE_OBJECT, MY_TYPE_OBJECT) ? "是" : "否");
+
+    // 6.2. 创建和销毁对象
+    g_print("\n6.2 创建和销毁对象\n");
+    MyObject* obj = g_object_new(MY_TYPE_OBJECT, NULL);
+    g_print("创建对象: %p\n", obj);
+
+    my_object_set_value(obj, 42);
+    g_print("设置对象值为: %d\n", my_object_get_value(obj));
+
+    g_object_unref(obj);  // 引用计数减为0，对象被销毁
+    g_print("对象已释放\n");
+
+    // 6.3. 基本引用计数
+    g_print("\n6.3 引用计数\n");
+    MyObject* obj2 = g_object_new(MY_TYPE_OBJECT, NULL);
+    g_print("对象已创建 (初始引用计数为1)\n");
+
+    // 注意：不推荐直接访问ref_count成员，这是内部实现细节
+    // 这里仅用于演示目的，实际代码中应避免这样做，这里只是为了查看这个值
+    g_print("初始引用计数: %d\n", (int)obj2->parent_instance.ref_count);
+
+    // g_object_ref() - 增加引用计数
+    g_object_ref(obj2);
+    g_print("g_object_ref 后引用计数: %d\n", (int)obj2->parent_instance.ref_count);
+
+    // g_object_unref() - 减少引用计数
+    g_object_unref(obj2);
+    g_print("第一次 g_object_unref 后引用计数: %d\n", (int)obj2->parent_instance.ref_count);
+
+    // g_object_unref() - 减少引用计数
+    g_object_unref(obj2);  // 引用计数变为0，对象被销毁
+    g_print("第二次 g_object_unref 后引用计数: %d\n", (int)obj2->parent_instance.ref_count);
+    g_print("第二次 g_object_unref 后，对象已销毁\n");
+
+    // 6.4  浮动引用
+    g_print("\n6.4 浮动引用 (g_object_ref_sink)\n");
+    // 创建普通 GObject 子类对象
+    MyObject* obj3 = g_object_new(MY_TYPE_OBJECT, NULL);
+    g_print("创建后：计数=%u，浮动=%s\n", G_OBJECT(obj3)->ref_count,  g_object_is_floating(obj3) ? "是" : "否");
+
+    MyObject *sunk = g_object_ref_sink(obj3);
+    g_print("ref_sink后：计数=%u，指针相同=%s\n", G_OBJECT(obj3)->ref_count, sunk == obj3 ? "是" : "否");
+
+    g_object_unref(sunk);
+    g_print("unref(sunk)后：计数=%u\n", G_OBJECT(obj3)->ref_count);
+
+    g_object_unref(obj3);
+    g_print("unref(obj3)后：对象已销毁\n");
+
+    // 6.5. 弱引用（不增加引用计数，对象销毁时通知）
+    g_print("\n6.5 弱引用（不增加引用计数，对象销毁时通知）\n");
+    MyObject* obj4 = g_object_new(MY_TYPE_OBJECT, NULL);
+
+    // 添加弱引用（需要转换为 GObject* 类型）
+    g_object_weak_ref(G_OBJECT(obj4), weak_ref_notify, NULL);
+    g_print("已为对象 %p 添加弱引用\n", obj4);
+    // 释放对象，此时会触发弱引用回调
+    g_object_unref(obj4);
+
+    // 6.6. 安全地释放引用并置空指针
+    g_print("\n6.6. 安全地释放引用并置空指针\n");
+    MyObject* obj5 = g_object_new(MY_TYPE_OBJECT, NULL);
+    g_print("obj5 销毁前: %p\n", (void *)obj5);
+    g_clear_object(&obj5);
+    g_print("obj4 销毁后: %p\n", (void *)obj5);
+
+    // 6.7. 切换引用（引用计数在1和2之间切换时通知）
+    g_print("\n6.7. 切换引用（引用计数在1和2之间切换时通知）\n");
+    MyObject* owner_obj = g_object_new(MY_TYPE_OBJECT, NULL);
+    g_print("创建对象，初始计数=%u，调用者拥有所有权\n", G_OBJECT(owner_obj)->ref_count);
+
+    // 统一使用 NULL 作为用户数据
+    gpointer user_data = NULL;
+
+    // 注册 toggle ref
+    g_object_add_toggle_ref(G_OBJECT(owner_obj), on_toggle_notify, user_data);
+    g_print("注册切换引用后，计数=%u\n\n", G_OBJECT(owner_obj)->ref_count);
+
+    // 释放原始引用
+    g_object_unref(owner_obj);
+    g_print("\n释放原始引用后，计数=%u（仅剩toggle引用）\n", G_OBJECT(owner_obj)->ref_count);
+
+    // 重新引用
+    g_object_ref(owner_obj);
+    g_print("重新引用后，计数=%u\n\n", G_OBJECT(owner_obj)->ref_count);
+
+    // 移除：回调 + 数据 和 add 完全一致
+    g_object_remove_toggle_ref(G_OBJECT(owner_obj), on_toggle_notify, user_data);
+
+    // 最后释放常规引用
+    g_object_unref(owner_obj);
+    g_print("清理完成，对象已销毁\n");
+
+    // 6.8. 类型转换和类型检查
+    g_print("\n6.8. 类型转换和类型检查\n");
+    GObject* generic_obj = g_object_new(MY_TYPE_OBJECT, NULL);
+
+    // 安全类型转换
+    MyObject* typed_obj = MY_OBJECT(generic_obj);
+    g_print("GObject* 转换为 MyObject* 成功: %p\n", typed_obj);
+
+    // 类型检查
+    g_print("generic_obj 是否是 MyObject 类型: %s\n", IS_MY_OBJECT(generic_obj) ? "是" : "否");
+    g_object_unref(generic_obj);
+
+    g_print("\n----- GObject高级程序结束 -----\n\n");
+}
+
+// ------------------------- GObject高级程序结束 -------------------------
+
+/**
+ * 第7章：GObject 属性
+ */
+// 定义带属性的 GObject 类
+#define MY_TYPE_PROPERTY_OBJECT (my_property_object_get_type())
+#define MY_PROPERTY_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), MY_TYPE_PROPERTY_OBJECT, MyPropertyObject))
+#define IS_MY_PROPERTY_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), MY_TYPE_PROPERTY_OBJECT))
+
+typedef struct _MyPropertyObject MyPropertyObject;
+typedef struct _MyPropertyObjectClass MyPropertyObjectClass;
+
+enum {
+    PROP_0,
+    PROP_NAME,
+    PROP_AGE,
+    N_PROPERTIES
+};
+
+struct _MyPropertyObject {
+    GObject parent_instance;
+    gchar* name;
+    gint age;
+};
+
+struct _MyPropertyObjectClass {
+    GObjectClass parent_class;
+};
+
+static GParamSpec* obj_properties[N_PROPERTIES] = { NULL, };
+
+GType my_property_object_get_type(void);
+
+G_DEFINE_TYPE(MyPropertyObject, my_property_object, G_TYPE_OBJECT)
+
+static void my_property_object_set_property(GObject* object, guint property_id,  const GValue* value, GParamSpec* pspec)
+{
+    MyPropertyObject* self = MY_PROPERTY_OBJECT(object);
+
+    switch (property_id)
+    {
+        case PROP_NAME:
+            g_free(self->name);
+            self->name = g_value_dup_string(value);
+            break;
+        case PROP_AGE:
+            self->age = g_value_get_int(value);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+            break;
+    }
+}
+
+static void my_property_object_get_property(GObject* object, guint property_id, GValue* value, GParamSpec* pspec)
+{
+    MyPropertyObject* self = MY_PROPERTY_OBJECT(object);
+
+    switch (property_id)
+    {
+        case PROP_NAME:
+            g_value_set_string(value, self->name);
+            break;
+        case PROP_AGE:
+            g_value_set_int(value, self->age);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+            break;
+    }
+}
+
+static void my_property_object_finalize(GObject* object)
+{
+    MyPropertyObject* self = MY_PROPERTY_OBJECT(object);
+    g_free(self->name);
+    G_OBJECT_CLASS(my_property_object_parent_class)->finalize(object);
+}
+
+static void my_property_object_class_init(MyPropertyObjectClass* klass)
+{
+    GObjectClass* gobject_class = G_OBJECT_CLASS(klass);
+
+    gobject_class->set_property = my_property_object_set_property;
+    gobject_class->get_property = my_property_object_get_property;
+    gobject_class->finalize = my_property_object_finalize;
+
+    // 安装属性
+    obj_properties[PROP_NAME] = g_param_spec_string(
+        "name",
+        "Name",
+        "The name of the person",
+        NULL,  // 默认值
+        G_PARAM_READWRITE | G_PARAM_CONSTRUCT
+    );
+
+    obj_properties[PROP_AGE] = g_param_spec_int(
+        "age",
+        "Age",
+        "The age of the person",
+        0,    // 最小值
+        150,  // 最大值
+        0,    // 默认值
+        G_PARAM_READWRITE | G_PARAM_CONSTRUCT
+    );
+
+    g_object_class_install_properties(gobject_class, N_PROPERTIES, obj_properties);
+}
+
+static void my_property_object_init(MyPropertyObject* self)
+{
+    self->name = NULL;
+    self->age = 0;
+}
+
+void chapter7_gobject_properties_test()
+{
+    g_print("\n--- 第7章：GObject 属性 ---\n\n");
+
+    // 7.1. 属性基本操作（官方文档：gobject-GObject-Properties.html）
+    g_print("7.1 属性基本操作\n");
+
+    // 创建对象并设置属性
+    MyPropertyObject* person = g_object_new(
+        MY_TYPE_PROPERTY_OBJECT,
+        "name", "Alice",
+        "age", 25,
+        NULL
+    );
+
+    // 获取属性
+    gchar* name;
+    gint age;
+    g_object_get(person, "name", &name, "age", &age, NULL);
+
+    g_print("Name: %s\n", name);
+    g_print("Age: %d\n", age);
+    g_free(name);  // g_object_get 返回的字符串需要释放
+
+    // 设置属性
+    g_object_set(person,
+                "name", "Bob",
+                "age", 30,
+                NULL);
+
+    g_object_get(person, "name", &name, NULL);
+    g_print("Updated name: %s\n", name);
+    g_free(name);
+
+    g_object_unref(person);
+}
+
+/**
+ * 第8章：GObject 高级特性
+ */
+void chapter8_gobject_advanced_test()
+{
+    g_print("\n--- 第8章：GObject 高级特性 ---\n\n");
+
+    // 8.1. 接口（官方文档：gobject-Interfaces.html）
+    g_print("8.1 接口\n");
+    g_print("G_TYPE_INTERFACE: %s\n", g_type_name(G_TYPE_INTERFACE));
+    g_print("G_TYPE_INITIALLY_UNOWNED: %s\n", g_type_name(G_TYPE_INITIALLY_UNOWNED));
+
+    // 8.2. 弱引用
+    g_print("\n8.2 弱引用\n");
+    GObject* obj = g_object_new(G_TYPE_OBJECT, NULL);
+    gpointer weak_data = GINT_TO_POINTER(123);
+
+    g_object_weak_ref(obj, (GWeakNotify)g_print, "对象被销毁了！\n");
+    g_object_unref(obj);  // 触发弱引用回调
+}
+
+/**
+ * 第8章：GObject 信号与槽
+ */
+// 定义带信号的 GObject 类
+#define MY_TYPE_SIGNAL_OBJECT (my_signal_object_get_type())
+#define MY_SIGNAL_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), MY_TYPE_SIGNAL_OBJECT, MySignalObject))
+#define MY_IS_SIGNAL_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), MY_TYPE_SIGNAL_OBJECT))
+
+typedef struct _MySignalObject MySignalObject;
+typedef struct _MySignalObjectClass MySignalObjectClass;
+
+enum {
+    CLICKED,
+    VALUE_CHANGED,
+    LAST_SIGNAL
+};
+
+struct _MySignalObject {
+    GObject parent_instance;
+    gint value;
+};
+
+struct _MySignalObjectClass {
+    GObjectClass parent_class;
+    void (*clicked)(MySignalObject* self);
+    void (*value_changed)(MySignalObject* self, gint new_value);
+};
+
+static guint obj_signals[LAST_SIGNAL] = { 0, };
+
+GType my_signal_object_get_type(void);
+
+static void my_signal_object_class_init(MySignalObjectClass* klass)
+{
+    GObjectClass* gobject_class = G_OBJECT_CLASS(klass);
+
+    // 注册信号
+    obj_signals[CLICKED] = g_signal_new(
+        "clicked",
+        G_TYPE_FROM_CLASS(klass),
+        G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(MySignalObjectClass, clicked),
+        NULL, NULL,
+        NULL,
+        G_TYPE_NONE,
+        0
+    );
+
+    obj_signals[VALUE_CHANGED] = g_signal_new(
+        "value-changed",
+        G_TYPE_FROM_CLASS(klass),
+        G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(MySignalObjectClass, value_changed),
+        NULL, NULL,
+        NULL,
+        G_TYPE_NONE,
+        1,
+        G_TYPE_INT
+    );
+}
+
+static void my_signal_object_init(MySignalObject* self)
+{
+    self->value = 0;
+}
+
+G_DEFINE_TYPE(MySignalObject, my_signal_object, G_TYPE_OBJECT)
+
+// 公共方法
+void my_signal_object_click(MySignalObject* self)
+{
+    g_return_if_fail(MY_IS_SIGNAL_OBJECT(self));
+    g_signal_emit(self, obj_signals[CLICKED], 0);
+}
+
+void my_signal_object_set_value(MySignalObject* self, gint value){
+    g_return_if_fail(MY_IS_SIGNAL_OBJECT(self));
+    if (self->value != value)
+    {
+        self->value = value;
+        g_signal_emit(self, obj_signals[VALUE_CHANGED], 0, value);
+    }
+}
+
+// 信号处理函数
+static void on_clicked(MySignalObject* self, gpointer user_data)
+{
+    g_print("信号处理: 按钮被点击了！\n");
+}
+
+static void on_value_changed(MySignalObject* self, gint new_value, gpointer user_data)
+{
+    g_print("信号处理: 值变为 %d\n", new_value);
+}
+
+void chapter9_gobject_signals_test()
+{
+    g_print("\n--- 第9章：GObject 信号 ---\n\n");
+
+    // 9.1. 信号基本操作（官方文档：gobject-Signals.html）
+    g_print("9.1 信号基本操作\n");
+
+    MySignalObject* obj = g_object_new(MY_TYPE_SIGNAL_OBJECT, NULL);
+
+    // 连接信号
+    g_signal_connect(obj, "clicked", G_CALLBACK(on_clicked), NULL);
+    g_signal_connect(obj, "value-changed", G_CALLBACK(on_value_changed), NULL);
+
+    // 发射信号
+    g_print("发射 clicked 信号:\n");
+    my_signal_object_click(obj);
+
+    g_print("\n发射 value-changed 信号:\n");
+    my_signal_object_set_value(obj, 42);
+    my_signal_object_set_value(obj, 100);
+
+    g_object_unref(obj);
+}
+
+/**
+ * 第10章：GIO 基础与文件操作
+ */
+// 方法1：自己写转换函数（推荐，输出更友好）
+static const gchar* file_type_to_string(GFileType type)
+{
+    switch (type)
+    {
+        case G_FILE_TYPE_REGULAR:
+            return "普通文件";
+        case G_FILE_TYPE_DIRECTORY:
+            return "目录";
+        case G_FILE_TYPE_SYMBOLIC_LINK:
+            return "符号链接";
+        case G_FILE_TYPE_SPECIAL:
+            return "特殊文件";
+        case G_FILE_TYPE_SHORTCUT:
+            return "快捷方式";
+        case G_FILE_TYPE_MOUNTABLE:
+            return "可挂载设备";
+        default:
+            return "未知类型";
+    }
+}
+
+// 方法2：使用GLib通用枚举转字符串函数
+// g_enum_to_string(G_TYPE_FILE_TYPE, g_file_info_get_file_type(info))
+
+void chapter10_gio_file_operations_test()
+{
+    g_print("\n--- 第10章：GIO 基础与文件操作 ---\n\n");
+
+    // 10.1. GFile 基本操作（官方文档：gio-GFile.html）
+    g_print("10.1 GFile 基本操作\n");
+
+    // 创建 GFile 对象
+    GFile* file = g_file_new_for_path("test.txt");
+    g_print("文件路径: %s\n", g_file_get_path(file));
+    g_print("文件URI: %s\n", g_file_get_uri(file));
+
+    // 写入文件
+    GError* error = NULL;
+    const gchar* content = "Hello, GIO!";
+    if (!g_file_replace_contents(file, content, strlen(content), NULL, FALSE, G_FILE_CREATE_NONE, NULL, NULL, &error))
+    {
+        g_print("写入文件失败: %s\n", error->message);
+        g_error_free(error);
+    }
+    else
+    {
+        g_print("文件写入成功\n");
+    }
+
+    // 读取文件
+    gchar* read_content;
+    gsize length;
+    if (g_file_load_contents(file, NULL, &read_content, &length, NULL, &error))
+    {
+        g_print("文件内容: %s\n", read_content);
+        g_print("文件大小: %zu 字节\n", length);
+        g_free(read_content);
+    }
+    else
+    {
+        g_print("读取文件失败: %s\n", error->message);
+        g_error_free(error);
+    }
+
+    // 检查文件信息
+    GFileInfo* info = g_file_query_info(file,
+                                       G_FILE_ATTRIBUTE_STANDARD_SIZE ","
+                                       G_FILE_ATTRIBUTE_STANDARD_TYPE,
+                                       G_FILE_QUERY_INFO_NONE,
+                                       NULL, &error);
+    if (info)
+    {
+        g_print("文件大小: %" G_GUINT64_FORMAT " 字节\n",
+                g_file_info_get_size(info));
+        g_print("文件类型: %s\n",
+                file_type_to_string(g_file_info_get_file_type(info)));
+        g_object_unref(info);
+    }
+    else
+    {
+        g_print("查询文件信息失败: %s\n", error->message);
+        g_error_free(error);
+    }
+
+    // 删除文件
+    if (g_file_delete(file, NULL, &error))
+    {
+        g_print("文件删除成功\n");
+    }
+    else
+    {
+        g_print("删除文件失败: %s\n", error->message);
+        g_error_free(error);
+    }
+
+    g_object_unref(file);
+}
+
+/**
+ * 第11章：GIO 主循环
+ */
+// 定时器回调函数
+static gboolean on_timeout(gpointer user_data)
+{
+    static gint count = 0;
+    g_print("定时器触发: %d\n", ++count);
+
+    if (count >= 3)
+    {
+        g_print("定时器停止\n");
+        return G_SOURCE_REMOVE;  // 返回FALSE停止定时器
+    }
+
+    return G_SOURCE_CONTINUE;  // 返回TRUE继续
+}
+
+// 空闲回调函数
+static gboolean on_idle(gpointer user_data)
+{
+    g_print("空闲任务执行\n");
+    return G_SOURCE_REMOVE;  // 只执行一次
+}
+
+void chapter11_gio_main_loop_test()
+{
+    g_print("\n--- 第11章：GIO 主循环 ---\n\n");
+
+    // 11.1. 主循环基础（官方文档：gio-The-Main-Event-Loop.html）
+    g_print("11.1 主循环基础\n");
+
+    GMainLoop* loop = g_main_loop_new(NULL, FALSE);
+
+    // 添加定时器（1秒触发一次）
+    guint timeout_id = g_timeout_add(1000, on_timeout, NULL);
+    g_print("添加定时器，ID: %u\n", timeout_id);
+
+    // 添加空闲任务
+    guint idle_id = g_idle_add(on_idle, NULL);
+    g_print("添加空闲任务，ID: %u\n", idle_id);
+
+    // 运行主循环
+    g_print("运行主循环...\n");
+    g_main_loop_run(loop);
+
+    // 清理
+    g_main_loop_unref(loop);
+}
+
+/**
+ * 第12章：GIO 网络编程
+ */
+void chapter12_gio_networking_test()
+{
+    g_print("\n--- 第12章：GIO 网络编程 ---\n\n");
+
+    // 12.1. 网络地址解析（官方文档：gio-GSocketAddress.html）
+    g_print("11.1 网络地址解析\n");
+
+    GError* error = NULL;
+    GResolver* resolver = g_resolver_get_default();
+
+    g_print("解析 www.baidu.com...\n");
+    GList* addresses = g_resolver_lookup_by_name(resolver, "www.baidu.com", NULL, &error);
+
+    if (addresses)
+    {
+        for (GList* l = addresses; l != NULL; l = l->next)
+        {
+            GInetAddress* addr = G_INET_ADDRESS(l->data);
+            gchar* ip = g_inet_address_to_string(addr);
+            g_print("IP地址: %s\n", ip);
+            g_free(ip);
+        }
+        g_resolver_free_addresses(addresses);
+    }
+    else
+    {
+        g_print("解析失败: %s\n", error->message);
+        g_error_free(error);
+    }
+
+    g_object_unref(resolver);
+}
+
+/**
+ * 第13章：GIO 高级特性
+ */
+void chapter13_gio_advanced_test()
+{
+    g_print("\n--- 第13章：GIO 高级特性 ---\n\n");
+
+    // 13.1. 异步操作（官方文档：gio-Asynchronous-IO.html）
+    g_print("13.1. 异步操作\n");
+    g_print("GIO 支持异步文件操作、网络操作等\n");
+    g_print("异步操作通过 GAsyncResult 和回调函数实现\n");
+
+    // 13.2. 数据流（官方文档：gio-IO-Streams.html）
+    g_print("\n13.2. 数据流\n");
+    g_print("GInputStream 和 GOutputStream 是所有 I/O 流的基类\n");
+    g_print("支持文件流、网络流、内存流等\n");
+}
+
+#if 0
+#endif
+int main()
+{
+    // 第1-4章：GLib 核心
+    // chapter1_basic_types_and_macros_test();
+    // chapter2_memory_management_test();
+    // chapter3_glib_string_handling_test();
+    // chapter4_data_structures_test();
+
+    // 第5-9章：GObject 系统
+    // chapter5_type_system_test();
+    // chapter6_gobject_basics_test_1();
+    // chapter6_gobject_basics_test_2();
+    // chapter6_gobject_senior_test_1();
+    // chapter7_gobject_properties_test();
+    // chapter8_gobject_advanced_test();
+    // chapter9_gobject_signals_test();
+
+    // 第10-12章：GIO 库
+    // chapter10_gio_file_operations_test();
+    // chapter11_gio_main_loop_test();
+    // chapter12_gio_networking_test();
+    // chapter13_gio_advanced_test();
+    return 0;
+}
