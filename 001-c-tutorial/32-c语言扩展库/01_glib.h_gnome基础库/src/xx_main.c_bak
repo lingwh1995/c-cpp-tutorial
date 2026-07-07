@@ -12,7 +12,7 @@ FIX_GLIB_UTF8_LOCALE();
 // 英文环境修复编码
 // FIX_GLIB_LOCALE("en_US.UTF-8");
 // 中文环境修复编码
-//FIX_GLIB_LOCALE("zh_CN.UTF-8");
+// FIX_GLIB_LOCALE("zh_CN.UTF-8");
 
 /**
  * GLib - GNOME 基础库

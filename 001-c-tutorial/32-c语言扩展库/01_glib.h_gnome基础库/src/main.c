@@ -12,7 +12,7 @@ FIX_GLIB_UTF8_LOCALE();
 // 英文环境修复编码
 // FIX_GLIB_LOCALE("en_US.UTF-8");
 // 中文环境修复编码
-//FIX_GLIB_LOCALE("zh_CN.UTF-8");
+// FIX_GLIB_LOCALE("zh_CN.UTF-8");
 
 /* 用于 GTest 等需要访问命令行参数的章节 */
 int g_argc = 0;
@@ -20,60 +20,64 @@ char **g_argv = NULL;
 
 /* ============================================================
  * 第一篇 入门基础篇
- * ============================================================ */
+ * ============================================================*/
 
-/* 第 1 章：GLib 体系概述与环境搭建 */
+/**
+ * 第 1 章：GLib 体系概述与环境搭建
+ */
 void chapter_01_glib_overview(void)
 {
-    g_print("\n=== 第 1 章 GLib 体系概述与环境搭建 ===\n");
+    g_print("\n--- 第 1 章 GLib 体系概述与环境搭建 ---\n");
 
-    /* 1. 运行时版本信息 */
+    // 1. 运行时版本信息
     g_print("[运行时版本] %u.%u.%u\n", glib_major_version, glib_minor_version, glib_micro_version);
 
-    /* 2. 编译时版本信息 */
+    // 2. 编译时版本信息
     g_print("[编译时版本] %d.%d.%d\n", GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
 
-    /* 3. 版本兼容性检查：传入所需最低版本，返回 NULL 表示兼容 */
+    // 3. 版本兼容性检查：传入所需最低版本，返回 NULL 表示兼容
     const gchar *check = glib_check_version(2, 50, 0);
     g_print("[版本检查] 要求>=2.50.0: %s\n", check ? check : "通过(NULL)");
 
-    /* 4. 体系结构说明 */
+    // 4. 体系结构说明
     g_print("[体系结构] GLib = 工具库 + GObject(对象系统) + GIO(I/O网络) + GModule(动态模块)\n");
     g_print("[子模块] glib(基础) / gobject(对象) / gio(I/O) / gmodule(模块) / gthread(线程)\n");
 
-    /* 5. 字节序判断 */
-    g_print("[字节序] %s\n", G_BYTE_ORDER == G_LITTLE_ENDIAN ? "小端" : "大端");
-
-    /* 6. 系统信息 */
+    // 5. 系统信息
     const gchar *os_name = g_get_os_info(G_OS_INFO_KEY_NAME);
     const gchar *os_ver = g_get_os_info(G_OS_INFO_KEY_VERSION);
-    g_print("[系统] %s %s\n", os_name ? os_name : "unknown", os_ver ? os_ver : "");
+    g_print("[系统信息] %s %s\n", os_name ? os_name : "unknown", os_ver ? os_ver : "");
 
-    /* 7. 处理器数 */
+    // 6. 字节序判断
+    g_print("[字节序] %s\n", G_BYTE_ORDER == G_LITTLE_ENDIAN ? "小端" : "大端");
+
+    // 7. 处理器数
     g_print("[CPU 核心数] %d\n", g_get_num_processors());
 
-    /* 8. 主机名与用户名 */
+    // 8. 主机名与用户名
     g_print("[主机名] %s\n", g_get_host_name());
     const gchar *user = g_get_user_name();
     g_print("[用户名] %s\n", user ? user : "(null)");
 
-    /* 9. GLib 目录信息 */
+    // 9. GLib 目录信息
     g_print("[用户数据目录] %s\n", g_get_user_data_dir());
     g_print("[用户配置目录] %s\n", g_get_user_config_dir());
     g_print("[用户缓存目录] %s\n", g_get_user_cache_dir());
     g_print("[系统临时目录] %s\n", g_get_tmp_dir());
 
-    /* 10. 当前工作目录 */
+    // 10. 当前工作目录
     gchar *cwd = g_get_current_dir();
     g_print("[当前工作目录] %s\n", cwd);
     g_free(cwd);
 
-    /* 11. 编译特性 */
+    // 11. 编译特性
     g_print("[编译特性] gsize 格式符: %s\n", G_GSIZE_FORMAT);
     g_print("[编译特性] 指针大小: %d 位\n", (int)(sizeof(gpointer) * 8));
 }
 
-/* 第 2 章：基础类型与核心宏 */
+/**
+ * 第 2 章：基础类型与核心宏
+ */
 void chapter_02_basic_types_and_macros(void)
 {
     g_print("\n=== 第 2 章 基础类型与核心宏 ===\n");
@@ -156,7 +160,9 @@ void chapter_02_basic_types_and_macros(void)
  * 第二篇 通用工具与数据结构篇
  * ============================================================ */
 
-/* 第 3 章：内存管理体系 */
+/**
+ * 第 3 章：内存管理体系
+ */
 void chapter_03_memory_management(void)
 {
     g_print("\n=== 第 3 章 内存管理体系 ===\n");
@@ -230,7 +236,9 @@ void chapter_03_memory_management(void)
     g_print("[内存] 全部释放完毕\n");
 }
 
-/* 第 4 章：字符串与文本处理 */
+/**
+ * 第 4 章：字符串与文本处理
+ */
 void chapter_04_strings_and_text(void)
 {
     g_print("\n=== 第 4 章 字符串与文本处理 ===\n");
@@ -321,10 +329,14 @@ void chapter_04_strings_and_text(void)
     g_free(upper);
 }
 
-/* 前向声明：整型比较函数，供第 5/6 章使用 */
+/**
+ * 前向声明：整型比较函数，供第 5/6 章使用
+ */
 gint int_compare(gconstpointer a, gconstpointer b);
 
-/* 第 5 章：线性数据结构 */
+/**
+ * 第 5 章：线性数据结构
+ */
 void chapter_05_linear_data_structures(void)
 {
     g_print("\n=== 第 5 章 线性数据结构 ===\n");
@@ -407,7 +419,9 @@ void chapter_05_linear_data_structures(void)
     g_byte_array_free(barr, TRUE);
 }
 
-/* 第 6 章：关联与集合数据结构 */
+/**
+ * 第 6 章：关联与集合数据结构
+ */
 gint int_compare(gconstpointer a, gconstpointer b)
 {
     return GPOINTER_TO_INT(a) - GPOINTER_TO_INT(b);
@@ -488,7 +502,9 @@ void chapter_06_associative_and_set_structures(void)
     g_variant_unref(variant);
 }
 
-/* 第 7 章：日期、时间与计时 */
+/**
+ * 第 7 章：日期、时间与计时
+ */
 void chapter_07_date_time_and_timer(void)
 {
     g_print("\n=== 第 7 章 日期、时间与计时 ===\n");
@@ -578,7 +594,9 @@ void chapter_07_date_time_and_timer(void)
     g_timer_destroy(timer);
 }
 
-/* 第 8 章：命令行与配置解析 */
+/**
+ * 第 8 章：命令行与配置解析
+ */
 void chapter_08_commandline_and_config(void)
 {
     g_print("\n=== 第 8 章 命令行与配置解析 ===\n");
@@ -680,23 +698,25 @@ void chapter_08_commandline_and_config(void)
     g_key_file_free(kf);
 }
 
-/* 第 9 章：通用工具函数集 */
+/**
+ * 第 9 章：通用工具函数集
+ */
 void chapter_09_utility_functions(void)
 {
     g_print("\n=== 第 9 章 通用工具函数集 ===\n");
 
-    /* 1. 随机数 */
+    // 1. 随机数
     g_print("[随机] 整数[0,99]=%d\n", g_random_int_range(0, 100));
     g_print("[随机] 浮点[0,1)=%f\n", g_random_double());
     g_print("[随机] 浮点[5,10)=%f\n", g_random_double_range(5.0, 10.0));
 
-    /* 带种子的随机 */
+    // 带种子的随机
     GRand *rand = g_rand_new_with_seed(42);
     g_print("[种子42] %d %d %d\n", g_rand_int_range(rand, 0, 100),
             g_rand_int_range(rand, 0, 100), g_rand_int_range(rand, 0, 100));
     g_rand_free(rand);
 
-    /* 2. 校验和 */
+    // 2. 校验和
     GChecksum *cs = g_checksum_new(G_CHECKSUM_SHA256);
     g_checksum_update(cs, (guchar *)"GLib", 4);
     g_print("[SHA256] %s\n", g_checksum_get_string(cs));
@@ -712,7 +732,7 @@ void chapter_09_utility_functions(void)
     g_print("[SHA1] %s\n", g_checksum_get_string(sha1));
     g_checksum_free(sha1);
 
-    /* 3. Base64 编解码 */
+    // 3. Base64 编解码
     gchar *b64 = g_base64_encode((guchar *)"Hello GLib", 10);
     g_print("[Base64 编码] %s\n", b64);
     gsize out_len = 0;
@@ -721,18 +741,18 @@ void chapter_09_utility_functions(void)
     g_free(decoded);
     g_free(b64);
 
-    /* 4. 字节序转换 */
+    // 4. 字节序转换
     guint16 x = 0x1234;
     guint32 y = 0x12345678;
     g_print("[字节序] 0x%x -> BE=0x%x LE=0x%x\n", x, GUINT16_TO_BE(x), GUINT16_TO_LE(x));
     g_print("[字节序] 0x%x -> BE=0x%x LE=0x%x\n", y, GUINT32_TO_BE(y), GUINT32_TO_LE(y));
 
-    /* 5. UUID */
+    // 5. UUID
     gchar *uuid = g_uuid_string_random();
     g_print("[UUID] %s\n", uuid);
     g_free(uuid);
 
-    /* 6. 环境变量 */
+    // 6. 环境变量
     const gchar *home = g_getenv("HOME");
     if (!home) home = g_getenv("USERPROFILE");
     g_print("[环境变量] HOME=%s\n", home ? home : "(null)");
@@ -741,13 +761,13 @@ void chapter_09_utility_functions(void)
     g_print("[设置后] GLIB_TUTORIAL_VAR=%s\n", g_getenv("GLIB_TUTORIAL_VAR"));
     g_unsetenv("GLIB_TUTORIAL_VAR");
 
-    /* 7. 用户目录 */
+    // 7. 用户目录
     g_print("[用户目录] 数据=%s\n", g_get_user_data_dir());
     g_print("[用户目录] 配置=%s\n", g_get_user_config_dir());
     g_print("[用户目录] 缓存=%s\n", g_get_user_cache_dir());
     g_print("[系统目录] 临时=%s\n", g_get_tmp_dir());
 
-    /* 8. 程序名与当前目录 */
+    // 8. 程序名与当前目录
     g_print("[程序名] %s\n", g_get_prgname());
     g_set_prgname("GLibTutorial");
     g_print("[设置后程序名] %s\n", g_get_prgname());
@@ -756,12 +776,12 @@ void chapter_09_utility_functions(void)
     g_print("[当前目录] %s\n", cwd);
     g_free(cwd);
 
-    /* 9. 主机名与用户名 */
+    // 9. 主机名与用户名
     g_print("[主机名] %s\n", g_get_host_name());
     const gchar *user = g_get_user_name();
     g_print("[用户名] %s\n", user ? user : "(null)");
 
-    /* 10. 路径工具 */
+    // 10. 路径工具
     gchar *path = g_build_filename("usr", "local", "bin", NULL);
     g_print("[构建路径] %s\n", path);
     g_free(path);
@@ -772,7 +792,7 @@ void chapter_09_utility_functions(void)
     g_free(dirname);
     g_free(basename);
 
-    /* 11. 字符串转数值 */
+    // 11. 字符串转数值
     g_print("[转数值] g_ascii_strtoull(\"255\", NULL, 10) = %llu\n",
             (guint64)g_ascii_strtoull("255", NULL, 10));
     g_print("[转数值] g_ascii_strtod(\"3.14\") = %.2f\n", g_ascii_strtod("3.14", NULL));
@@ -782,30 +802,32 @@ void chapter_09_utility_functions(void)
  * 第三篇 系统编程与并发篇
  * ============================================================ */
 
-/* 第 10 章：日志与错误处理体系 */
+/*
+ * 第 10 章：日志与错误处理体系
+ */
 void chapter_10_logging_and_error_handling(void)
 {
     g_print("\n=== 第 10 章 日志与错误处理体系 ===\n");
 
-    /* 1. 日志级别 */
+    // 1. 日志级别
     g_print("[日志级别演示]\n");
     g_message("这是一条 message 级别日志");
     g_warning("这是一条 warning 级别日志");
     g_critical("这是一条 critical 级别日志");
     g_debug("这是一条 debug 级别日志（默认不显示）");
 
-    /* 2. 结构化日志字段 */
+    // 2. 结构化日志字段
     g_log_structured(G_LOG_DOMAIN, G_LOG_LEVEL_INFO,
                      "MESSAGE", "结构化日志示例",
                      "MODULE", "chapter_10",
                      "LINE", "10");
 
-    /* 3. 自定义日志处理 */
+    // 3. 自定义日志处理
     guint old_id = g_log_set_handler(NULL, G_LOG_LEVEL_DEBUG, g_log_default_handler, NULL);
     g_debug("这条 debug 现在会显示（设置了 handler）");
     g_log_remove_handler(NULL, old_id);
 
-    /* 4. GError 基本用法 */
+    // 4. GError 基本用法
     GError *error = NULL;
     g_set_error(&error, G_FILE_ERROR, G_FILE_ERROR_NOENT,
                 "文件不存在: %s", "demo.txt");
@@ -813,7 +835,7 @@ void chapter_10_logging_and_error_handling(void)
             g_quark_to_string(error->domain), error->code, error->message);
     g_clear_error(&error);
 
-    /* 5. 错误链（嵌套） */
+    // 5. 错误链（嵌套）
     GError *inner = NULL;
     g_set_error(&inner, G_IO_ERROR, G_IO_ERROR_FAILED, "底层 I/O 失败");
     g_set_error(&error, G_FILE_ERROR, G_FILE_ERROR_IO,
@@ -823,35 +845,35 @@ void chapter_10_logging_and_error_handling(void)
     g_clear_error(&error);
     g_clear_error(&inner);
 
-    /* 6. 错误字面量设置 */
+    // 6. 错误字面量设置
     error = NULL;
     g_set_error_literal(&error, G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
                         "数据无效");
     g_print("[g_set_error_literal] %s\n", error->message);
     g_clear_error(&error);
 
-    /* 7. 错误域注册 */
+    // 7. 错误域注册
     GQuark my_domain = g_quark_from_static_string("my-error-quark");
     g_set_error(&error, my_domain, 100, "自定义错误域");
     g_print("[自定义域] domain=%s code=%d\n",
             g_quark_to_string(error->domain), error->code);
     g_clear_error(&error);
 
-    /* 8. g_propagate_error 错误传播 */
+    // 8. g_propagate_error 错误传播
     GError *src = NULL, *dst = NULL;
     g_set_error(&src, G_IO_ERROR, G_IO_ERROR_PERMISSION_DENIED, "权限不足");
     g_propagate_error(&dst, src);
     g_print("[propagate] dst=%s src=%p\n", dst->message, (void *)src);
     g_clear_error(&dst);
 
-    /* 9. 错误匹配宏 */
+    // 9. 错误匹配宏
     GError *e2 = g_error_new(G_IO_ERROR, G_IO_ERROR_NOT_FOUND, "未找到");
     if (g_error_matches(e2, G_IO_ERROR, G_IO_ERROR_NOT_FOUND)) {
         g_print("[matches] 匹配 G_IO_ERROR_NOT_FOUND\n");
     }
     g_error_free(e2);
 
-    /* 10. 错误复制 */
+    // 10. 错误复制
     GError *e3 = g_error_new(G_FILE_ERROR, G_FILE_ERROR_IO, "I/O 错误");
     GError *e3_copy = g_error_copy(e3);
     g_print("[copy] 原=%s 副本=%s\n", e3->message, e3_copy->message);
@@ -859,7 +881,9 @@ void chapter_10_logging_and_error_handling(void)
     g_error_free(e3_copy);
 }
 
-/* 第 11 章：主事件循环 GMainLoop */
+/*
+ *  第 11 章：主事件循环 GMainLoop
+ */
 gint timeout_count = 0;
 
 gboolean timeout_callback(gpointer data)
@@ -889,28 +913,28 @@ void chapter_11_main_event_loop(void)
 {
     g_print("\n=== 第 11 章 主事件循环 GMainLoop ===\n");
 
-    /* 1. 创建主循环 */
+    // 1. 创建主循环
     GMainLoop *loop = g_main_loop_new(NULL, FALSE);
     GMainContext *ctx = g_main_loop_get_context(loop);
     g_print("[主循环] 运行中=%s\n", g_main_loop_is_running(loop) ? "是" : "否");
 
-    /* 2. 添加超时源（毫秒级） */
+    // 2. 添加超时源（毫秒级）
     guint timeout_id = g_timeout_add(50, timeout_callback, loop);
     g_print("[超时源] id=%u 已添加\n", timeout_id);
 
-    /* 3. 添加空闲源 */
+    // 3. 添加空闲源
     guint idle_id = g_idle_add(idle_callback, NULL);
     g_print("[空闲源] id=%u 已添加\n", idle_id);
 
-    /* 4. 超时秒数源（开销更小） */
+    // 4. 超时秒数源（开销更小）
     guint sec_id = g_timeout_add_seconds(1, seconds_callback, NULL);
     g_print("[秒级源] id=%u 已添加\n", sec_id);
 
-    /* 5. 运行主循环 */
+    // 5. 运行主循环
     g_print("[主循环] 开始运行...\n");
     g_main_loop_run(loop);
 
-    /* 6. 清理源 */
+    // 6. 清理源
     g_source_remove(sec_id);
     g_main_loop_unref(loop);
     timeout_count = 0;
@@ -920,7 +944,9 @@ void chapter_11_main_event_loop(void)
     (void)idle_id;
 }
 
-/* 第 12 章：线程编程基础 */
+/*
+ * 第 12 章：线程编程基础
+ */
 gpointer thread_worker(gpointer data)
 {
     gchar *msg = (gchar *)data;
@@ -935,7 +961,7 @@ void chapter_12_thread_basics(void)
 {
     g_print("\n=== 第 12 章 线程编程基础 ===\n");
 
-    /* 1. 创建并等待线程 */
+    // 1. 创建并等待线程
     GThread *t1 = g_thread_new("worker1", thread_worker, "hello from main");
     GThread *t2 = g_thread_new("worker2", thread_worker, "second task");
     g_print("[主线程] 等待子线程完成...\n");
@@ -944,31 +970,33 @@ void chapter_12_thread_basics(void)
     gpointer r2 = g_thread_join(t2);
     g_print("[结果] 线程1=%d 线程2=%d\n", GPOINTER_TO_INT(r1), GPOINTER_TO_INT(r2));
 
-    /* 2. 线程自省 */
+    // 2. 线程自省
     g_print("[主线程] self=%p\n", (void *)g_thread_self());
 
-    /* 3. 线程让步 */
+    // 3. 线程让步
     g_print("[主线程] 执行 g_thread_yield()\n");
     g_thread_yield();
 
-    /* 4. 线程私有数据（TSD） */
+    // 4. 线程私有数据（TSD）
     static GPrivate priv = G_PRIVATE_INIT(g_free);
     g_private_set(&priv, g_strdup("private data"));
     gchar *pd = (gchar *)g_private_get(&priv);
     g_print("[TSD] 私有数据=%s\n", pd ? pd : "(null)");
     g_private_replace(&priv, NULL);
 
-    /* 5. 一次性初始化 */
+    // 5. 一次性初始化
     static GOnce once = G_ONCE_INIT;
     g_once(&once, (GThreadFunc)g_thread_self, NULL);
     g_print("[GOnce] 已初始化: %s\n", once.retval ? "是" : "否");
 
-    /* 6. 线程名说明 */
+    // 6. 线程名说明
     g_print("[线程] 名称用于调试，g_thread_new 第一个参数\n");
     g_print("[线程] 默认栈大小使用系统默认\n");
 }
 
-/* 第 13 章：线程同步原语 */
+/*
+ * 第 13 章：线程同步原语
+ */
 GMutex mutex;
 GRecMutex rec_mutex;
 GRWLock rwlock;
@@ -1002,14 +1030,14 @@ void chapter_13_thread_synchronization(void)
 {
     g_print("\n=== 第 13 章 线程同步原语 ===\n");
 
-    /* 1. 互斥锁 */
+    // 1. 互斥锁
     g_mutex_init(&mutex);
     g_mutex_lock(&mutex);
     g_print("[mutex] 已锁定\n");
     g_mutex_unlock(&mutex);
     g_print("[mutex] 已解锁\n");
 
-    /* 2. 递归锁（同一线程可多次加锁） */
+    // 2. 递归锁（同一线程可多次加锁）
     g_rec_mutex_init(&rec_mutex);
     g_rec_mutex_lock(&rec_mutex);
     g_rec_mutex_lock(&rec_mutex);
@@ -1017,7 +1045,7 @@ void chapter_13_thread_synchronization(void)
     g_rec_mutex_unlock(&rec_mutex);
     g_rec_mutex_unlock(&rec_mutex);
 
-    /* 3. 读写锁 */
+    // 3. 读写锁
     g_rw_lock_init(&rwlock);
     g_rw_lock_reader_lock(&rwlock);
     g_print("[rwlock] 读锁获取\n");
@@ -1026,7 +1054,7 @@ void chapter_13_thread_synchronization(void)
     g_print("[rwlock] 写锁获取\n");
     g_rw_lock_writer_unlock(&rwlock);
 
-    /* 4. 条件变量（生产者-消费者） */
+    // 4. 条件变量（生产者-消费者）
     g_cond_init(&cond);
     ready = FALSE;
 
@@ -1037,7 +1065,7 @@ void chapter_13_thread_synchronization(void)
     g_thread_join(consumer);
     g_thread_join(producer);
 
-    /* 5. 带超时的等待 */
+    // 5. 带超时的等待
     g_mutex_lock(&mutex);
     ready = FALSE;
     gint64 end_time = g_get_monotonic_time() + 100 * G_TIME_SPAN_MILLISECOND;
@@ -1045,7 +1073,7 @@ void chapter_13_thread_synchronization(void)
     g_print("[cond_wait_until] 超时返回=%s\n", signaled ? "信号" : "超时");
     g_mutex_unlock(&mutex);
 
-    /* 6. 广播信号 */
+    // 6. 广播信号
     g_mutex_lock(&mutex);
     ready = TRUE;
     g_cond_broadcast(&cond);
@@ -1059,7 +1087,9 @@ void chapter_13_thread_synchronization(void)
     ready = FALSE;
 }
 
-/* 第 14 章：并发组件与线程池 */
+/*
+ * 第 14 章：并发组件与线程池
+ */
 void thread_pool_func(gpointer data, gpointer user_data)
 {
     gint task_id = GPOINTER_TO_INT(data);
@@ -1071,7 +1101,7 @@ void chapter_14_concurrency_and_thread_pool(void)
 {
     g_print("\n=== 第 14 章 并发组件与线程池 ===\n");
 
-    /* 1. GThreadPool */
+    // 1. GThreadPool
     GError *error = NULL;
     GThreadPool *pool = g_thread_pool_new(thread_pool_func, NULL, 2, FALSE, &error);
     if (pool) {
@@ -1086,7 +1116,7 @@ void chapter_14_concurrency_and_thread_pool(void)
         g_print("[线程池] 已完成所有任务\n");
     }
 
-    /* 2. 配置线程池 */
+    // 2. 配置线程池
     GThreadPool *pool2 = g_thread_pool_new(thread_pool_func, NULL, 4, FALSE, NULL);
     g_thread_pool_set_max_unused_threads(2);
     g_thread_pool_set_max_idle_time(1000);
@@ -1095,27 +1125,27 @@ void chapter_14_concurrency_and_thread_pool(void)
             g_thread_pool_get_max_idle_time());
     g_thread_pool_free(pool2, FALSE, TRUE);
 
-    /* 3. GAsyncQueue 异步队列 */
+    // 3. GAsyncQueue 异步队列
     GAsyncQueue *queue = g_async_queue_new();
     g_async_queue_push(queue, GINT_TO_POINTER(100));
     g_async_queue_push(queue, GINT_TO_POINTER(200));
     g_async_queue_push(queue, GINT_TO_POINTER(300));
 
-    /* 非阻塞弹出 */
+    // 非阻塞弹出
     gpointer item = g_async_queue_try_pop(queue);
     g_print("[AsyncQueue try_pop] %d\n", GPOINTER_TO_INT(item));
 
-    /* 带超时弹出 */
+    // 带超时弹出
     gpointer item2 = g_async_queue_timeout_pop(queue, 100 * G_TIME_SPAN_MILLISECOND);
     g_print("[AsyncQueue timeout_pop] %d\n", GPOINTER_TO_INT(item2));
 
     g_print("[AsyncQueue] 剩余长度=%d\n", g_async_queue_length(queue));
     g_async_queue_unref(queue);
 
-    /* 4. 线程数控制 */
+    // 4. 线程数控制
     g_print("[系统] CPU 核心数=%d\n", g_get_num_processors());
 
-    /* 5. 原子操作 */
+    // 5. 原子操作
     gint atomic_val = 0;
     g_atomic_int_set(&atomic_val, 10);
     g_atomic_int_inc(&atomic_val);
@@ -1125,14 +1155,16 @@ void chapter_14_concurrency_and_thread_pool(void)
     g_print("[原子] 交换后=%d\n", g_atomic_int_get(&atomic_val));
 }
 
-/* 第 15 章：子进程管理 */
+/*
+ * 第 15 章：子进程管理
+ */
 void chapter_15_subprocess_management(void)
 {
     g_print("\n=== 第 15 章 子进程管理 ===\n");
 
     GError *error = NULL;
 
-    /* 1. 基本子进程 */
+    // 1. 基本子进程
     GSubprocess *proc = g_subprocess_new(G_SUBPROCESS_FLAGS_STDOUT_PIPE | G_SUBPROCESS_FLAGS_STDERR_PIPE,
                                          &error,
                                          "echo", "Hello from subprocess", NULL);
@@ -1142,7 +1174,7 @@ void chapter_15_subprocess_management(void)
         return;
     }
 
-    /* 2. 同步通信 */
+    // 2. 同步通信
     gchar *stdout_buf = NULL;
     gchar *stderr_buf = NULL;
     g_subprocess_communicate_utf8(proc, NULL, NULL, &stdout_buf, &stderr_buf, &error);
@@ -1153,7 +1185,7 @@ void chapter_15_subprocess_management(void)
     g_free(stderr_buf);
     g_object_unref(proc);
 
-    /* 3. 管道输入 */
+    // 3. 管道输入
     GSubprocess *cat = g_subprocess_new(G_SUBPROCESS_FLAGS_STDIN_PIPE | G_SUBPROCESS_FLAGS_STDOUT_PIPE,
                                          &error,
                                          "cat", NULL);
@@ -1166,7 +1198,7 @@ void chapter_15_subprocess_management(void)
         g_object_unref(cat);
     }
 
-    /* 4. 等待子进程 */
+    // 4. 等待子进程
     GSubprocess *wait_proc = g_subprocess_new(0, &error, "echo", "wait test", NULL);
     if (wait_proc) {
         gboolean success = g_subprocess_wait(wait_proc, NULL, &error);
@@ -1175,7 +1207,7 @@ void chapter_15_subprocess_management(void)
         g_object_unref(wait_proc);
     }
 
-    /* 5. 获取 PID */
+    // 5. 获取 PID
     GSubprocess *pid_proc = g_subprocess_new(0, &error, "echo", "pid test", NULL);
     if (pid_proc) {
         const gchar *pid = g_subprocess_get_identifier(pid_proc);
@@ -1184,7 +1216,7 @@ void chapter_15_subprocess_management(void)
         g_object_unref(pid_proc);
     }
 
-    /* 6. 子进程标志说明 */
+    // 6. 子进程标志说明
     g_print("[标志说明]\n");
     g_print("  G_SUBPROCESS_FLAGS_NONE: 默认\n");
     g_print("  G_SUBPROCESS_FLAGS_STDOUT_PIPE: 捕获标准输出\n");
@@ -1192,12 +1224,14 @@ void chapter_15_subprocess_management(void)
     g_print("  G_SUBPROCESS_FLAGS_STDIN_PIPE: 可写入标准输入\n");
 }
 
-/* 第 16 章：动态模块与插件架构 */
+/*
+ * 第 16 章：动态模块与插件架构
+ */
 void chapter_16_modules_and_plugins(void)
 {
     g_print("\n=== 第 16 章 动态模块与插件架构 ===\n");
 
-    /* 1. 检查模块支持 */
+    // 1. 检查模块支持
     gboolean supported = g_module_supported();
     g_print("[GModule] 支持动态加载: %s\n", supported ? "是" : "否");
 
@@ -1205,21 +1239,21 @@ void chapter_16_modules_and_plugins(void)
         return;
     }
 
-    /* 2. 模块路径构建（g_module_build_path 已废弃，用 g_build_filename 替代） */
+    // 2. 模块路径构建（g_module_build_path 已废弃，用 g_build_filename 替代）
     gchar *mod_path = g_build_filename("libmyplugin.so", NULL);
     g_print("[模块路径] %s (示例)\n", mod_path);
     g_free(mod_path);
 
-    /* 3. 模块打开标志说明 */
+    // 3. 模块打开标志说明
     g_print("[标志] G_MODULE_BIND_LAZY=%d G_MODULE_BIND_LOCAL=%d\n",
             G_MODULE_BIND_LAZY, G_MODULE_BIND_LOCAL);
 
-    /* 4. 打开主程序自身（演示符号查找） */
+    // 4. 打开主程序自身（演示符号查找）
     GModule *mod = g_module_open(NULL, G_MODULE_BIND_LAZY);
     if (mod) {
         g_print("[模块] 主程序自身已打开\n");
 
-        /* 5. 查找符号 */
+        // 5. 查找符号
         gpointer func = NULL;
         if (g_module_symbol(mod, "g_print", &func)) {
             g_print("[符号] g_print 地址=%p\n", (void *)func);
@@ -1227,17 +1261,17 @@ void chapter_16_modules_and_plugins(void)
             g_print("[符号] 未找到 g_print\n");
         }
 
-        /* 6. 模块名 */
+        // 6. 模块名
         const gchar *name = g_module_name(mod);
         g_print("[模块名] %s\n", name ? name : "(null)");
 
-        /* 7. 关闭模块 */
+        // 7. 关闭模块
         g_module_close(mod);
     } else {
         g_print("[模块] 打开失败（平台相关）\n");
     }
 
-    /* 8. 插件架构设计说明 */
+    // 8. 插件架构设计说明
     g_print("[插件架构设计]\n");
     g_print("  1. 定义插件接口结构体（含 init/fini/func 函数指针）\n");
     g_print("  2. 插件用 G_MODULE_EXPORT 导出 init_plugin() 符号\n");
@@ -1251,12 +1285,14 @@ void chapter_16_modules_and_plugins(void)
  * 第四篇 GObject 对象系统篇
  * ============================================================ */
 
-/* 第 17 章：GType 类型系统基础 */
+/*
+ * 第 17 章：GType 类型系统基础
+ */
 void chapter_17_gtype_basics(void)
 {
     g_print("\n=== 第 17 章 GType 类型系统基础 ===\n");
 
-    /* 1. 基本类型查询 */
+    // 1. 基本类型查询
     g_print("[基本类型]\n");
     g_print("  G_TYPE_INT:     id=%lu 名称=%s\n", G_TYPE_INT, g_type_name(G_TYPE_INT));
     g_print("  G_TYPE_UINT:    id=%lu 名称=%s\n", G_TYPE_UINT, g_type_name(G_TYPE_UINT));
@@ -1267,14 +1303,14 @@ void chapter_17_gtype_basics(void)
     g_print("  G_TYPE_BOXED:   id=%lu 名称=%s\n", G_TYPE_BOXED, g_type_name(G_TYPE_BOXED));
     g_print("  G_TYPE_POINTER: id=%lu 名称=%s\n", G_TYPE_POINTER, g_type_name(G_TYPE_POINTER));
 
-    /* 2. 类型判断宏 */
+    // 2. 类型判断宏
     g_print("[类型判断]\n");
     g_print("  G_TYPE_IS_OBJECT(G_TYPE_OBJECT): %s\n", G_TYPE_IS_OBJECT(G_TYPE_OBJECT) ? "是" : "否");
     g_print("  G_TYPE_IS_FUNDAMENTAL(G_TYPE_INT): %s\n", G_TYPE_IS_FUNDAMENTAL(G_TYPE_INT) ? "是" : "否");
     g_print("  G_TYPE_IS_DERIVABLE(G_TYPE_OBJECT): %s\n", G_TYPE_IS_DERIVABLE(G_TYPE_OBJECT) ? "是" : "否");
     g_print("  G_TYPE_IS_INTERFACE(G_TYPE_OBJECT): %s\n", G_TYPE_IS_INTERFACE(G_TYPE_OBJECT) ? "是" : "否");
 
-    /* 3. GValue 值容器 */
+    // 3. GValue 值容器
     GValue val = G_VALUE_INIT;
     g_value_init(&val, G_TYPE_INT);
     g_value_set_int(&val, 42);
@@ -1292,7 +1328,7 @@ void chapter_17_gtype_basics(void)
     g_print("[GValue boolean] %s\n", g_value_get_boolean(&val) ? "TRUE" : "FALSE");
     g_value_unset(&val);
 
-    /* 4. GValue 类型转换 */
+    // 4. GValue 类型转换
     g_value_init(&val, G_TYPE_INT);
     g_value_set_int(&val, 100);
     GValue str_val = G_VALUE_INIT;
@@ -1303,7 +1339,7 @@ void chapter_17_gtype_basics(void)
     g_value_unset(&val);
     g_value_unset(&str_val);
 
-    /* 5. GValue 复制 */
+    // 5. GValue 复制
     GValue src = G_VALUE_INIT;
     g_value_init(&src, G_TYPE_INT);
     g_value_set_int(&src, 999);
@@ -1314,18 +1350,18 @@ void chapter_17_gtype_basics(void)
     g_value_unset(&src);
     g_value_unset(&dst);
 
-    /* 6. 类型继承关系 */
+    // 6. 类型继承关系
     GType parent = g_type_parent(G_TYPE_OBJECT);
     g_print("[继承] GObject 父类型=%s\n", parent ? g_type_name(parent) : "(无)");
 
-    /* 7. 类型子类列表 */
+    // 7. 类型子类列表
     GType *children = NULL;
     guint n_children = 0;
     children = g_type_children(G_TYPE_OBJECT, &n_children);
     g_print("[子类] GObject 直接子类数量=%u\n", n_children);
     g_free(children);
 
-    /* 8. 类型接口列表 */
+    // 8. 类型接口列表
     GType *interfaces = NULL;
     guint n_ifaces = 0;
     interfaces = g_type_interfaces(G_TYPE_OBJECT, &n_ifaces);
@@ -1333,16 +1369,18 @@ void chapter_17_gtype_basics(void)
     g_free(interfaces);
 }
 
-/* 第 18 章：GObject 对象基础 */
+/*
+ * 第 18 章：GObject 对象基础
+ */
 void chapter_18_gobject_basics(void)
 {
     g_print("\n=== 第 18 章 GObject 对象基础 ===\n");
 
-    /* 1. 创建对象 */
+    // 1. 创建对象
     GObject *obj = g_object_new(G_TYPE_OBJECT, NULL);
     g_print("[创建] GObject 地址=%p 引用计数=%d\n", (void *)obj, obj->ref_count);
 
-    /* 2. 引用计数 */
+    // 2. 引用计数
     g_object_ref(obj);
     g_print("[ref] 引用计数=%d\n", obj->ref_count);
 
@@ -1352,27 +1390,27 @@ void chapter_18_gobject_basics(void)
     g_object_unref(obj);
     g_print("[unref] 引用计数=%d\n", obj->ref_count);
 
-    /* 3. qdata 关联数据 */
+    // 3. qdata 关联数据
     GQuark qd_key = g_quark_from_static_string("my-data");
     g_object_set_qdata_full(obj, qd_key, g_strdup("attached data"), g_free);
     gchar *qd = g_object_get_qdata(obj, qd_key);
     g_print("[qdata] key=%s value=%s\n", g_quark_to_string(qd_key), qd ? qd : "(null)");
 
-    /* 4. qdata 替换 */
+    // 4. qdata 替换
     g_object_set_qdata_full(obj, qd_key, g_strdup("new data"), g_free);
     gchar *qd2 = g_object_get_qdata(obj, qd_key);
     g_print("[qdata 替换] %s\n", qd2 ? qd2 : "(null)");
 
-    /* 5. 多个 qdata */
+    // 5. 多个 qdata
     GQuark qd_key2 = g_quark_from_static_string("number");
     g_object_set_qdata(obj, qd_key2, GINT_TO_POINTER(123));
     g_print("[qdata2] number=%d\n", GPOINTER_TO_INT(g_object_get_qdata(obj, qd_key2)));
 
-    /* 6. qdata 重置 */
+    // 6. qdata 重置
     g_object_set_qdata(obj, qd_key2, GINT_TO_POINTER(456));
     g_print("[qdata2 重置] number=%d\n", GPOINTER_TO_INT(g_object_get_qdata(obj, qd_key2)));
 
-    /* 7. 弱引用 */
+    // 7. 弱引用
     GObject *weak_ref = NULL;
     g_object_add_weak_pointer(obj, (gpointer *)&weak_ref);
     g_print("[weak] 添加弱引用=%p\n", (void *)weak_ref);
@@ -1383,15 +1421,17 @@ void chapter_18_gobject_basics(void)
     g_object_unref(obj);
     g_print("[weak] 全部释放后=%p (应为 NULL)\n", (void *)weak_ref);
 
-    /* 8. toggle ref 说明 */
+    // 8. toggle ref 说明
     g_print("[toggle] toggle ref 用于实现弱引用持有者的回调通知\n");
 
-    /* 9. 浮引用说明 */
+    // 9. 浮引用说明
     g_print("[浮引用] g_object_ref_sink 将浮引用转为普通引用\n");
     g_print("[浮引用] 初始创建的对象为浮引用，需 sink 后管理\n");
 }
 
-/* 第 19 章：属性系统 */
+/*
+ * 第 19 章：属性系统
+ */
 #define CH19_TYPE_MY_OBJECT chapter_19_my_object_get_type()
 G_DECLARE_FINAL_TYPE(Chapter19MyObject, chapter_19_my_object, CH19, MY_OBJECT, GObject)
 
@@ -1490,14 +1530,14 @@ void chapter_19_properties(void)
 {
     g_print("\n=== 第 19 章 属性系统 ===\n");
 
-    /* 1. 创建对象并设置属性 */
+    // 1. 创建对象并设置属性
     GObject *obj = g_object_new(CH19_TYPE_MY_OBJECT,
                                  "value", 100,
                                  "name", "GLibObject",
                                  "active", TRUE,
                                  NULL);
 
-    /* 2. 读取属性 */
+    // 2. 读取属性
     gint value;
     gchar *name;
     gboolean active;
@@ -1505,23 +1545,23 @@ void chapter_19_properties(void)
     g_print("[属性] value=%d name=%s active=%s\n", value, name, active ? "TRUE" : "FALSE");
     g_free(name);
 
-    /* 3. 监听属性变化 */
+    // 3. 监听属性变化
     g_print("[监听] 连接 notify 信号\n");
     g_signal_connect(obj, "notify::value", G_CALLBACK(on_ch19_notify), NULL);
     g_object_set(obj, "value", 200, NULL);
 
-    /* 4. 冻结通知 */
+    // 4. 冻结通知
     g_object_freeze_notify(obj);
     g_object_set(obj, "value", 300, "active", FALSE, NULL);
     g_print("[冻结] 多次设置不发通知\n");
     g_object_thaw_notify(obj);
 
-    /* 5. 单独获取 */
+    // 5. 单独获取
     gint v = 0;
     g_object_get(obj, "value", &v, NULL);
     g_print("[单独获取] value=%d\n", v);
 
-    /* 6. 属性描述 */
+    // 6. 属性描述
     GParamSpec *pspec = g_object_class_find_property(G_OBJECT_GET_CLASS(obj), "value");
     if (pspec) {
         g_print("[ParamSpec] name=%s nick=%s blurb=%s\n",
@@ -1534,7 +1574,7 @@ void chapter_19_properties(void)
                 G_PARAM_SPEC_INT(pspec)->default_value);
     }
 
-    /* 7. bind（绑定到另一个对象） */
+    // 7. bind（绑定到另一个对象）
     GObject *obj2 = g_object_new(CH19_TYPE_MY_OBJECT, NULL);
     GBinding *binding = g_object_bind_property(obj, "value", obj2, "value", G_BINDING_DEFAULT);
     g_object_set(obj, "value", 999, NULL);
@@ -1547,7 +1587,9 @@ void chapter_19_properties(void)
     g_object_unref(obj);
 }
 
-/* 第 20 章：信号系统 */
+/*
+ * 第 20 章：信号系统
+ */
 #define CH20_TYPE_MY_SIGNAL_OBJECT chapter_20_my_signal_object_get_type()
 G_DECLARE_FINAL_TYPE(Chapter20MySignalObject, chapter_20_my_signal_object, CH20, MY_SIGNAL_OBJECT, GObject)
 
@@ -1596,37 +1638,37 @@ void chapter_20_signals(void)
 
     GObject *obj = g_object_new(CH20_TYPE_MY_SIGNAL_OBJECT, NULL);
 
-    /* 1. 基本连接与发射 */
+    // 1. 基本连接与发射
     gulong hid1 = g_signal_connect(obj, "hello", G_CALLBACK(on_hello_default), "user-data");
     g_signal_emit_by_name(obj, "hello", "Hello World");
     g_print("[信号] 连接 id=%lu\n", hid1);
 
-    /* 2. after 回调 */
+    // 2. after 回调
     gulong hid2 = g_signal_connect_after(obj, "hello", G_CALLBACK(on_hello_after), NULL);
     g_signal_emit_by_name(obj, "hello", "Second emit");
 
-    /* 3. 阻断信号 */
+    // 3. 阻断信号
     g_signal_handler_block(obj, hid1);
     g_print("[阻断] 已阻断 hello 信号\n");
     g_signal_emit_by_name(obj, "hello", "Blocked");
     g_signal_handler_unblock(obj, hid1);
     g_print("[解除] 已解除阻断\n");
 
-    /* 4. 断开连接 */
+    // 4. 断开连接
     g_signal_handler_disconnect(obj, hid1);
     g_signal_handler_disconnect(obj, hid2);
     g_signal_emit_by_name(obj, "hello", "No handlers");
     g_print("[断开] 信号已无处理器\n");
 
-    /* 5. changed 信号 */
+    // 5. changed 信号
     g_signal_connect(obj, "changed", G_CALLBACK(on_changed), NULL);
     g_signal_emit_by_name(obj, "changed", 42);
 
-    /* 6. 信号详细化（detail） */
+    // 6. 信号详细化（detail）
     g_signal_connect(obj, "hello::greeting", G_CALLBACK(on_hello_default), "detail");
     g_signal_emit_by_name(obj, "hello::greeting", "Detailed emit");
 
-    /* 7. 查询信号信息 */
+    // 7. 查询信号信息
     guint signal_id = g_signal_lookup("hello", CH20_TYPE_MY_SIGNAL_OBJECT);
     GSignalQuery query;
     g_signal_query(signal_id, &query);
@@ -1634,7 +1676,7 @@ void chapter_20_signals(void)
             query.signal_name, query.n_params,
             g_type_name(query.return_type));
 
-    /* 8. 信号列表 */
+    // 8. 信号列表
     guint n_ids = 0;
     guint *ids = g_signal_list_ids(CH20_TYPE_MY_SIGNAL_OBJECT, &n_ids);
     g_print("[信号列表] 数量=%u: ", n_ids);
@@ -1647,7 +1689,9 @@ void chapter_20_signals(void)
     g_object_unref(obj);
 }
 
-/* 第 21 章：GObject 子类化 */
+/*
+ * 第 21 章：GObject 子类化
+ */
 #define CH21_TYPE_ANIMAL chapter_21_animal_get_type()
 G_DECLARE_DERIVABLE_TYPE(Chapter21Animal, chapter_21_animal, CH21, ANIMAL, GObject)
 
@@ -1689,7 +1733,7 @@ const gchar *chapter_21_animal_get_type_name(Chapter21Animal *self)
     return CH21_ANIMAL_GET_CLASS(self)->get_type_name(self);
 }
 
-/* Dog 子类 */
+// Dog 子类
 #define CH21_TYPE_DOG chapter_21_dog_get_type()
 G_DECLARE_FINAL_TYPE(Chapter21Dog, chapter_21_dog, CH21, DOG, Chapter21Animal)
 
@@ -1722,7 +1766,7 @@ void chapter_21_dog_init(Chapter21Dog *self)
     self->name = g_strdup("Rex");
 }
 
-/* Cat 子类 */
+// Cat 子类
 #define CH21_TYPE_CAT chapter_21_cat_get_type()
 G_DECLARE_FINAL_TYPE(Chapter21Cat, chapter_21_cat, CH21, CAT, Chapter21Animal)
 
@@ -1750,24 +1794,24 @@ void chapter_21_subclassing(void)
 {
     g_print("\n=== 第 21 章 GObject 子类化 ===\n");
 
-    /* 1. 创建基类和子类实例 */
+    // 1. 创建基类和子类实例
     Chapter21Animal *animal = g_object_new(CH21_TYPE_ANIMAL, NULL);
     Chapter21Animal *dog = g_object_new(CH21_TYPE_DOG, NULL);
     Chapter21Animal *cat = g_object_new(CH21_TYPE_CAT, NULL);
 
-    /* 2. 虚方法调用（多态） */
+    // 2. 虚方法调用（多态）
     g_print("[多态演示]\n");
     chapter_21_animal_speak(animal);
     chapter_21_animal_speak(dog);
     chapter_21_animal_speak(cat);
 
-    /* 3. 类型名查询 */
+    // 3. 类型名查询
     g_print("[类型名] animal=%s dog=%s cat=%s\n",
             chapter_21_animal_get_type_name(animal),
             chapter_21_animal_get_type_name(dog),
             chapter_21_animal_get_type_name(cat));
 
-    /* 4. 类型检查 */
+    // 4. 类型检查
     g_print("[类型检查] dog 是 Animal: %s\n",
             G_TYPE_CHECK_INSTANCE_TYPE(dog, CH21_TYPE_ANIMAL) ? "是" : "否");
     g_print("[类型检查] dog 是 Dog: %s\n",
@@ -1775,11 +1819,11 @@ void chapter_21_subclassing(void)
     g_print("[类型检查] dog 是 Cat: %s\n",
             G_TYPE_CHECK_INSTANCE_TYPE(dog, CH21_TYPE_CAT) ? "是" : "否");
 
-    /* 5. 类型转换 */
+    // 5. 类型转换
     Chapter21Dog *dog_ptr = CH21_DOG(dog);
     g_print("[类型转换] Dog 名字=%s\n", dog_ptr->name);
 
-    /* 6. 继承链查询 */
+    // 6. 继承链查询
     GType parent = g_type_parent(CH21_TYPE_DOG);
     g_print("[继承链] Dog 父类型=%s\n", g_type_name(parent));
     g_print("[继承链] Dog 顶层类型=%s\n", g_type_name(G_TYPE_FUNDAMENTAL(CH21_TYPE_DOG)));
@@ -1789,7 +1833,9 @@ void chapter_21_subclassing(void)
     g_object_unref(cat);
 }
 
-/* 第 22 章：接口系统 GInterface */
+/**
+ * 第 22 章：接口系统 GInterface
+ */
 #define CH22_TYPE_GREETER chapter_22_greeter_get_type()
 G_DECLARE_INTERFACE(Chapter22Greeter, chapter_22_greeter, CH22, GREETER, GObject)
 
@@ -1815,7 +1861,9 @@ const gchar *chapter_22_greeter_get_greeting(Chapter22Greeter *self)
     return CH22_GREETER_GET_IFACE(self)->get_greeting(self);
 }
 
-/* Person 实现 Greeter 接口 */
+/*
+ * Person 实现 Greeter 接口
+ */
 #define CH22_TYPE_PERSON chapter_22_person_get_type()
 G_DECLARE_FINAL_TYPE(Chapter22Person, chapter_22_person, CH22, PERSON, GObject)
 
@@ -1856,7 +1904,9 @@ void chapter_22_person_init(Chapter22Person *self)
     self->name = g_strdup("Alice");
 }
 
-/* Robot 也实现 Greeter 接口 */
+/*
+ * Robot 也实现 Greeter 接口
+ */
 #define CH22_TYPE_ROBOT chapter_22_robot_get_type()
 G_DECLARE_FINAL_TYPE(Chapter22Robot, chapter_22_robot, CH22, ROBOT, GObject)
 
@@ -1892,26 +1942,26 @@ void chapter_22_ginterface(void)
 {
     g_print("\n=== 第 22 章 接口系统 GInterface ===\n");
 
-    /* 1. 创建实现了接口的对象 */
+    // 1. 创建实现了接口的对象
     Chapter22Greeter *person = g_object_new(CH22_TYPE_PERSON, NULL);
     Chapter22Greeter *robot = g_object_new(CH22_TYPE_ROBOT, NULL);
 
-    /* 2. 通过接口调用（多态） */
+    // 2. 通过接口调用（多态）
     g_print("[接口调用]\n");
     chapter_22_greeter_greet(person);
     chapter_22_greeter_greet(robot);
 
-    /* 3. 接口方法返回值 */
+    // 3. 接口方法返回值
     const gchar *greeting = chapter_22_greeter_get_greeting(person);
     g_print("[接口返回] Person greeting=%s\n", greeting ? greeting : "(null)");
 
-    /* 4. 接口类型检查 */
+    // 4. 接口类型检查
     g_print("[类型检查] Person 实现 Greeter: %s\n",
             G_TYPE_CHECK_INSTANCE_TYPE(person, CH22_TYPE_GREETER) ? "是" : "否");
     g_print("[类型检查] Robot 实现 Greeter: %s\n",
             G_TYPE_CHECK_INSTANCE_TYPE(robot, CH22_TYPE_GREETER) ? "是" : "否");
 
-    /* 5. 接口前提类型检查 */
+    // 5. 接口前提类型检查
     /* g_type_interface_prerequisites 返回接口的前提类型数组 */
     guint n_prereqs = 0;
     GType *prereqs = g_type_interface_prerequisites(CH22_TYPE_GREETER, &n_prereqs);
@@ -1922,7 +1972,7 @@ void chapter_22_ginterface(void)
     }
     g_free(prereqs);
 
-    /* 6. 列出类型实现的接口 */
+    // 6. 列出类型实现的接口
     GType *ifaces = g_type_interfaces(CH22_TYPE_PERSON, NULL);
     g_print("[Person 接口] %s\n", ifaces ? g_type_name(ifaces[0]) : "(无)");
     g_free(ifaces);
@@ -1931,12 +1981,14 @@ void chapter_22_ginterface(void)
     g_object_unref(robot);
 }
 
-/* 第 23 章：GObject 高级特性 */
+/*
+ * 第 23 章：GObject 高级特性
+ */
 void chapter_23_gobject_advanced(void)
 {
     g_print("\n=== 第 23 章 GObject 高级特性 ===\n");
 
-    /* 1. 弱引用 */
+    // 1. 弱引用
     GObject *obj = g_object_new(G_TYPE_OBJECT, NULL);
     GObject *weak = NULL;
 
@@ -1945,48 +1997,48 @@ void chapter_23_gobject_advanced(void)
     g_object_unref(obj);
     g_print("[weak] 释放后=%p (应为 NULL)\n", (void *)weak);
 
-    /* 2. qdata 关联数据 */
+    // 2. qdata 关联数据
     GObject *obj2 = g_object_new(G_TYPE_OBJECT, NULL);
     GQuark qd_key = g_quark_from_static_string("mydata");
     g_object_set_qdata_full(obj2, qd_key, g_strdup("attached"), g_free);
     gchar *qd = g_object_get_qdata(obj2, qd_key);
     g_print("[qdata] value=%s\n", qd ? qd : "(null)");
 
-    /* 3. qdata 重设 */
+    // 3. qdata 重设
     g_object_set_qdata_full(obj2, qd_key, g_strdup("updated"), g_free);
     gchar *qd2 = g_object_get_qdata(obj2, qd_key);
     g_print("[qdata 更新] %s\n", qd2 ? qd2 : "(null)");
 
-    /* 4. qdata steal */
+    // 4. qdata steal
     gchar *stolen = g_object_steal_qdata(obj2, qd_key);
     g_print("[qdata steal] %s\n", stolen ? stolen : "(null)");
     g_free(stolen);
 
-    /* 5. toggle ref（切换引用） */
+    // 5. toggle ref（切换引用）
     GObject *obj3 = g_object_new(G_TYPE_OBJECT, NULL);
     g_object_ref_sink(obj3);
     g_print("[toggle] 引用计数=%d\n", obj3->ref_count);
 
-    /* 6. 属性冻结/解冻 */
-    /* 用第19章的对象演示属性批量通知 */
+    // 6. 属性冻结/解冻
+    // 用第19章的对象演示属性批量通知
 
-    /* 7. object notify 信号 */
+    // 7. object notify 信号
     GObject *obj4 = g_object_new(G_TYPE_OBJECT, NULL);
     gulong notify_id = g_signal_connect(obj4, "notify", G_CALLBACK(on_ch19_notify), NULL);
     (void)notify_id;
 
-    /* 8. 对象接口查询 */
+    // 8. 对象接口查询
     guint n_ifaces = 0;
     GType *obj_ifaces = g_type_interfaces(G_TYPE_OBJECT, &n_ifaces);
     g_print("[interface] GObject 实现接口数=%u\n", n_ifaces);
     g_free(obj_ifaces);
 
-    /* 9. weak ref 回调 */
+    // 9. weak ref 回调
     GObject *obj5 = g_object_new(G_TYPE_OBJECT, NULL);
     g_object_weak_ref(obj5, (GWeakNotify)g_print, "[weak_ref] 对象被销毁");
     g_object_unref(obj5);
 
-    /* 10. 多个弱引用 */
+    // 10. 多个弱引用
     GObject *obj6 = g_object_new(G_TYPE_OBJECT, NULL);
     GObject *weak1 = NULL, *weak2 = NULL;
     g_object_add_weak_pointer(obj6, (gpointer *)&weak1);
@@ -2000,12 +2052,14 @@ void chapter_23_gobject_advanced(void)
     g_object_unref(obj4);
 }
 
-/* 第 24 章：GVariant 类型系统 */
+/*
+ * 第 24 章：GVariant 类型系统
+ */
 void chapter_24_gvariant(void)
 {
     g_print("\n=== 第 24 章 GVariant 类型系统 ===\n");
 
-    /* 1. 基本 variant */
+    // 1. 基本 variant
     GVariant *v = g_variant_new("(si)", "GLib", 42);
     gchar *str = NULL;
     gint num = 0;
@@ -2013,7 +2067,7 @@ void chapter_24_gvariant(void)
     g_print("[基本] str=%s num=%d 类型=%s\n", str, num, g_variant_get_type_string(v));
     g_variant_unref(v);
 
-    /* 2. 基本类型 variant */
+    // 2. 基本类型 variant
     GVariant *vi = g_variant_new_int32(100);
     g_print("[int32] 值=%d 类型=%s\n", g_variant_get_int32(vi), g_variant_get_type_string(vi));
     g_variant_unref(vi);
@@ -2031,7 +2085,7 @@ void chapter_24_gvariant(void)
     g_print("[double] 值=%.2f 类型=%s\n", g_variant_get_double(vd), g_variant_get_type_string(vd));
     g_variant_unref(vd);
 
-    /* 3. 数组 */
+    // 3. 数组
     GVariantBuilder builder;
     g_variant_builder_init(&builder, G_VARIANT_TYPE("ai"));
     g_variant_builder_add(&builder, "i", 1);
@@ -2040,7 +2094,7 @@ void chapter_24_gvariant(void)
     GVariant *arr = g_variant_builder_end(&builder);
     g_print("[数组] 类型=%s 大小=%d\n", g_variant_get_type_string(arr), g_variant_n_children(arr));
 
-    /* 遍历数组 */
+    // 遍历数组
     GVariantIter iter;
     g_variant_iter_init(&iter, arr);
     gint val;
@@ -2051,7 +2105,7 @@ void chapter_24_gvariant(void)
     g_print("\n");
     g_variant_unref(arr);
 
-    /* 4. 字典 */
+    // 4. 字典
     GVariantBuilder dbuilder;
     g_variant_builder_init(&dbuilder, G_VARIANT_TYPE("a{sv}"));
     g_variant_builder_add(&dbuilder, "{sv}", "name", g_variant_new_string("GLib"));
@@ -2059,7 +2113,7 @@ void chapter_24_gvariant(void)
     GVariant *dict = g_variant_builder_end(&dbuilder);
     g_print("[字典] 类型=%s 子项数=%d\n", g_variant_get_type_string(dict), g_variant_n_children(dict));
 
-    /* 查找字典 */
+    // 查找字典
     GVariant *lookup = g_variant_lookup_value(dict, "name", NULL);
     if (lookup) {
         g_print("[字典查找] name=%s\n", g_variant_get_string(lookup, NULL));
@@ -2067,7 +2121,7 @@ void chapter_24_gvariant(void)
     }
     g_variant_unref(dict);
 
-    /* 5. 元组 */
+    // 5. 元组
     GVariant *tuple = g_variant_new("(sis)", "hello", 42, "world");
     gchar *s1, *s2;
     gint i1;
@@ -2077,14 +2131,14 @@ void chapter_24_gvariant(void)
     g_free(s2);
     g_variant_unref(tuple);
 
-    /* 6. 字符串序列化 */
+    // 6. 字符串序列化
     GVariant *ser = g_variant_new("(si)", "GLib", 42);
     gchar *json = g_variant_print(ser, TRUE);
     g_print("[序列化] %s\n", json);
     g_free(json);
     g_variant_unref(ser);
 
-    /* 7. 可能类型（Maybe） */
+    // 7. 可能类型（Maybe）
     GVariant *maybe = g_variant_new("ms", g_variant_new_string("value"));
     g_print("[maybe] 类型=%s\n", g_variant_get_type_string(maybe));
     g_variant_unref(maybe);
@@ -2093,7 +2147,7 @@ void chapter_24_gvariant(void)
     g_print("[maybe null] 类型=%s\n", g_variant_get_type_string(null_maybe));
     g_variant_unref(null_maybe);
 
-    /* 8. GVariant 类型字符串判断 */
+    // 8. GVariant 类型字符串判断
     g_print("[类型检查] is_container=%s\n",
             g_variant_is_container(g_variant_new("()")) ? "是" : "否");
     g_print("[类型检查] is_of_type=%s\n",
@@ -2104,12 +2158,14 @@ void chapter_24_gvariant(void)
  * 第五篇 GIO 输入输出与网络篇
  * ============================================================ */
 
-/* 第 25 章：GIO 基础与流体系 */
+/*
+ * 第 25 章：GIO 基础与流体系
+ */
 void chapter_25_gio_basics_and_streams(void)
 {
     g_print("\n=== 第 25 章 GIO 基础与流体系 ===\n");
 
-    /* 1. GMemoryInputStream 内存输入流 */
+    // 1. GMemoryInputStream 内存输入流
     const gchar *input = "Hello GIO Stream";
     GInputStream *istream = g_memory_input_stream_new_from_data(input, -1, NULL);
     gchar buf[64] = { 0 };
@@ -2117,7 +2173,7 @@ void chapter_25_gio_basics_and_streams(void)
     g_print("[MemoryInputStream] 读取: %s (字节数: %d)\n", buf, (gint)n);
     g_object_unref(istream);
 
-    /* 2. GMemoryOutputStream 内存输出流 */
+    // 2. GMemoryOutputStream 内存输出流
     GOutputStream *ostream = g_memory_output_stream_new_resizable();
     const gchar *out = "GLib output stream";
     g_output_stream_write_all(ostream, out, strlen(out), NULL, NULL, NULL);
@@ -2125,7 +2181,7 @@ void chapter_25_gio_basics_and_streams(void)
     g_print("[MemoryOutputStream] 内容: %s\n", data);
     g_object_unref(ostream);
 
-    /* 3. GDataInputStream 数据输入流 */
+    // 3. GDataInputStream 数据输入流
     GInputStream *mem_in = g_memory_input_stream_new_from_data("line1\nline2\n", -1, NULL);
     GDataInputStream *data_in = g_data_input_stream_new(mem_in);
     gchar *line1 = g_data_input_stream_read_line_utf8(data_in, NULL, NULL, NULL);
@@ -2136,7 +2192,7 @@ void chapter_25_gio_basics_and_streams(void)
     g_object_unref(data_in);
     g_object_unref(mem_in);
 
-    /* 4. GDataOutputStream 数据输出流 */
+    // 4. GDataOutputStream 数据输出流
     GOutputStream *mem_out = g_memory_output_stream_new_resizable();
     GDataOutputStream *data_out = g_data_output_stream_new(mem_out);
     g_data_output_stream_put_string(data_out, "Hello ", NULL, NULL);
@@ -2147,14 +2203,14 @@ void chapter_25_gio_basics_and_streams(void)
     g_object_unref(data_out);
     g_object_unref(mem_out);
 
-    /* 5. 流的 close */
+    // 5. 流的 close
     GInputStream *close_stream = g_memory_input_stream_new_from_data("test", -1, NULL);
     g_input_stream_close(close_stream, NULL, NULL);
     g_print("[stream close] 已关闭: %s\n",
             g_input_stream_is_closed(close_stream) ? "是" : "否");
     g_object_unref(close_stream);
 
-    /* 6. GBufferedInputStream 缓冲输入流 */
+    // 6. GBufferedInputStream 缓冲输入流
     GInputStream *base = g_memory_input_stream_new_from_data("buffered data", -1, NULL);
     GBufferedInputStream *buf_stream = G_BUFFERED_INPUT_STREAM(
         g_buffered_input_stream_new(base));
@@ -2165,22 +2221,24 @@ void chapter_25_gio_basics_and_streams(void)
     g_object_unref(base);
 }
 
-/* 第 26 章：文件系统操作 */
+/*
+ * 第 26 章：文件系统操作
+ */
 void chapter_26_filesystem_operations(void)
 {
     g_print("\n=== 第 26 章 文件系统操作 ===\n");
     GError *error = NULL;
 
-    /* 1. 创建 GFile */
+    // 1. 创建 GFile
     GFile *file = g_file_new_for_path("demo.txt");
     g_print("[GFile] 路径=%s\n", g_file_peek_path(file));
 
-    /* 2. 写入文件 */
+    // 2. 写入文件
     if (g_file_replace_contents(file, "GLib GFile demo\n", strlen("GLib GFile demo\n"),
                                 NULL, FALSE, G_FILE_CREATE_NONE, NULL, NULL, &error)) {
         g_print("[写入] 文件写入成功\n");
 
-        /* 3. 获取文件路径和 URI */
+        // 3. 获取文件路径和 URI
         gchar *path = g_file_get_path(file);
         gchar *uri = g_file_get_uri(file);
         gchar *basename = g_file_get_basename(file);
@@ -2193,7 +2251,7 @@ void chapter_26_filesystem_operations(void)
         g_free(basename);
         g_free(dirname);
 
-        /* 4. 文件信息查询 */
+        // 4. 文件信息查询
         GFileInfo *info = g_file_query_info(file,
             G_FILE_ATTRIBUTE_STANDARD_SIZE "," G_FILE_ATTRIBUTE_STANDARD_TYPE "," G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
             G_FILE_QUERY_INFO_NONE, NULL, NULL);
@@ -2207,7 +2265,7 @@ void chapter_26_filesystem_operations(void)
             g_object_unref(info);
         }
 
-        /* 5. 读取文件 */
+        // 5. 读取文件
         gchar *contents = NULL;
         gsize len = 0;
         if (g_file_load_contents(file, NULL, &contents, &len, NULL, NULL)) {
@@ -2215,11 +2273,11 @@ void chapter_26_filesystem_operations(void)
             g_free(contents);
         }
 
-        /* 6. 检查文件存在 */
+        // 6. 检查文件存在
         gboolean exists = g_file_query_exists(file, NULL);
         g_print("[存在] %s\n", exists ? "是" : "否");
 
-        /* 7. 复制文件 */
+        // 7. 复制文件
         GFile *copy = g_file_new_for_path("demo_copy.txt");
         if (g_file_copy(file, copy, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error)) {
             g_print("[复制] demo.txt -> demo_copy.txt 成功\n");
@@ -2228,7 +2286,7 @@ void chapter_26_filesystem_operations(void)
             g_clear_error(&error);
         }
 
-        /* 8. 删除复制的文件 */
+        // 8. 删除复制的文件
         if (g_file_delete(copy, NULL, &error)) {
             g_print("[删除] demo_copy.txt 成功\n");
         } else {
@@ -2241,7 +2299,7 @@ void chapter_26_filesystem_operations(void)
         g_clear_error(&error);
     }
 
-    /* 9. 目录操作 */
+    // 9. 目录操作
     GFile *dir = g_file_new_for_path("test_dir");
     if (g_file_make_directory(dir, NULL, &error)) {
         g_print("[目录] test_dir 创建成功\n");
@@ -2250,7 +2308,7 @@ void chapter_26_filesystem_operations(void)
         g_clear_error(&error);
     }
 
-    /* 10. 枚举目录 */
+    // 10. 枚举目录
     GFileEnumerator *enumerator = g_file_enumerate_children(
         g_file_new_for_path("."),
         G_FILE_ATTRIBUTE_STANDARD_NAME,
@@ -2271,7 +2329,9 @@ void chapter_26_filesystem_operations(void)
     g_object_unref(dir);
 }
 
-/* 第 27 章：异步 IO 编程模型 */
+/*
+ * 第 27 章：异步 IO 编程模型
+ */
 void read_async_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 {
     GFile *file = G_FILE(source);
@@ -2299,7 +2359,7 @@ void chapter_27_async_io(void)
 {
     g_print("\n=== 第 27 章 异步 IO 编程模型 ===\n");
 
-    /* 1. 异步读取文件 */
+    // 1. 异步读取文件
     GMainLoop *loop = g_main_loop_new(NULL, FALSE);
     GCancellable *cancellable = g_cancellable_new();
     GFile *file = g_file_new_for_path("demo.txt");
@@ -2307,13 +2367,13 @@ void chapter_27_async_io(void)
     g_print("[异步] 开始异步读取 demo.txt...\n");
     g_file_load_contents_async(file, cancellable, read_async_callback, loop);
 
-    /* 2. 同时添加超时源 */
+    // 2. 同时添加超时源
     g_timeout_add_seconds(1, async_timeout_callback, NULL);
 
-    /* 3. 运行主循环等待异步完成 */
+    // 3. 运行主循环等待异步完成
     g_main_loop_run(loop);
 
-    /* 4. GCancellable 说明 */
+    // 4. GCancellable 说明
     g_print("[Cancellable] 是否已取消=%s\n",
             g_cancellable_is_cancelled(cancellable) ? "是" : "否");
     g_print("[Cancellable] 可在异步操作中调用 g_cancellable_cancel 取消\n");
@@ -2322,7 +2382,7 @@ void chapter_27_async_io(void)
     g_object_unref(file);
     g_main_loop_unref(loop);
 
-    /* 5. 同步读取对比 */
+    // 5. 同步读取对比
     g_print("[同步] 对比同步读取...\n");
     GFile *file2 = g_file_new_for_path("demo.txt");
     gchar *contents = NULL;
@@ -2333,33 +2393,35 @@ void chapter_27_async_io(void)
     }
     g_object_unref(file2);
 
-    /* 6. 异步写入说明 */
+    // 6. 异步写入说明
     g_print("[异步写入] 使用 g_file_replace_async / g_file_replace_contents_async\n");
 
-    /* 7. GTask 说明（自定义异步任务） */
+    // 7. GTask 说明（自定义异步任务）
     g_print("[GTask] 自定义异步任务通过 g_task_new / g_task_return_* 实现\n");
 }
 
-/* 第 28 章：网络编程基础 */
+/*
+ * 第 28 章：网络编程基础
+ */
 void chapter_28_network_basics(void)
 {
     g_print("\n=== 第 28 章 网络编程基础 ===\n");
 
-    /* 1. GInetAddress 回环地址 */
+    // 1. GInetAddress 回环地址
     GInetAddress *loopback = g_inet_address_new_loopback(G_SOCKET_FAMILY_IPV4);
     gchar *str = g_inet_address_to_string(loopback);
     g_print("[IPv4 回环] %s\n", str);
     g_free(str);
     g_object_unref(loopback);
 
-    /* 2. IPv6 回环地址 */
+    // 2. IPv6 回环地址
     GInetAddress *loopback6 = g_inet_address_new_loopback(G_SOCKET_FAMILY_IPV6);
     gchar *str6 = g_inet_address_to_string(loopback6);
     g_print("[IPv6 回环] %s\n", str6);
     g_free(str6);
     g_object_unref(loopback6);
 
-    /* 3. 从字符串创建地址 */
+    // 3. 从字符串创建地址
     GInetAddress *addr = g_inet_address_new_from_string("192.168.1.1");
     if (addr) {
         gchar *s = g_inet_address_to_string(addr);
@@ -2368,7 +2430,7 @@ void chapter_28_network_basics(void)
         g_object_unref(addr);
     }
 
-    /* 4. GSocketAddress 套接字地址 */
+    // 4. GSocketAddress 套接字地址
     GInetAddress *any = g_inet_address_new_any(G_SOCKET_FAMILY_IPV4);
     GSocketAddress *saddr = g_inet_socket_address_new(any, 8080);
     g_print("[SocketAddress] 端口=%d\n",
@@ -2376,19 +2438,19 @@ void chapter_28_network_basics(void)
     g_object_unref(saddr);
     g_object_unref(any);
 
-    /* 5. 地址族 */
+    // 5. 地址族
     g_print("[地址族] G_SOCKET_FAMILY_IPV4=%d G_SOCKET_FAMILY_IPV6=%d\n",
             G_SOCKET_FAMILY_IPV4, G_SOCKET_FAMILY_IPV6);
 
-    /* 6. Socket 类型 */
+    // 6. Socket 类型
     g_print("[Socket类型] G_SOCKET_TYPE_STREAM=%d (TCP)\n", G_SOCKET_TYPE_STREAM);
     g_print("[Socket类型] G_SOCKET_TYPE_DATAGRAM=%d (UDP)\n", G_SOCKET_TYPE_DATAGRAM);
 
-    /* 7. 协议 */
+    // 7. 协议
     g_print("[协议] G_SOCKET_PROTOCOL_TCP=%d\n", G_SOCKET_PROTOCOL_TCP);
     g_print("[协议] G_SOCKET_PROTOCOL_UDP=%d\n", G_SOCKET_PROTOCOL_UDP);
 
-    /* 8. 创建 Socket */
+    // 8. 创建 Socket
     GError *error = NULL;
     GSocket *sock = g_socket_new(G_SOCKET_FAMILY_IPV4,
                                   G_SOCKET_TYPE_STREAM,
@@ -2404,7 +2466,7 @@ void chapter_28_network_basics(void)
         g_clear_error(&error);
     }
 
-    /* 9. GResolver 域名解析 */
+    // 9. GResolver 域名解析
     GResolver *resolver = g_resolver_get_default();
     if (resolver) {
         GList *addrs = g_resolver_lookup_by_name(resolver, "localhost", NULL, NULL);
@@ -2419,16 +2481,18 @@ void chapter_28_network_basics(void)
     }
 }
 
-/* 第 29 章：网络客户端与服务端 */
+/*
+ * 第 29 章：网络客户端与服务端
+ */
 void chapter_29_network_client_server(void)
 {
     g_print("\n=== 第 29 章 网络客户端与服务端 ===\n");
 
-    /* 1. GSocketService 服务端 */
+    // 1. GSocketService 服务端
     GSocketService *service = g_socket_service_new();
     GError *error = NULL;
 
-    /* 2. 添加监听端口（使用固定端口便于演示） */
+    // 2. 添加监听端口（使用固定端口便于演示）
     guint16 listen_port = 12345;
     if (g_socket_listener_add_inet_port(G_SOCKET_LISTENER(service), listen_port, NULL, &error)) {
         g_print("[服务端] 监听端口 %d 添加成功\n", listen_port);
@@ -2437,37 +2501,37 @@ void chapter_29_network_client_server(void)
         g_clear_error(&error);
     }
 
-    /* 3. 说明监听端口 */
+    // 3. 说明监听端口
     g_print("[服务端] 配置监听端口=%d\n", listen_port);
 
-    /* 4. 启动服务（不实际运行循环） */
+    // 4. 启动服务（不实际运行循环）
     g_socket_service_start(service);
     g_print("[服务端] 服务已启动\n");
 
-    /* 5. GSocketClient 客户端 */
+    // 5. GSocketClient 客户端
     GSocketClient *client = g_socket_client_new();
     g_socket_client_set_timeout(client, 5);
     g_print("[客户端] 超时设置=%d秒\n", g_socket_client_get_timeout(client));
 
-    /* 6. 客户端连接配置 */
+    // 6. 客户端连接配置
     g_socket_client_set_family(client, G_SOCKET_FAMILY_IPV4);
     g_socket_client_set_protocol(client, G_SOCKET_PROTOCOL_TCP);
     g_socket_client_set_socket_type(client, G_SOCKET_TYPE_STREAM);
     g_print("[客户端] 已配置 TCP/IPv4\n");
 
-    /* 7. 停止服务 */
+    // 7. 停止服务
     g_socket_service_stop(service);
     g_print("[服务端] 服务已停止\n");
 
-    /* 8. GSocketConnection 说明 */
+    // 8. GSocketConnection 说明
     g_print("[GSocketConnection] 表示已建立的连接\n");
     g_print("[GSocketConnection] 可通过 g_socket_connection_get_socket 获取底层 Socket\n");
 
-    /* 9. GSocketListener 说明 */
+    // 9. GSocketListener 说明
     g_print("[GSocketListener] 可同时监听多个端口\n");
     g_print("[GSocketListener] g_socket_listener_accept_async 异步接受连接\n");
 
-    /* 10. 连接信号说明 */
+    // 10. 连接信号说明
     g_print("[信号] GSocketService::incoming 新连接到来时触发\n");
     g_print("[信号] 回调返回 TRUE 可阻止默认处理\n");
 
@@ -2475,13 +2539,15 @@ void chapter_29_network_client_server(void)
     g_object_unref(client);
 }
 
-/* 第 30 章：D-Bus IPC 基础 */
+/*
+ * 第 30 章：D-Bus IPC 基础
+ */
 void chapter_30_dbus_basics(void)
 {
     g_print("\n=== 第 30 章 D-Bus IPC 基础 ===\n");
     GError *error = NULL;
 
-    /* 1. 连接会话总线 */
+    // 1. 连接会话总线
     GDBusConnection *conn = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
     if (conn) {
         g_print("[会话总线] 连接成功\n");
@@ -2489,16 +2555,16 @@ void chapter_30_dbus_basics(void)
         g_print("[会话总线] 是否关闭: %s\n",
                 g_dbus_connection_is_closed(conn) ? "是" : "否");
 
-        /* 2. 总线类型说明 */
+        // 2. 总线类型说明
         g_print("[总线类型] G_BUS_TYPE_SESSION=%d (会话)\n", G_BUS_TYPE_SESSION);
         g_print("[总线类型] G_BUS_TYPE_SYSTEM=%d (系统)\n", G_BUS_TYPE_SYSTEM);
         g_print("[总线类型] G_BUS_TYPE_STARTER=%d (启动者)\n", G_BUS_TYPE_STARTER);
 
-        /* 3. 连接标志说明 */
+        // 3. 连接标志说明
         g_print("[标志] G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT\n");
         g_print("[标志] G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION\n");
 
-        /* 4. 发送消息示例（ListNames） */
+        // 4. 发送消息示例（ListNames）
         GVariant *result = g_dbus_connection_call_sync(
             conn,
             "org.freedesktop.DBus",      /* 总线名 */
@@ -2535,7 +2601,7 @@ void chapter_30_dbus_basics(void)
         g_clear_error(&error);
     }
 
-    /* 5. 连接系统总线 */
+    // 5. 连接系统总线
     GDBusConnection *sys_conn = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, &error);
     if (sys_conn) {
         g_print("[系统总线] 连接成功\n");
@@ -2546,7 +2612,7 @@ void chapter_30_dbus_basics(void)
         g_clear_error(&error);
     }
 
-    /* 6. D-Bus 概念说明 */
+    // 6. D-Bus 概念说明
     g_print("[D-Bus 概念]\n");
     g_print("  Bus Name: 如 org.freedesktop.DBus\n");
     g_print("  Object Path: 如 /org/freedesktop/DBus\n");
@@ -2555,19 +2621,21 @@ void chapter_30_dbus_basics(void)
     g_print("  Signal: 事件通知机制\n");
 }
 
-/* 第 31 章：D-Bus 高级编程 */
+/*
+ * 第 31 章：D-Bus 高级编程
+ */
 void chapter_31_dbus_advanced(void)
 {
     g_print("\n=== 第 31 章 D-Bus 高级编程 ===\n");
     g_print("建议使用 g_dbus_proxy_new_sync / g_dbus_proxy_call_sync。\n");
     g_print("需要目标服务已注册在 D-Bus 上。\n");
 
-    /* 1. 获取会话总线连接 */
+    // 1. 获取会话总线连接
     GError *error = NULL;
     GDBusConnection *conn = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
     if (conn) {
-        /* 2. 创建 D-Bus 代理：代理封装了对远端对象的访问 */
-        /* 参数：连接、标志、 introspection XML、总线名、对象路径、接口名 */
+        // 2. 创建 D-Bus 代理：代理封装了对远端对象的访问
+        // 参数：连接、标志、 introspection XML、总线名、对象路径、接口名
         GDBusProxy *proxy = g_dbus_proxy_new_sync(conn,
                                                   G_DBUS_PROXY_FLAGS_NONE,
                                                   NULL,
@@ -2578,7 +2646,7 @@ void chapter_31_dbus_advanced(void)
         if (proxy) {
             g_print("[代理] 创建成功，目标=%s\n", g_dbus_proxy_get_name(proxy));
 
-            /* 3. 通过代理调用方法（同步方式） */
+            // 3. 通过代理调用方法（同步方式）
             GVariant *result = g_dbus_proxy_call_sync(proxy,
                                                        "GetId",
                                                        NULL,
@@ -2587,7 +2655,7 @@ void chapter_31_dbus_advanced(void)
                                                        NULL,
                                                        &error);
             if (result) {
-                /* GetId 返回一个字符串 */
+                // GetId 返回一个字符串
                 const gchar *id;
                 g_variant_get(result, "(&s)", &id);
                 g_print("[GetId] 总线 ID=%s\n", id);
@@ -2597,7 +2665,7 @@ void chapter_31_dbus_advanced(void)
                 g_clear_error(&error);
             }
 
-            /* 4. 获取接口信息 */
+            // 4. 获取接口信息
             GDBusInterfaceInfo *info = g_dbus_proxy_get_interface_info(proxy);
             if (info) {
                 g_print("[接口信息] 名称=%s\n", info ? info->name : "(null)");
@@ -2614,7 +2682,7 @@ void chapter_31_dbus_advanced(void)
         g_clear_error(&error);
     }
 
-    /* 5. D-Bus 高级概念说明 */
+    // 5. D-Bus 高级概念说明
     g_print("[高级概念]\n");
     g_print("  - GDBusProxy: 代理模式，缓存属性值，可监听信号\n");
     g_print("  - GDBusInterfaceVTable: 虚表模式，直接处理方法调用\n");
@@ -2623,60 +2691,64 @@ void chapter_31_dbus_advanced(void)
     g_print("  - g_dbus_connection_emit_signal: 发送信号\n");
 }
 
-/* 第 32 章：应用与资源管理 */
+/*
+ * 第 32 章：应用与资源管理
+ */
 void chapter_32_application_and_resources(void)
 {
     g_print("\n=== 第 32 章 应用与资源管理 ===\n");
 
-    /* 1. GApplication 应用入口 */
-    /* GApplication 提供应用唯一性、激活、命令行处理等 */
+    // 1. GApplication 应用入口
+    // GApplication 提供应用唯一性、激活、命令行处理等
     GApplication *app = g_application_new("com.example.glibtutorial", G_APPLICATION_DEFAULT_FLAGS);
     g_print("[GApplication] ID=%s\n", g_application_get_application_id(app));
 
-    /* 2. 应用标志说明 */
+    // 2. 应用标志说明
     g_print("[标志] G_APPLICATION_DEFAULT_FLAGS=%d (默认)\n", G_APPLICATION_DEFAULT_FLAGS);
     g_print("[标志] G_APPLICATION_IS_SERVICE=%d (服务模式)\n", G_APPLICATION_IS_SERVICE);
     g_print("[标志] G_APPLICATION_HANDLES_COMMAND_LINE=%d (处理命令行)\n",
             G_APPLICATION_HANDLES_COMMAND_LINE);
 
-    /* 3. 检查应用 ID */
+    // 3. 检查应用 ID
     const gchar *app_id = g_application_get_application_id(app);
     g_print("[应用 ID] %s (反向域名格式)\n", app_id);
 
-    /* 4. GResource 资源系统说明 */
-    /* GResource 用于将文件打包到二进制中 */
+    // 4. GResource 资源系统说明
+    // GResource 用于将文件打包到二进制中
     g_print("[GResource] 使用流程:\n");
     g_print("  1. 编写 .gresource.xml 资源描述文件\n");
     g_print("  2. 用 glib-compile-resources 编译为 .c 或二进制\n");
     g_print("  3. 代码中用 g_resource_load() 加载\n");
     g_print("  4. 用 g_resources_lookup_data() 访问资源\n");
 
-    /* 5. 资源路径格式 */
+    // 5. 资源路径格式
     g_print("[资源路径] 格式: /com/example/app/icon.png\n");
 
     g_object_unref(app);
 }
 
-/* 第 33 章：应用配置管理 GSettings */
+/*
+ * 第 33 章：应用配置管理 GSettings
+ */
 void chapter_33_gsettings(void)
 {
     g_print("\n=== 第 33 章 应用配置管理 GSettings ===\n");
     g_print("GSettings 需要已安装的 schema；\n");
     g_print("示例：g_settings_new(\"org.gnome.desktop.interface\")。\n");
 
-    /* 1. 获取默认 schema 源 */
-    /* Schema 源是已安装的 .gschema.xml 文件的集合 */
+    // 1. 获取默认 schema 源
+    // Schema 源是已安装的 .gschema.xml 文件的集合
     GSettingsSchemaSource *source = g_settings_schema_source_get_default();
     if (source) {
         g_print("[schema 源] 已找到默认源\n");
 
-        /* 2. 查找特定 schema */
+        // 2. 查找特定 schema
         GSettingsSchema *schema = g_settings_schema_source_lookup(source,
             "org.gnome.desktop.interface", TRUE);
         if (schema) {
             g_print("[schema] 找到: org.gnome.desktop.interface\n");
 
-            /* 3. 列出 schema 的键 */
+            // 3. 列出 schema 的键
             gchar **keys = g_settings_schema_list_keys(schema);
             if (keys) {
                 g_print("[键列表] ");
@@ -2687,10 +2759,10 @@ void chapter_33_gsettings(void)
                 g_strfreev(keys);
             }
 
-            /* 4. 创建 GSettings 并读取值 */
+            // 4. 创建 GSettings 并读取值
             GSettings *settings = g_settings_new_full(schema, NULL, NULL);
             if (settings) {
-                /* 读取字符串值 */
+                // 读取字符串值
                 gchar *theme = g_settings_get_string(settings, "gtk-theme");
                 g_print("[读取] gtk-theme=%s\n", theme ? theme : "(null)");
                 g_free(theme);
@@ -2706,7 +2778,7 @@ void chapter_33_gsettings(void)
         g_print("[schema 源] 没有默认源\n");
     }
 
-    /* 5. GSettings 特性说明 */
+    // 5. GSettings 特性说明
     g_print("[特性]\n");
     g_print("  - 基于 key-value 的配置存储\n");
     g_print("  - 支持 change 信号监听键变化\n");
@@ -2718,45 +2790,49 @@ void chapter_33_gsettings(void)
  * 第六篇 高级特性与工程实践篇
  * ============================================================ */
 
-/* 第 34 章：跨平台适配与兼容性 */
+/*
+ * 第 34 章：跨平台适配与兼容性
+ */
 void chapter_34_cross_platform_adaptation(void)
 {
     g_print("\n=== 第 34 章 跨平台适配与兼容性 ===\n");
 
-    /* 1. 操作系统信息 */
+    // 1. 操作系统信息
     const gchar *os_name = g_get_os_info(G_OS_INFO_KEY_NAME);
     const gchar *os_ver = g_get_os_info(G_OS_INFO_KEY_VERSION);
     g_print("[系统] %s %s\n", os_name ? os_name : "unknown", os_ver ? os_ver : "");
 
-    /* 2. 路径分隔符 */
-    /* Windows 用 '\'，Unix 用 '/' */
+    // 2. 路径分隔符
+    // Windows 用 '\'，Unix 用 '/'
     g_print("[路径分隔符] '%c'\n", G_DIR_SEPARATOR);
-    /* 环境变量 PATH 的分隔符：Windows 用 ';'，Unix 用 ':' */
+    // 环境变量 PATH 的分隔符：Windows 用 ';'，Unix 用 ':'
     g_print("[搜索路径分隔符] '%c'\n", G_SEARCHPATH_SEPARATOR);
 
-    /* 3. 标准目录 */
+    // 3. 标准目录
     g_print("[用户数据目录] %s\n", g_get_user_data_dir());
     g_print("[用户配置目录] %s\n", g_get_user_config_dir());
     g_print("[用户缓存目录] %s\n", g_get_user_cache_dir());
     g_print("[系统临时目录] %s\n", g_get_tmp_dir());
 
-    /* 4. 路径构建（跨平台安全） */
-    /* g_build_filename 自动使用正确的分隔符 */
+    // 4. 路径构建（跨平台安全）
+    // g_build_filename 自动使用正确的分隔符
     gchar *path = g_build_filename("usr", "local", "bin", "program", NULL);
     g_print("[构建路径] %s\n", path);
     g_free(path);
 
-    /* 5. 环境变量跨平台处理 */
+    // 5. 环境变量跨平台处理
     const gchar *home = g_getenv("HOME");
     if (!home) home = g_getenv("USERPROFILE"); /* Windows */
     g_print("[HOME] %s\n", home ? home : "(null)");
 
-    /* 6. 换行符处理 */
+    // 6. 换行符处理
     g_print("[换行符] G_DIR_SEPARATOR 用于路径\n");
     g_print("[换行符] 文本换行 Unix:'\\n' Windows:'\\r\\n'\n");
 }
 
-/* 第 35 章：性能优化与调试技巧 */
+/*
+ * 第 35 章：性能优化与调试技巧
+ */
 void chapter_35_performance_and_debugging(void)
 {
     GTimer *timer = g_timer_new();
@@ -2764,7 +2840,7 @@ void chapter_35_performance_and_debugging(void)
 
     g_print("\n=== 第 35 章 性能优化与调试技巧 ===\n");
 
-    /* 1. 插入性能测试 */
+    // 1. 插入性能测试
     g_timer_start(timer);
     for (gint i = 0; i < 10000; i++) {
         gchar *key = g_strdup_printf("key%d", i);
@@ -2773,7 +2849,7 @@ void chapter_35_performance_and_debugging(void)
     g_timer_stop(timer);
     g_print("[插入] 10000 项耗时: %f 秒\n", g_timer_elapsed(timer, NULL));
 
-    /* 2. 查找性能测试 */
+    // 2. 查找性能测试
     g_timer_start(timer);
     for (gint i = 0; i < 10000; i++) {
         gchar *key = g_strdup_printf("key%d", i);
@@ -2783,7 +2859,7 @@ void chapter_35_performance_and_debugging(void)
     g_timer_stop(timer);
     g_print("[查找] 10000 项耗时: %f 秒\n", g_timer_elapsed(timer, NULL));
 
-    /* 3. slice 分配器 vs malloc 性能对比 */
+    // 3. slice 分配器 vs malloc 性能对比
     g_timer_start(timer);
     for (gint i = 0; i < 10000; i++) {
         gpointer p = g_slice_alloc(sizeof(gint));
@@ -2800,7 +2876,7 @@ void chapter_35_performance_and_debugging(void)
     g_timer_stop(timer);
     g_print("[malloc] 10000 次分配/释放: %f 秒\n", g_timer_elapsed(timer, NULL));
 
-    /* 4. 调试技巧说明 */
+    // 4. 调试技巧说明
     g_print("[调试技巧]\n");
     g_print("  - GTimer: 精确计时\n");
     g_print("  - g_get_monotonic_time: 单调时间戳\n");
@@ -2813,20 +2889,22 @@ void chapter_35_performance_and_debugging(void)
     g_timer_destroy(timer);
 }
 
-/* 第 36 章：自定义扩展与组件封装 */
+/*
+ * 第 36 章：自定义扩展与组件封装
+ */
 void chapter_36_custom_extensions(void)
 {
     g_print("\n=== 第 36 章 自定义扩展与组件封装 ===\n");
 
-    /* 1. 自定义 Boxed 类型 */
-    /* Boxed 类型用于包装不透明数据，提供复制和释放函数 */
+    // 1. 自定义 Boxed 类型
+    // Boxed 类型用于包装不透明数据，提供复制和释放函数
     GType boxed_type = g_boxed_type_register_static("MyBoxedInt",
                                            (GBoxedCopyFunc)g_strdup,
                                            (GBoxedFreeFunc)g_free);
     g_print("[Boxed] 类型注册成功: %s (id=%lu)\n", g_type_name(boxed_type), boxed_type);
 
-    /* 2. 自定义枚举类型 */
-    /* 枚举类型用于注册可被 GObject 属性系统使用的枚举 */
+    // 2. 自定义枚举类型
+    // 枚举类型用于注册可被 GObject 属性系统使用的枚举
     GType enum_type = g_enum_register_static("MyEnum",
         (GEnumValue[]) {
             { 0, "MY_ENUM_ZERO", "zero" },
@@ -2847,7 +2925,7 @@ void chapter_36_custom_extensions(void)
         g_type_class_unref(enum_class);
     }
 
-    /* 4. 自定义标志类型 */
+    // 4. 自定义标志类型
     GType flags_type = g_flags_register_static("MyFlags",
         (GFlagsValue[]) {
             { 1, "MY_FLAG_READ",  "read" },
@@ -2857,7 +2935,7 @@ void chapter_36_custom_extensions(void)
         });
     g_print("[Flags] 类型注册成功: %s (id=%lu)\n", g_type_name(flags_type), flags_type);
 
-    /* 5. 组件封装建议 */
+    // 5. 组件封装建议
     g_print("[封装建议]\n");
     g_print("  - 用 G_DECLARE_FINAL_TYPE 声明最终类型\n");
     g_print("  - 用 G_DECLARE_DERIVABLE_TYPE 声明可派生类型\n");
@@ -2866,63 +2944,63 @@ void chapter_36_custom_extensions(void)
     g_print("  - 信号用 g_signal_new 注册\n");
 }
 
-/* 第 37 章：测试框架 GTest */
+// 第 37 章：测试框架 GTest
 void test_case_addition(void)
 {
-    /* 基本断言宏 */
-    g_assert_cmpint(1 + 1, ==, 2);          /* 整数比较 */
-    g_assert_cmpint(10 > 5, ==, TRUE);       /* 布尔断言 */
+    // 基本断言宏
+    g_assert_cmpint(1 + 1, ==, 2);          // 整数比较
+    g_assert_cmpint(10 > 5, ==, TRUE);      // 布尔断言
 }
 
 void test_case_string(void)
 {
-    /* 字符串断言 */
-    g_assert_cmpstr("GLib", ==, "GLib");     /* 相等 */
-    g_assert_cmpstr("abc", !=, "xyz");       /* 不等 */
+    // 字符串断言
+    g_assert_cmpstr("GLib", ==, "GLib");     // 相等
+    g_assert_cmpstr("abc", !=, "xyz");       // 不等
 }
 
 void test_case_float(void)
 {
-    /* 浮点数断言（注意精度问题） */
-    g_assert_cmpfloat(0.1 + 0.2, !=, 0.3);   /* 浮点精度示例 */
-    g_assert_cmpfloat(1.0 + 1.0, ==, 2.0);   /* 精确相等 */
+    // 浮点数断言（注意精度问题）
+    g_assert_cmpfloat(0.1 + 0.2, !=, 0.3);   // 浮点精度示例
+    g_assert_cmpfloat(1.0 + 1.0, ==, 2.0);   // 精确相等
 }
 
 void test_case_pointer(void)
 {
-    /* 指针断言 */
-    g_assert_null(NULL);                     /* 断言为 NULL */
-    g_assert_nonnull(g_strdup("x"));         /* 断言非 NULL */
-    g_free(g_strdup("x"));                   /* 释放避免泄漏 */
+    // 指针断言
+    g_assert_null(NULL);                     // 断言为 NULL
+    g_assert_nonnull(g_strdup("x"));         // 断言非 NULL
+    g_free(g_strdup("x"));              // 释放避免泄漏
 }
 
 void chapter_37_gtest_framework(void)
 {
     g_print("\n=== 第 37 章 测试框架 GTest ===\n");
 
-    /* 1. 初始化测试框架 */
-    /* g_test_init 会解析 --verbose 等命令行参数 */
+    // 1. 初始化测试框架
+    // g_test_init 会解析 --verbose 等命令行参数
     g_test_init(&g_argc, &g_argv, NULL);
 
-    /* 2. 设置测试行为 */
-    g_test_set_nonfatal_assertions();  /* 断言失败不终止 */
-    g_test_timer_start();              /* 启动计时器 */
+    // 2. 设置测试行为
+    g_test_set_nonfatal_assertions();  // 断言失败不终止
+    g_test_timer_start();              // 启动计时器
 
-    /* 3. 添加测试用例 */
-    /* 路径格式: /模块/用例名 */
+    // 3. 添加测试用例
+    // 路径格式: /模块/用例名
     g_test_add_func("/math/addition", test_case_addition);
     g_test_add_func("/string/compare", test_case_string);
     g_test_add_func("/float/precision", test_case_float);
     g_test_add_func("/pointer/null", test_case_pointer);
 
-    /* 4. 运行测试 */
+    // 4. 运行测试
     gint ret = g_test_run();
     g_print("[结果] 退出码=%d (0=全部通过)\n", ret);
 
-    /* 5. 测试时间 */
+    // 5. 测试时间
     g_print("[计时] 测试耗时: %.6f 秒\n", g_test_timer_elapsed());
 
-    /* 6. 断言宏说明 */
+    // 6. 断言宏说明
     g_print("[断言宏]\n");
     g_print("  g_assert(expr)               断言为真\n");
     g_print("  g_assert_cmpint(a, op, b)    整数比较 (==, !=, <, >, <=, >=)\n");
@@ -2934,13 +3012,15 @@ void chapter_37_gtest_framework(void)
     g_print("  g_assert_false(expr)         断言为 FALSE\n");
 }
 
-/* 第 38 章：综合项目实战 */
+/*
+ * 第 38 章：综合项目实战
+ */
 void chapter_38_comprehensive_project(void)
 {
     g_print("\n=== 第 38 章 综合项目实战 ===\n");
     g_print("综合运用 GLib 各模块构建一个简单的任务管理系统\n");
 
-    /* === 模块 1: 配置管理（GKeyFile） === */
+    // === 模块 1: 配置管理（GKeyFile） ===
     g_print("\n[1] 配置管理\n");
     GKeyFile *kf = g_key_file_new();
     g_key_file_set_string(kf, "settings", "name", "TaskManager");
@@ -2953,7 +3033,7 @@ void chapter_38_comprehensive_project(void)
     g_print("  配置: name=%s timeout=%d\n", config_name, config_timeout);
     g_free(config_name);
 
-    /* === 模块 2: 任务列表（GList + 动态分配） === */
+    // === 模块 2: 任务列表（GList + 动态分配） ===
     g_print("\n[2] 任务列表\n");
     GList *tasks = NULL;
     tasks = g_list_append(tasks, g_strdup("init"));
@@ -2966,7 +3046,7 @@ void chapter_38_comprehensive_project(void)
     }
     g_list_free_full(tasks, g_free);
 
-    /* === 模块 3: 状态表（GHashTable） === */
+    // === 模块 3: 状态表（GHashTable） ===
     g_print("\n[3] 状态表\n");
     GHashTable *status = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(status, "init", "done");
@@ -2981,7 +3061,7 @@ void chapter_38_comprehensive_project(void)
     }
     g_hash_table_destroy(status);
 
-    /* === 模块 4: 日志记录（GDateTime + 日志） === */
+    // === 模块 4: 日志记录（GDateTime + 日志） ===
     g_print("\n[4] 日志记录\n");
     GDateTime *now = g_date_time_new_now_local();
     gchar *timestamp = g_date_time_format(now, "%H:%M:%S");
@@ -2990,7 +3070,7 @@ void chapter_38_comprehensive_project(void)
     g_free(timestamp);
     g_date_time_unref(now);
 
-    /* === 模块 5: 文件 I/O（GFile） === */
+    // === 模块 5: 文件 I/O（GFile） ===
     g_print("\n[5] 文件 I/O\n");
     GFile *file = g_file_new_for_path("demo.txt");
     gchar *contents = NULL;
@@ -3004,7 +3084,7 @@ void chapter_38_comprehensive_project(void)
     }
     g_object_unref(file);
 
-    /* === 模块 6: 随机数据（GRand） === */
+    // === 模块 6: 随机数据（GRand） ===
     g_print("\n[6] 随机数据\n");
     GRand *rng = g_rand_new_with_seed(42);
     g_print("  随机数: %d %d %d\n",
@@ -3013,7 +3093,7 @@ void chapter_38_comprehensive_project(void)
             g_rand_int_range(rng, 0, 100));
     g_rand_free(rng);
 
-    /* === 模块 7: GVariant 数据序列化 === */
+    // === 模块 7: GVariant 数据序列化 ===
     g_print("\n[7] 数据序列化\n");
     GVariant *data = g_variant_new("(sia{sv})",
                                     "TaskManager",
@@ -3037,42 +3117,42 @@ int main(int argc, char *argv[])
     g_argv = argv;
 
     chapter_01_glib_overview();
-    chapter_02_basic_types_and_macros();
-    chapter_03_memory_management();
-    chapter_04_strings_and_text();
-    chapter_05_linear_data_structures();
-    chapter_06_associative_and_set_structures();
-    chapter_07_date_time_and_timer();
-    chapter_08_commandline_and_config();
-    chapter_09_utility_functions();
-    chapter_10_logging_and_error_handling();
-    chapter_11_main_event_loop();
-    chapter_12_thread_basics();
-    chapter_13_thread_synchronization();
-    chapter_14_concurrency_and_thread_pool();
-    chapter_15_subprocess_management();
-    chapter_16_modules_and_plugins();
-    chapter_17_gtype_basics();
-    chapter_18_gobject_basics();
-    chapter_19_properties();
-    chapter_20_signals();
-    chapter_21_subclassing();
-    chapter_22_ginterface();
-    chapter_23_gobject_advanced();
-    chapter_24_gvariant();
-    chapter_25_gio_basics_and_streams();
-    chapter_26_filesystem_operations();
-    chapter_27_async_io();
-    chapter_28_network_basics();
-    chapter_29_network_client_server();
-    chapter_30_dbus_basics();
-    chapter_31_dbus_advanced();
-    chapter_32_application_and_resources();
-    chapter_33_gsettings();
-    chapter_34_cross_platform_adaptation();
-    chapter_35_performance_and_debugging();
-    chapter_36_custom_extensions();
-    chapter_37_gtest_framework();
-    chapter_38_comprehensive_project();
+    // chapter_02_basic_types_and_macros();
+    // chapter_03_memory_management();
+    // chapter_04_strings_and_text();
+    // chapter_05_linear_data_structures();
+    // chapter_06_associative_and_set_structures();
+    // chapter_07_date_time_and_timer();
+    // chapter_08_commandline_and_config();
+    // chapter_09_utility_functions();
+    // chapter_10_logging_and_error_handling();
+    // chapter_11_main_event_loop();
+    // chapter_12_thread_basics();
+    // chapter_13_thread_synchronization();
+    // chapter_14_concurrency_and_thread_pool();
+    // chapter_15_subprocess_management();
+    // chapter_16_modules_and_plugins();
+    // chapter_17_gtype_basics();
+    // chapter_18_gobject_basics();
+    // chapter_19_properties();
+    // chapter_20_signals();
+    // chapter_21_subclassing();
+    // chapter_22_ginterface();
+    // chapter_23_gobject_advanced();
+    // chapter_24_gvariant();
+    // chapter_25_gio_basics_and_streams();
+    // chapter_26_filesystem_operations();
+    // chapter_27_async_io();
+    // chapter_28_network_basics();
+    // chapter_29_network_client_server();
+    // chapter_30_dbus_basics();
+    // chapter_31_dbus_advanced();
+    // chapter_32_application_and_resources();
+    // chapter_33_gsettings();
+    // chapter_34_cross_platform_adaptation();
+    // chapter_35_performance_and_debugging();
+    // chapter_36_custom_extensions();
+    // chapter_37_gtest_framework();
+    // chapter_38_comprehensive_project();
     return 0;
 }

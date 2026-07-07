@@ -18,7 +18,6 @@ typedef enum bool
  * 使用 枚举+typedef 实现自定义bool
  */
 #if 0
-#endif
 int main()
 {
     bool b = true;
@@ -33,3 +32,4 @@ int main()
     printf("b = %d\n", b);
     return 0;
 }
+#endif
