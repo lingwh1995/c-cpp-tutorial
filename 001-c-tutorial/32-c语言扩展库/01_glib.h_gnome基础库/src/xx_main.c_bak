@@ -91,61 +91,6 @@ FIX_GLIB_UTF8_LOCALE();
  *
  */
 
-
-
-    // /* 第一篇：入门基础篇 */
-    // g_print("[第 01 章] GLib 体系概述与环境搭建\n");   chapter_01_overview();
-    // g_print("[第 02 章] 基础类型与核心宏\n");           chapter_02_types_macros();
-    //
-    // /* 第二篇：通用工具与数据结构篇 */
-    // g_print("[第 03 章] 内存管理体系\n");               chapter_03_memory();
-    // g_print("[第 04 章] 字符串与文本处理\n");           chapter_04_strings();
-    // g_print("[第 05 章] 线性数据结构\n");               chapter_05_linear_data();
-    // g_print("[第 06 章] 关联与集合数据结构\n");         chapter_06_associative_data();
-    // g_print("[第 07 章] 日期、时间与计时\n");           chapter_07_datetime();
-    // g_print("[第 08 章] 命令行与配置解析\n");           chapter_08_option_keyfile();
-    // g_print("[第 09 章] 通用工具函数集\n");             chapter_09_utilities();
-    //
-    // /* 第三篇：系统编程与并发篇 */
-    // g_print("[第 10 章] 日志与错误处理体系\n");         chapter_10_error_logging();
-    // g_print("[第 11 章] 主事件循环 GMainLoop\n");       chapter_11_main_loop();
-    // g_print("[第 12 章] 线程编程基础\n");               chapter_12_threads();
-    // g_print("[第 13 章] 线程同步原语\n");               chapter_13_sync();
-    // g_print("[第 14 章] 并发组件与线程池\n");           chapter_14_threadpool();
-    // g_print("[第 15 章] 子进程管理\n");                 chapter_15_subprocess();
-    // g_print("[第 16 章] 动态模块与插件架构\n");         chapter_16_gmodule();
-    //
-    // /* 第四篇：GObject 对象系统篇 */
-    // g_print("[第 17 章] GType 类型系统基础\n");         chapter_17_gtype();
-    // g_print("[第 18 章] GObject 对象基础\n");           chapter_18_gobject();
-    // g_print("[第 19 章] 属性系统\n");                   chapter_19_properties();
-    // g_print("[第 20 章] 信号系统\n");                   chapter_20_signals();
-    // g_print("[第 21 章] GObject 子类化\n");             chapter_21_subclass();
-    // g_print("[第 22 章] 接口系统 GInterface\n");        chapter_22_interface();
-    // g_print("[第 23 章] GObject 高级特性\n");           chapter_23_gobject_advanced();
-    // g_print("[第 24 章] GVariant 类型系统\n");          chapter_24_gvariant();
-    //
-    // /* 第五篇：GIO 输入输出与网络篇 */
-    // g_print("[第 25 章] GIO 基础与流体系\n");           chapter_25_gio_streams();
-    // g_print("[第 26 章] 文件系统操作\n");               chapter_26_filesystem();
-    // g_print("[第 27 章] 异步 IO 编程模型\n");           chapter_27_async_io();
-    // g_print("[第 28 章] 网络编程基础\n");               chapter_28_networking();
-    // g_print("[第 29 章] 网络客户端与服务端\n");         chapter_29_network_service();
-    // g_print("[第 30 章] D-Bus IPC 基础\n");            chapter_30_dbus();
-    // g_print("[第 31 章] D-Bus 高级编程\n");             chapter_31_dbus_advanced();
-    // g_print("[第 32 章] 应用与资源管理\n");             chapter_32_app_resource();
-    // g_print("[第 33 章] 应用配置管理 GSettings\n");     chapter_33_gsettings();
-    //
-    // /* 第六篇：高级特性与工程实践篇 */
-    // g_print("[第 34 章] 跨平台适配与兼容性\n");         chapter_34_cross_platform();
-    // g_print("[第 35 章] 性能优化与调试技巧\n");         chapter_35_performance();
-    // g_print("[第 36 章] 自定义扩展与组件封装\n");       chapter_36_custom_extension();
-    // g_print("[第 37 章] 测试框架 GTest\n");             chapter_37_testing();
-    // g_print("[第 38 章] 综合项目实战\n");               chapter_38_project();
-    //
-    // g_print("\n====== 全部 38 章运行完成 ======\n");
-
-
 /**
  * 第1章：GLib 基础数据类型与常用宏
  */
@@ -156,6 +101,7 @@ void chapter1_basic_types_and_macros_test()
     // 1.1. 基本数据类型 官方文档：https://docs.gtk.org/glib/types.html
     g_print("1.1 基本数据类型\n");
 
+/*
     // gchar - char
     const gchar c = 'a';
     g_print("gchar c = %c\n", c);
@@ -224,6 +170,7 @@ void chapter1_basic_types_and_macros_test()
     const gfloat  f = 3.14f;
     const gdouble d = 3.141592653589793;
     g_print("gfloat = %.2f, gdouble = %.15f\n", f, d);
+*/
 
     // 1.2. 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
     g_print("\n1.2 常用宏定义\n");
@@ -1868,7 +1815,6 @@ void chapter13_gio_advanced_test()
 }
 
 #if 0
-#endif
 int main()
 {
     // 第1-4章：GLib 核心
@@ -1893,3 +1839,4 @@ int main()
     // chapter13_gio_advanced_test();
     return 0;
 }
+#endif
