@@ -1,0 +1,340 @@
+### 划分原则
+1. **渐进式难度**：从基础环境→工具函数→数据结构→系统并发→对象系统→IO网络→工程实践，难度逐步抬升
+2. **依赖前置**：所有前置知识点优先讲解（例如学GIO前必须掌握GObject与事件循环）
+3. **全量覆盖**：完整覆盖 GLib Core、GObject、GIO 三大模块的非GUI知识点，排除GTK/GDK/Cairo等图形界面开发内容
+4. **工程导向**：每章对应可落地的编程能力，兼顾原理与实践范式
+
+---
+
+## 第一篇：入门基础篇（建立认知，跑通第一个程序）
+### 第1章 GLib 体系概述与环境搭建
+- GLib 的定位与三大组成：GLib Core、GObject、GIO
+- 与 GTK 图形界面的边界与关系（本课程不涉及 GUI 开发）
+- 跨平台特性与适用场景
+- 开发环境搭建：库安装、编译工具链
+- 编译构建：pkg-config 配置、头文件引入、CMake/Makefile 示例
+- 第一个 GLib 程序：Hello World 与运行验证
+
+### 第2章 基础类型与核心宏
+- 标准基本类型：gint/guint/gchar/gboolean/gpointer 等类型定义
+- 类型极值与范围宏
+- 通用宏：G_LIKELY/G_UNLIKELY、G_STATIC_ASSERT、G_STRUCT_OFFSET
+- 字节序与类型转换：大小端判断、字节序转换、数值安全转换
+- 防御式编程宏：编译期断言、运行期断言、返回值校验
+- 平台兼容宏：路径分隔符、系统判断、字符串处理宏
+
+---
+
+## 第二篇：通用工具与数据结构篇（日常开发高频工具，扩展C语言基础能力）
+### 第3章 内存管理体系
+- 基础内存分配：g_malloc/g_free/g_realloc 与标准libc的区别
+- 类型安全分配：g_new/g_new0/g_renew/g_steal_pointer/g_clear_pointer
+- 切片分配器 GSlice：高效小内存分配及与 g_malloc 的取舍
+- 自动清理宏：g_autoptr/g_autofree/g_auto（RAII 风格资源管理）
+- 原子操作基础：g_atomic_int/g_atomic_pointer 系列
+- 引用计数基础：grefcount/g_atomic_ref_count
+- 内存调试与检测：内存泄漏检查、越界检测工具
+- （了解）已废弃 API：GMemChunk（已被 GSlice 取代，仅作历史了解）
+
+### 第4章 字符串与文本处理
+- 动态字符串 GString：增删改查、追加、格式化
+- 字符串工具集：分割、拼接、大小写转换、前缀后缀匹配
+- 字符串向量：g_strv_* 系列与 g_strdupv/g_strfreev
+- Unicode 与字符集：g_utf8 系列函数、字符编码转换
+- 正则表达式 GRegex：匹配、捕获、替换、语法与性能优化
+- 词法扫描器 GScanner：自定义词法分析基础
+- Quarks：字符串与整型 id 的双向映射
+
+### 第5章 线性数据结构
+- 数组系列：GArray（类型化数组）、GPtrArray（指针数组）、GByteArray（字节数组）
+- 不可变字节序列 GBytes：零拷贝字节缓冲
+- 链表：GSList（单链表）、GList（双链表）的操作与遍历
+- 双端队列 GQueue：栈/队列双模式实现
+- 有序序列 GSequence：可排序、可定位的有序容器
+- 字符串块 GStringChunk：多字符串共享存储
+- 线性容器的选型原则与性能对比
+
+### 第6章 关联与集合数据结构
+- 哈希表 GHashTable：键值对存储、自定义哈希函数、遍历、性能优化
+- 平衡二叉树 GTree：有序键值对、范围查找、顺序遍历
+- N 叉树 GNode：层级数据组织
+- 用 GHashTable 实现集合：元素去重、交并差集运算（GLib 无独立 GSet 类型）
+- 关键数据列表 GDataset/GDatalist：按 Quark 关联的元素表
+- 容器的内存管理与元素销毁范式
+- 不同关联容器的选型场景
+
+### 第7章 日期、时间与计时
+- 日期处理 GDate：日期计算、星期、闰年、格式转换
+- 高精度时间 GDateTime：时间戳、时区处理、格式化输出
+- 计时器 GTimer：代码耗时统计、精度控制
+- 单调时钟与实时时钟：g_get_monotonic_time/g_get_real_time
+- 时区数据库与时区转换、夏令时处理
+
+### 第8章 命令行与配置解析
+- 命令行参数解析 GOption：GOptionContext、GOptionEntry、选项分组
+- 选项类型：字符串/整型/双精度/文件名/可选参数/剩余参数
+- 自动生成帮助与版本信息
+- 配置文件解析 GKeyFile：INI 风格配置的读写
+- 配置的分组、列表、注释处理
+- 与 GOption/GSettings 的配合使用
+
+### 第9章 通用工具函数集
+- 随机数生成：GRand 伪随机数、安全随机数
+- 数据编码与校验：Base64 编解码、GChecksum（MD5/SHA系列校验和）
+- 唯一标识 UUID：g_uuid_string_random 生成与解析
+- 文件路径处理：跨平台路径拼接 g_build_filename、规范化、目录操作
+- 环境变量与目录：g_getenv/g_setenv、g_get_home_dir/g_get_user_config_dir
+- Shell 工具：g_shell_parse_argv、g_shell_quote/unquote
+- 通用算法：排序、二分查找、版本号比较
+- 书签文件 GBookmarkFile：XBEL 格式读写
+
+---
+
+## 第三篇：系统编程与并发篇（系统级能力，异步与并发编程基础）
+### 第10章 日志与错误处理体系
+- 分级日志系统：调试/信息/警告/错误/严重五级日志
+- 自定义日志域、日志输出重定向、日志过滤规则
+- 结构化日志 g_log_structured 与日志写入器 g_log_writer_*
+- GError 错误处理机制：错误定义、传递、捕获、释放
+- G_DEFINE_QUARK 定义错误域
+- 断言与调试宏的生产环境最佳实践
+- 错误码与异常处理的设计范式
+
+### 第11章 主事件循环 GMainLoop
+- 事件循环核心原理：上下文、事件源、分发机制
+- GMainLoop/GMainContext/GSource 三件套
+- 内置事件源：g_timeout_add 超时事件、g_idle_add 空闲事件、IO 事件
+- 事件源优先级：G_PRIORITY_* 系列常量
+- GMainContext 的线程模型：单线程循环、多线程上下文
+- 自定义 GSource：扩展主事件循环
+- 事件源的销毁与生命周期管理
+- 事件循环的退出与异常处理
+
+### 第12章 线程编程基础
+- GThread 线程管理：线程创建、退出、等待、分离
+- 线程私有数据（TSD）：g_private 实现线程数据隔离
+- 原子操作：g_atomic 系列函数、无锁编程基础
+- 线程安全的基本原则与常见陷阱
+
+### 第13章 线程同步原语
+- 互斥锁 GMutex：临界区保护、g_mutex_trylock
+- 递归锁 GRecMutex
+- 条件变量 GCond：等待-通知机制、生产者消费者基础
+- 读写锁 GRWLock：读写分离场景优化
+- 一次性初始化：g_once、g_once_init_enter/leave 实现线程安全单例
+- 死锁的成因、排查与避免方案
+
+### 第14章 并发组件与线程池
+- 异步队列 GAsyncQueue：线程安全队列、跨线程数据传递
+- 线程池 GThreadPool：任务分发、并发数控制、任务队列管理
+- 生产者-消费者模型的标准实现范式
+- 并发任务的错误传递与资源回收
+
+### 第15章 子进程管理
+- g_spawn 系列函数：g_spawn_async/g_spawn_sync/g_spawn_command_line_async
+- 子进程的标准输入输出重定向
+- GSubprocess（GIO）：现代进程 API 与管道组合
+- GSubprocessLauncher：工作目录、环境变量、文件描述符继承
+- 进程退出状态与信号处理
+- 守护进程化与进程监控
+
+### 第16章 动态模块与插件架构
+- GModule 跨平台动态库加载：g_module_open、g_module_symbol、g_module_close
+- 模块路径构建：g_module_build_path
+- 插件的接口规范与生命周期管理
+- 结合 GInterface/GType 实现插件系统
+- 跨平台动态库的兼容性注意事项
+
+---
+
+## 第四篇：GObject 对象系统篇（面向对象C语言，GLib 核心进阶）
+### 第17章 GType 类型系统基础
+- GType 设计思想：C语言实现面向对象的底层机制
+- 类型分类：基础类型、枚举、标志、结构体、对象类型
+- 类型注册与查询：g_type_register_static、动态类型系统的运行时机制
+- G_DEFINE_TYPE 系列宏
+- 类型转换与类型检查：安全的类型强转
+- 枚举与标志类型注册：g_enum_register_static/g_flags_register_static
+- 箱类型（Boxed Type）：普通结构体的类型封装
+
+### 第18章 GObject 对象基础
+- GObject 的类结构与实例结构
+- 对象的创建与销毁：g_object_new、g_object_ref、g_object_unref
+- 引用计数机制：强引用、引用计数的线程安全
+- 浮动引用与 GInitiallyUnowned：所有权转移机制
+- 弱引用与引用监听：g_object_weak_ref、GWeakRef
+- toggle ref 与语言绑定
+- 对象的生命周期：constructed/dispose/finalize 完整流程
+
+### 第19章 属性系统
+- GParamSpec：属性元数据定义、类型与约束
+- 对象属性的注册：g_object_class_install_property
+- 属性的读写：g_object_set/g_object_get
+- 属性变更通知：notify 信号与属性监听
+- 构造属性：对象构造阶段的属性传递
+- 属性的验证与转换逻辑
+- 遍历属性：g_object_class_list_properties
+
+### 第20章 信号系统
+- 信号的核心概念：注册、发射、连接、回调
+- g_signal_new 系列函数与信号标志
+- 闭包 GClosure：回调的通用封装
+- 信号连接细节：g_signal_connect_data、单次连接、信号细节匹配
+- 信号累加器：多回调返回值的聚合
+- 自定义信号的设计与实现
+- 信号的发射顺序与默认处理、停止发射
+
+### 第21章 GObject 子类化
+- 子类化完整流程：类声明、实例声明、类初始化、实例初始化
+- 私有数据结构：G_DEFINE_TYPE_WITH_PRIVATE、g_type_instance_get_private
+- 虚函数的实现与重写
+- 父类方法的调用
+- 子类的内存管理与析构顺序
+
+### 第22章 接口系统 GInterface
+- 接口的定义与注册：G_DEFINE_INTERFACE
+- 接口的实现：类对接口方法的实现
+- 接口属性：接口层面的属性定义
+- 接口的依赖（prerequisite）与多继承特性
+- 接口与抽象类的选型区别
+
+### 第23章 GObject 高级特性
+- GValue 通用值容器：类型安全的动态值存储与转换
+- GBinding 属性绑定：对象间属性自动同步
+- GObject 内存管理最佳实践：避免循环引用、泄漏排查
+- 类型系统的扩展：自定义类型的高级特性
+
+### 第24章 GVariant 类型系统（GIO 的数据基础）
+- GVariant 设计定位：类型化数据的序列化与反序列化（属于 GLib Core）
+- 基本类型与格式字符串：G_VARIANT_TYPE 系列
+- 构造与读取：g_variant_new/g_variant_get
+- 容器类型：数组、元组、字典项、可空类型
+- GVariantBuilder / GVariantIter / GVariantDict
+- GVariantType 与类型校验
+- 文本格式：g_variant_parse/g_variant_print
+
+---
+
+## 第五篇：GIO 输入输出与网络篇（基于对象的IO框架，进程间与网络通信）
+### 第25章 GIO 基础与流体系
+- GIO 的设计理念：基于 GObject 的跨平台IO抽象
+- 流基类：GInputStream、GOutputStream 的核心方法
+- 基础流实现：内存流、文件流、缓冲流、数据流 GDataInputStream
+- 流的关闭、刷新与错误处理
+- 流的拷贝、拼接与管道操作
+- GBytes 与流的互转
+
+### 第26章 文件系统操作
+- GFile 抽象：路径、URI 统一的文件表示
+- 文件元数据：GFileInfo、文件属性与权限
+- 文件与目录操作：创建、删除、移动、复制
+- 目录遍历：GFileEnumerator 递归遍历、文件过滤
+- 内存映射文件 GMappedFile：大文件高效访问
+- 文件监控 GFileMonitor：文件/目录变更实时监听
+- 文件类型检测 GContentType：MIME 类型识别
+- 应用信息 GAppInfo：默认应用关联
+
+### 第27章 异步 IO 编程模型
+- 异步编程核心思想：同步阻塞 vs 异步非阻塞
+- GAsyncResult 异步结果标准模式与 GAsyncReadyCallback
+- GTask：异步任务的封装与实现
+- 流与文件的异步读写：异步IO的标准范式
+- GCancellable：异步操作的取消
+- 超时与错误处理
+- 基于事件循环的异步编程最佳实践
+
+### 第28章 网络编程基础
+- 网络地址 GInetAddress：IPv4/IPv6 地址处理
+- 网络端点 GInetSocketAddress / GProxyAddress
+- 域名解析 GResolver：同步/异步域名查询
+- GNetworkAddress / GNetworkService
+- GSocket 套接字：TCP/UDP 套接字创建、配置
+- 基于 Socket 的同步通信实现
+- 网络错误处理与连接管理
+
+### 第29章 网络客户端与服务端
+- GSocketClient：客户端连接封装、代理支持
+- GSocketService / GThreadedSocketService：服务端监听与连接处理
+- GSocketConnection / GTcpConnection 连接对象
+- TLS 加密通信：GTlsConnection、GTlsCertificate、GTlsClientConnection
+- GProxy / GProxyResolver 代理支持
+- 简单 TCP/SSL 服务的实现范式
+- 高并发网络服务的设计要点
+
+### 第30章 D-Bus IPC 基础
+- D-Bus 核心概念：总线、对象、接口、方法、信号
+- 总线连接 GDBusConnection：会话总线、系统总线
+- 总线名称占用：g_bus_own_name/g_bus_unown_name
+- 同步/异步方法调用：g_dbus_connection_call
+- 信号监听与接收：g_dbus_connection_signal_subscribe
+- D-Bus 错误处理与权限
+
+### 第31章 D-Bus 高级编程
+- D-Bus 对象导出：GDBusInterfaceVTable、g_dbus_connection_register_object
+- D-Bus 代理 GDBusProxy：客户端对象封装
+- GDBusObjectManager / GDBusObjectSkeleton
+- D-Bus 属性：属性读写与变更通知
+- D-Bus 内省与接口描述（XML）
+- GDBusMethodInvocation 处理方法调用
+- D-Bus 服务的守护化设计
+
+### 第32章 应用与资源管理
+- GApplication：应用生命周期、唯一实例、激活方式
+- GApplicationFlags 标志位
+- Actions 体系：GAction、GSimpleAction、GActionGroup、GActionMap
+- GMenu / GMenuItem：菜单模型（非渲染，纯数据）
+- GNotification：桌面通知
+- GResource：资源打包与内嵌
+- GListModel / GListStore：通用列表模型
+- GPermission / GSimplePermission
+
+### 第33章 应用配置管理 GSettings
+- GSettings 设计理念：系统级配置管理
+- Schema 定义与安装：GSettingsSchema、GSettingsSchemaSource
+- 配置项的读写、监听与默认值
+- 配置的作用域：用户级、系统级
+- 配置绑定：g_settings_bind 与属性联动
+- 配置迁移与版本兼容
+
+---
+
+## 第六篇：高级特性与工程实践篇（落地能力，性能与工程化）
+### 第34章 跨平台适配与兼容性
+- GLib 的跨平台抽象层
+- Windows/Linux/macOS 的平台差异处理
+- 线程模型的平台区别
+- 文件系统与路径的跨平台坑点
+- 编译期的平台兼容宏与条件编译
+- 字符编码与 locale 的跨平台处理
+
+### 第35章 性能优化与调试技巧
+- GLib 容器的性能调优：哈希表、数组的性能瓶颈
+- 内存优化：切片分配、内存复用的最佳实践
+- 事件循环性能优化：避免阻塞、事件优先级设计
+- 线程性能：锁粒度优化、无锁设计
+- 调试工具：gdb 调试 GLib 程序、内存泄漏排查、死锁定位
+- 性能剖析：热点函数定位、IO 瓶颈分析
+
+### 第36章 自定义扩展与组件封装
+- 自定义 GObject 子类的工程化设计
+- 自定义 GIO 流实现：扩展IO能力
+- 自定义事件源 GSource：扩展主事件循环
+- 自定义容器的设计思路
+- 组件的接口设计与可扩展性
+
+### 第37章 测试框架 GTest
+- g_test_init 初始化与 G_TEST_OPTION 选项
+- 添加测试用例：g_test_add_func/g_test_add/g_test_add_data_func
+- 断言宏：g_assert_cmpint/g_assert_cmpstr/g_assert_cmpmem/g_assert_no_error
+- 子进程测试：g_test_trap_subprocess/g_test_trap_assert_*
+- 性能基准：g_test_timer_*
+- 测试夹具：GTestFixtureFunc
+- 与 CI/CD 集成的最佳实践
+
+### 第38章 综合项目实战
+- 项目需求：实现异步插件化网络服务
+- 架构设计：事件循环 + 线程池 + 插件架构 + D-Bus 管控
+- 模块实现：网络模块、业务模块、配置模块、日志模块
+- 测试编写：用 GTest 覆盖核心模块
+- 编译构建与部署
+- 问题排查与优化迭代

@@ -170,7 +170,7 @@ void chapter1_basic_types_and_macros_test()
     const gfloat  f = 3.14f;
     const gdouble d = 3.141592653589793;
     g_print("gfloat = %.2f, gdouble = %.15f\n", f, d);
-*/
+
 
     // 1.2. 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
     g_print("\n1.2 常用宏定义\n");
@@ -234,6 +234,7 @@ void chapter1_basic_types_and_macros_test()
     {
         g_print("G_UNLIKELY(0): 分支不太可能执行\n");
     }
+    */
 }
 
 /**

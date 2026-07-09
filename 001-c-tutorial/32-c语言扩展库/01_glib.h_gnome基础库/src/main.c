@@ -76,127 +76,132 @@ void chapter_01_glib_overview(void)
 }
 
 /**
- * 第 2 章：基础类型与核心宏
+ * 第 2 章：基本类型与常用宏
  */
 void chapter_02_basic_types_and_macros(void)
 {
-    g_print("\n--- 第 2 章 基础类型与核心宏 ---\n");
+    g_print("\n--- 第 2 章 基本类型与常用宏 ---\n");
 
-    // 1. 基本类型演示
+    // 1. 基本类型演示 官方文档：https://docs.gtk.org/glib/types.html
     // gint -> int
-    const gint a = 10;
-    const gint b = 20;
+    const gint i = 10;
     // guint -> unsigned int
     const guint u = 100U;
-    g_print("[基本类型] gint=%d, guint=%u\n", a, u);
+    g_print("[基本数据类型] gint=%d, guint=%u\n", i, u);
 
     // glong -> long
     const glong l = 1234567890L;
     // gulong -> unsigned long
     const gulong ul = 1234567890UL;
-    g_print("[基本类型] glong=%ld, gulong=%uld\n", u, ul);
+    g_print("[基本数据类型] glong=%ld, gulong=%uld\n", u, ul);
 
     // gfloat -> float
     const gfloat f = 3.14f;
     // gdouble -> double
     const gdouble d = 3.14159265358979;
-    g_print("[基本类型] gfloat=%.3f, gdouble=%.6f\n", f, d);
+    g_print("[基本数据类型] gfloat=%.3f, gdouble=%.6f\n", f, d);
 
     // gboolean -> boolean
     const gboolean flag_true = TRUE;
     const gboolean flag_false = FALSE;
-    g_print("[基本类型] flag_true=%s, flag_false=%s\n", flag_true ? "TRUE" : "FALSE", flag_false ? "TRUE" : "FALSE");
-    g_print("[基本类型] gboolean TRUE = %d, gboolean FALSE = %d\n", TRUE, FALSE);
+    g_print("[布尔数据类型] flag_true=%s, flag_false=%s\n", flag_true ? "TRUE" : "FALSE", flag_false ? "TRUE" : "FALSE");
+    g_print("[布尔数据类型] gboolean TRUE=%d, gboolean FALSE=%d\n", TRUE, FALSE);
 
     // gchar -> char
     const gchar c = 'a';
     // guchar -> unsigned char
     const guchar uc = 'a';
-    g_print("[基本类型] gchar=%c, guchar=%c\n", c, uc);
+    g_print("[指针数据类型] gchar=%c, guchar=%c\n", c, uc);
 
     // gsize -> sizeof(无符号类型)
     const gsize gsize = sizeof(gint);
     // gssize -> sizeof(有符号类型)
     const gssize gssize = sizeof(guint);
-    g_print("[基本类型] gsize=%" G_GSIZE_FORMAT ", gssize=%" G_GSIZE_FORMAT "\n", gsize, gssize);
-
-    // gpointer -> void*
-    const gint value = 42;
-    gpointer ptr = &value;
-    // gconstpointer -> const void *
-    gconstpointer cptr = &value;
-    g_print("[指针类型] gpointer 指向值 %d, gconstpointer 指向值 %d\n", *(gint *)ptr, *(gint *)cptr);
+    g_print("[数据类型别名] gsize=%" G_GSIZE_FORMAT ", gssize=%" G_GSIZE_FORMAT "\n", gsize, gssize);
 
     // 有符号 gint8/gint16/gint32/gint64 - 固定宽度整型
     const gint8  i8  = 127;
     const gint16 i16 = 32767;
     const gint32 i32 = 2147483647;
     const gint64 i64 = G_GINT64_CONSTANT(9223372036854775807);
-    g_print("[基本类型] gint8=%d, gint16=%d, gint32=%d, gint64=%" G_GINT64_FORMAT "\n", i8, i16, i32, i64);
+    g_print("[固宽有符整型] gint8=%d, gint16=%d, gint32=%d, gint64=%" G_GINT64_FORMAT "\n", i8, i16, i32, i64);
 
     // 无符号 guint8/guint16/guint32/guint64 - 固定宽度整型
     const guint8  ui8  = 127;
     const guint16 ui16 = 32767;
     const guint32 ui32 = 2147483647;
     const guint64 ui64 = G_GINT64_CONSTANT(9223372036854775807);
-    g_print("[基本类型] guint8=%u, guint16=%u, guint32=%u, guint64=%" G_GINT64_FORMAT "\n", ui8, ui16, ui32, ui64);
+    g_print("[固宽无符整型] guint8=%u, guint16=%u, guint32=%u, guint64=%" G_GINT64_FORMAT "\n", ui8, ui16, ui32, ui64);
 
 
-    // 2. 类型极值宏
-    g_print("[极值] G_MAXINT=%d G_MININT=%d G_MAXUINT=%u\n", G_MAXINT, G_MININT, G_MAXUINT);
-    g_print("[极值] G_MAXLONG=%ld G_MAXULONG=%lu\n", (glong)G_MAXLONG, (gulong)G_MAXULONG);
-    g_print("[极值] G_MAXDOUBLE=%g G_MINDOUBLE=%g\n", G_MAXDOUBLE, G_MINDOUBLE);
-    g_print("[极值] G_MAXSIZE=%" G_GSIZE_FORMAT " G_MAXSSIZE=%" G_GSSIZE_FORMAT "\n", G_MAXSIZE, G_MAXSSIZE);
+    // 2. 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
+    // 取值范围宏
+    g_print("\n[类型极限值宏] G_MAXINT=%d, G_MININT=%d, G_MAXUINT=%u\n", G_MAXINT, G_MININT, G_MAXUINT);
+    g_print("[类型极限值宏] G_MAXLONG=%ld, G_MAXULONG=%lu\n", (glong)G_MAXLONG, (gulong)G_MAXULONG);
+    g_print("[类型极限值宏] G_MAXDOUBLE=%g, G_MINDOUBLE=%g\n", G_MAXDOUBLE, G_MINDOUBLE);
+    g_print("[类型极限值宏] G_MAXSIZE=%" G_GSIZE_FORMAT ", G_MAXSSIZE=%" G_GSSIZE_FORMAT "\n", G_MAXSIZE, G_MAXSSIZE);
+    g_print("[类型极限值宏] G_MAXUINT=%" G_GSIZE_FORMAT "\n", G_MAXUINT);
+    g_print("[类型极限值宏] G_MININT64=%" G_GINT64_FORMAT ", G_MAXINT64=%" G_GINT64_FORMAT "\n", G_MININT64, G_MAXINT64);
+    g_print("[类型极限值宏] G_MAXUINT64=%" G_GUINT64_FORMAT "\n", G_MAXUINT64);
+    g_print("[类型极限值宏] G_MINSSIZE=%" G_GSSIZE_FORMAT ", G_MAXSSIZE=%" G_GSSIZE_FORMAT "\n", G_MINSSIZE, G_MAXSSIZE);
+    g_print("[类型极限值宏] G_MAXSIZE=%" G_GSIZE_FORMAT "\n", G_MAXSIZE);
+    g_print("[布尔类型值宏] TRUE=%d, FALSE=%d \n", TRUE, FALSE);
+    g_print("[NULL 类型宏] NULL=%p \n", NULL);
 
-    // 3. 数学运算宏
-    g_print("[数学] MIN(%d,%d)=%d  MAX(%d,%d)=%d\n", a, b, MIN(a, b), a, b, MAX(a, b));
-    g_print("[数学] ABS(-5)=%d  ABS(7)=%d\n", ABS(-5), ABS(7));
-    g_print("[数学] CLAMP(15,0,10)=%d  CLAMP(3,0,10)=%d  CLAMP(-1,0,10)=%d\n", CLAMP(15, 0, 10), CLAMP(3, 0, 10), CLAMP(-1, 0, 10));
+    // 指针与整型互转
+    gint a = 10;
+    gpointer ptr_a = GINT_TO_POINTER(100);
+    gint b = GPOINTER_TO_INT(ptr_a);
+    g_print("\n[整数和指针互转宏] GINT_TO_POINTER/GPOINTER_TO_INT: %d -> %p -> %d\n", a, ptr_a, b);
+    gpointer pu = GUINT_TO_POINTER(0xABCD);
+    g_print("[整数和指针互转宏] GUINT_TO_POINTER(0xABCD)->0x%x\n", GPOINTER_TO_UINT(pu));
 
-    // 4. 数学常量
-    g_print("[常量] G_PI=%.15f\n", G_PI);
-    g_print("[常量] G_E=%.15f\n", G_E);
-    g_print("[常量] G_SQRT2=%.15f\n", G_SQRT2);
-    g_print("[常量] G_PI_2=%.15f  G_PI_4=%.15f\n", G_PI_2, G_PI_4);
+    // 整数与字符串互转
+    g_print("[整数和字符串互转宏] g_strdup_printf(\"%d\") = %s\n", 42, g_strdup_printf("%d", 42));
+    g_print("[整数和字符串互转宏] g_ascii_strtoull(\"255\", NULL, 10) = %llu\n", (guint64)g_ascii_strtoull("255", NULL, 10));
 
-    // 5. 分支预测宏
+    // 数学宏
+    g_print("\n[数学运算宏] ABS(-10)=%d\n", ABS(-10));
+    g_print("[数学运算宏] MIN(5, 10)=%d\n", MIN(5, 10));
+    g_print("[数学运算宏] MAX(5, 10)=%d\n", MAX(5, 10));
+    g_print("[数学运算宏] CLAMP(15, 5, 10)=%d\n", CLAMP(15, 5, 10));
+
+    // 数学常量
+    g_print("[数学常量宏] G_PI=%.15f\n", G_PI);
+    g_print("[数学常量宏] G_E=%.15f\n", G_E);
+    g_print("[数学常量宏] G_SQRT2=%.15f\n", G_SQRT2);
+    g_print("[数学常量宏] G_PI_2=%.15f  G_PI_4=%.15f\n", G_PI_2, G_PI_4);
+
+    // 字节序宏
+    g_print("\n[字节序列值宏] G_BYTE_ORDER=%d (G_LITTLE_ENDIAN: %d, G_BIG_ENDIAN: %d)\n", G_BYTE_ORDER, G_LITTLE_ENDIAN, G_BIG_ENDIAN);
+
+    // 字符串化宏
+    g_print("[字符串序列化宏] G_STRINGIFY(hello)=%s\n", G_STRINGIFY(hello));
+
+    // 数组元素个数宏
+    gint g_array[] = { 1, 2, 3, 4, 5 };
+    g_print("[元素个数宏] G_N_ELEMENTS(g_array)=%u\n", G_N_ELEMENTS(g_array));
+
+    // 结构体成员偏移宏
+    struct Point { gint x; gint y; };
+    g_print("[结构体成员偏移宏] G_STRUCT_OFFSET(y)=%u\n", (guint)G_STRUCT_OFFSET(struct Point, y));
+
+    g_print("[内存对齐查询宏] G_ALIGNOF(gint) = %u\n", (guint)G_ALIGNOF(gint));
+    g_print("[内存对齐查询宏] G_ALIGNOF(gdouble) = %u\n", (guint)G_ALIGNOF(gdouble));
+
+    // 编译时断言
+    G_STATIC_ASSERT(sizeof(gint) >= 4);
+    g_print("[静态断言宏] sizeof(gint)>=4 通过\n");
+
+    // 分支预测宏
     if (G_LIKELY(a < b)) {
-        g_print("[分支] G_LIKELY(a<b) 命中\n");
+        g_print("[分支预测宏] G_LIKELY(a<b) 命中\n");
     }
     if (G_UNLIKELY(a > 100)) {
-        g_print("[分支] G_UNLIKELY 不该命中\n");
+        g_print("[分支预测宏] G_UNLIKELY 不该命中\n");
     } else {
-        g_print("[分支] G_UNLIKELY 未命中\n");
+        g_print("[分支预测宏] G_UNLIKELY 未命中\n");
     }
-
-    // 6. 数组元素个数宏
-    gint arr[] = { 1, 2, 3, 4, 5 };
-    g_print("[数组] G_N_ELEMENTS = %u\n", (guint)G_N_ELEMENTS(arr));
-
-    // 7. 结构体偏移宏
-    struct Point { gint x; gint y; };
-    g_print("[偏移] G_STRUCT_OFFSET(y) = %u\n", (guint)G_STRUCT_OFFSET(struct Point, y));
-
-    // 8. 指针与整型互转
-    gpointer p = GINT_TO_POINTER(42);
-    g_print("[指针] GINT_TO_POINTER(42)->%d\n", GPOINTER_TO_INT(p));
-    gpointer pu = GUINT_TO_POINTER(0xABCD);
-    g_print("[指针] GUINT_TO_POINTER(0xABCD)->0x%x\n", GPOINTER_TO_UINT(pu));
-
-    // 9. 字符串化宏
-    g_print("[字符串化] G_STRINGIFY(42) = %s\n", G_STRINGIFY(42));
-
-    // 10. 对齐计算宏
-    g_print("[对齐] G_ALIGNOF(gint) = %u\n", (guint)G_ALIGNOF(gint));
-    g_print("[对齐] G_ALIGNOF(gdouble) = %u\n", (guint)G_ALIGNOF(gdouble));
-
-    // 11. 编译时断言
-    G_STATIC_ASSERT(sizeof(gint) >= 4);
-    g_print("[静态断言] sizeof(gint)>=4 通过\n");
-
-    // 12. 整数与字符串互转
-    g_print("[转字符串] g_strdup_printf(\"%d\") = %s\n", 42, g_strdup_printf("%d", 42));
-    g_print("[转整数] g_ascii_strtoull(\"255\", NULL, 10) = %llu\n", (guint64)g_ascii_strtoull("255", NULL, 10));
 }
 
 /* ============================================================
