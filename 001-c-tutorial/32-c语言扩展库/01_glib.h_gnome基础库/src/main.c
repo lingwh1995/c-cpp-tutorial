@@ -82,7 +82,7 @@ void chapter_02_basic_types_and_macros(void)
 {
     g_print("\n--- 第 2 章 基本类型与常用宏 ---\n");
 
-    // 1. 基本类型演示 官方文档：https://docs.gtk.org/glib/types.html
+    // 1. 基本数据类型 官方文档：https://docs.gtk.org/glib/types.html
     // gint -> int
     const gint i = 10;
     // guint -> unsigned int
@@ -134,7 +134,7 @@ void chapter_02_basic_types_and_macros(void)
     g_print("[固宽无符整型] guint8=%u, guint16=%u, guint32=%u, guint64=%" G_GINT64_FORMAT "\n", ui8, ui16, ui32, ui64);
 
 
-    // 2. 常用宏定义 官方文档：https://docs.gtk.org//glib/#constants
+    // 2. 常用宏定义 官方文档：https://docs.gtk.org/glib/macros.html
     // 取值范围宏
     g_print("\n[类型极限值宏] G_MAXINT=%d, G_MININT=%d, G_MAXUINT=%u\n", G_MAXINT, G_MININT, G_MAXUINT);
     g_print("[类型极限值宏] G_MAXLONG=%ld, G_MAXULONG=%lu\n", (glong)G_MAXLONG, (gulong)G_MAXULONG);
@@ -213,76 +213,251 @@ void chapter_02_basic_types_and_macros(void)
  */
 void chapter_03_memory_management(void)
 {
-    g_print("\n=== 第 3 章 内存管理体系 ===\n");
+    g_print("\n--- 第 3 章 内存管理体系 ---\n");
 
-    /* 1. g_malloc / g_free */
-    gpointer buf = g_malloc(128);
-    g_print("[g_malloc] 分配 128 字节: %p\n", buf);
-    g_free(buf);
+    // 3.1. 基本内存分配 官方文档：https://docs.gtk.org/glib/memory.html
+    // g_malloc - 分配内存，分配失败时直接终止程序，代码不需要检查返回值 -> malloc
+    gint *malloc_ptr = g_malloc(sizeof(gint));
+    g_print("[g_malloc] 分配了 %d 字节，地址: 0x%p\n", sizeof(gint), malloc_ptr);
+    *malloc_ptr = 100;
+    g_print("[g_malloc] *int_ptr = %d\n", *malloc_ptr);
+    // g_free - 通用的释放函数。无论是 g_malloc 还是 g_try_malloc 分配的内存，都使用 g_free 释放。注意：g_free(NULL) 是安全的。
+    g_free(malloc_ptr);
 
-    /* 2. g_new / g_new0：类型安全分配 */
-    gint *arr = g_new(gint, 5);
-    for (gint i = 0; i < 5; i++) arr[i] = i * 10;
-    g_print("[g_new] 数组: %d %d %d %d %d\n", arr[0], arr[1], arr[2], arr[3], arr[4]);
+    // g_malloc0() - 分配内存并初始化为0，分配失败时直接终止程序，代码不需要检查返回值 -> malloc() + memset(0)
+    const gint *malloc0_ptr = g_malloc0(sizeof(gint) * 5);
+    g_print("[g_malloc0] 数组前n个元素 = [%d, %d, %d, %d]\n", malloc0_ptr[0], malloc0_ptr[1], malloc0_ptr[2], malloc0_ptr[3]);
+    g_free(malloc0_ptr);
 
-    gint *zeroed = g_new0(gint, 3);
-    g_print("[g_new0] 清零数组: %d %d %d\n", zeroed[0], zeroed[1], zeroed[2]);
-
-    /* 3. g_realloc：重分配 */
-    arr = g_realloc(arr, sizeof(gint) * 8);
-    arr[5] = 50; arr[6] = 60; arr[7] = 70;
-    g_print("[g_realloc] 扩展后: %d %d %d\n", arr[5], arr[6], arr[7]);
-
-    /* 4. g_try_malloc：不致命的分配 */
-    gpointer try_buf = g_try_malloc(64);
-    if (try_buf) {
-        g_print("[g_try_malloc] 成功: %p\n", try_buf);
-        g_free(try_buf);
+    // g_try_malloc() - 尝试分配内存，分配失败时返回 NULL，不终止程序，代码必须检查返回值 -> 标准 malloc()
+    const gpointer try_malloc_ptr = g_try_malloc(512);
+    if (try_malloc_ptr != NULL) {
+        g_print("[g_try_malloc] 成功分配 512 字节\n");
+        g_free(try_malloc_ptr);
+    } else {
+        g_print("[g_try_malloc] 分配失败\n");
     }
 
-    /* 5. g_strdup / g_strndup：字符串复制 */
+    // g_try_malloc0() - 尝试分配内存并初始化为0，分配失败时返回 NULL，不终止程序，代码必须检查返回值 -> 标准 malloc0() + memset(0)
+    const gpointer try_malloc0_ptr = g_try_malloc0(512);
+    if (try_malloc0_ptr != NULL) {
+        g_print("[g_try_malloc0] 成功分配 512 字节并初始化为0\n");
+        g_free(try_malloc0_ptr);
+    }
+
+    // g_new() - 类型安全的内存分配宏，等价于 (type *)g_malloc(n * sizeof(type))
+    gint *new_ptr = g_new(gint, 3);
+    new_ptr[0] = 10;
+    new_ptr[1] = 20;
+    new_ptr[2] = 30;
+    g_print("[g_new] arr = [%d, %d, %d]\n", new_ptr[0], new_ptr[1], new_ptr[2]);
+    // 特别注意1：下面要再使用 new_ptr 的话，这里绝对不能释放，这里释放了，下面用到的地方相当于在操作野指针，会直接报错
+    // g_free(new_ptr); //放开程序会直接报错
+
+    // g_realloc() 演示1 - 重分配，g_realloc（）会先释放 new_ptr 指针，操作完成后会返回一个新的地址
+    gint *realloc_ptr = g_realloc(new_ptr, sizeof(gint) * 8);
+    realloc_ptr[5] = 50; realloc_ptr[6] = 60; realloc_ptr[7] = 70;
+    g_print("[g_realloc] arr 原来值 = %d %d %d\n", realloc_ptr[0], realloc_ptr[1], realloc_ptr[2]);
+    g_print("[g_realloc] arr 扩展值 = %d %d %d\n", realloc_ptr[5], realloc_ptr[6], realloc_ptr[7]);
+    // 特别注意2：g_realloc() 操作时已经释放 new_ptr 指针，这里再重复释放，会造成严重错误
+    // g_free(new_ptr); // 放开程序会直接报错
+    g_free(realloc_ptr);
+
+    // g_realloc() 演示2 - 使用 g_realloc() 实现 g_malloc() 的效果 + glib 推荐使用 gpointer 作为返回值类型
+    const gpointer realloc_ptr_ = g_realloc(NULL, 100);
+    g_print("[g_realloc] g_realloc(NULL, 100) = 0x%p\n", realloc_ptr_);
+    const gpointer realloc_ptr__ = g_realloc(realloc_ptr_, 200);
+    g_print("[g_realloc] g_realloc(realloc_ptr_, 200) = %p\n", realloc_ptr__);
+    g_free(realloc_ptr__);
+
+    // g_new0() - 类型安全的零初始化分配
+    gint *new0_ptr = g_new0(gint, 3);
+    g_print("[g_new0] zero_arr = [%d, %d, %d]\n", new0_ptr[0], new0_ptr[1], new0_ptr[2]);
+    g_free(new0_ptr);
+
+
+
+
+
+
+
+
+    // 5. g_strdup / g_strndup：字符串复制
     gchar *str = g_strdup("Hello GLib");
     gchar *strn = g_strndup("HelloWorld", 5);
     g_print("[g_strdup] %s  [g_strndup] %s\n", str, strn);
 
-    /* 6. g_clear_pointer：释放并置空 */
+    // 6. g_clear_pointer：释放并置空
     g_clear_pointer(&str, g_free);
     g_clear_pointer(&strn, g_free);
     g_print("[g_clear_pointer] str=%p strn=%p\n", (void *)str, (void *)strn);
 
-    /* 7. slice 分配器：固定大小高效分配 */
+    // 7. slice 分配器：固定大小高效分配
     gpointer s1 = g_slice_alloc(sizeof(gint));
     gpointer s2 = g_slice_alloc(sizeof(gint));
     g_print("[g_slice_alloc] s1=%p s2=%p\n", s1, s2);
     g_slice_free1(sizeof(gint), s1);
     g_slice_free1(sizeof(gint), s2);
 
-    /* 8. g_steal_pointer：转移所有权 */
+    // 8. g_steal_pointer：转移所有权
     gchar *owned = g_strdup("transfer");
     gchar *stolen = g_steal_pointer(&owned);
     g_print("[g_steal_pointer] stolen=%s owned=%p\n", stolen, (void *)owned);
     g_free(stolen);
 
-    /* 9. 内存清零与复制 */
-    memset(zeroed, 0, sizeof(gint) * 3);
+    // 9. 内存清零与复制
+    //memset(zeroed, 0, sizeof(gint) * 3);
     gint src[5] = { 1, 2, 3, 4, 5 };
     gint dst[5];
     memcpy(dst, src, sizeof(src));
     g_print("[memcpy] dst[4]=%d\n", dst[4]);
 
-    /* 10. g_aligned_alloc：对齐分配 */
+    // 10. g_aligned_alloc：对齐分配
     gpointer aligned = g_malloc(64);
     g_print("[对齐分配] %p\n", aligned);
     g_free(aligned);
 
-    /* 11. 内存调试宏 GLIB_VERSION_2_64+ */
+    // 11. 内存调试宏 GLIB_VERSION_2_64+
     g_print("[内存说明] g_malloc 出错时默认调用 abort()\n");
     g_print("[内存说明] g_try_malloc 出错时返回 NULL\n");
 
-    g_free(arr);
-    g_free(zeroed);
+    //g_free(arr);
+    // g_free(zeroed);
     g_print("[内存] 全部释放完毕\n");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// /**
+//  * 第2章：内存管理
+//  */
+// void chapter2_memory_management_test()
+// {
+//     g_print("--- 第2章：内存管理 ---\n\n");
+
+
+//     // 2.2. 对齐内存分配（GLib 2.72+）
+//     g_print("\n2.2 对齐内存分配\n");
+//     // g_aligned_alloc() - 对齐内存分配
+//     gpointer aligned_mem = g_aligned_alloc(1, 100, 16);  // 1块 × 100字节，16字节对齐
+//     g_print("g_aligned_alloc(1, 100, 16) = %p\n", aligned_mem);
+//     // 必须使用对应的释放函数
+//     g_aligned_free(aligned_mem);
+//
+//     // 2.3. 临时内存分配（栈分配）
+//     g_print("\n2.3 临时内存分配\n");
+//     // g_alloca() - 在栈上分配，自动释放
+//     gchar *stack_mem = g_alloca(100);
+//     g_print("g_alloca(100) = %p\n", stack_mem);
+//
+//     // g_steal_pointer() - 转移指针所有权并置空原指针
+//     gchar *original = g_strdup("hello");
+//     gchar *stolen = g_steal_pointer(&original);
+//     g_print("g_steal_pointer: stolen = %s, original = %s\n", stolen, original ? original : "(null)");
+//     g_free(stolen);
+//
+//     // g_clear_pointer() - 清除指针并释放资源
+//     gint *clear_ptr = g_new(gint, 1);
+//     *clear_ptr = 99;
+//     g_clear_pointer(&clear_ptr, g_free);
+//     g_print("g_clear_pointer: clear_ptr = %s\n", clear_ptr ? "非NULL" : "NULL");
+//
+//     // 2.4. 内存切片分配器（高效小内存分配）
+//     /**
+//      * g_slice_alloc() 和 malloc() 分配方式区别
+//      * 1. 性能差异
+//      *    g_slice_alloc()
+//      *      使用预分配的内存池
+//      *      分配速度更快，特别是对于小内存块
+//      *      减少了系统调用次数
+//      *    malloc()
+//      *      每次都需要向操作系统请求内存
+//      *      相对较慢，尤其是频繁调用时
+//      *
+//      * 2. 内存管理方式
+//      *    g_slice_alloc()
+//      *      gpointer slice = g_slice_alloc(64);  // 从64字节池中获取
+//      *      g_slice_free1(64, slice);            // 返回到池中而非真正释放
+//      *    malloc()/free()
+//      *      void *ptr = malloc(64);   // 直接向系统申请
+//      *      free(ptr);                // 直接归还给系统
+//      *
+//      * 3. 内存碎片处理
+//      *    g_slice_alloc()
+//      *      通过重用相同大小的内存块减少碎片
+//      *      更适合大量相同大小对象的场景
+//      *    malloc()/free()
+//      *      容易产生内存碎片
+//      *      长时间运行后可能影响性能
+//      *
+//      * 4. 应用场景对比
+//      *    g_slice_alloc()
+//      *      小对象频繁分配: 如链表节点、结构体等小对象
+//      *      typedef struct Node {
+//      *          int data;
+//      *          struct Node *next;
+//      *      } Node;
+//      *
+//      *      Node* node = g_slice_alloc(sizeof(Node));  // 快速分配
+//      *      // ... 使用节点 ...
+//      *      g_slice_free1(sizeof(Node), node);         // 快速释放
+//      *      // 使用传统分配
+//      *      Node* node = malloc(sizeof(Node));         // 相对较慢
+//      *      // ... 使用节点 ...
+//      *      free(node);                                // 相对较慢
+//      *
+//      *    malloc()/free()
+//      *      不同大小混合分配
+//      */
+//     g_print("\n2.4 内存切片分配器\n");
+//     // 分配64字节的内存块
+//     gpointer slice = g_slice_alloc(64);
+//     /**
+//      * 首次调用 gpointer slice = g_slice_alloc(64);  时， glib 内部会执行如下操作：
+//      *
+//      * 1. 检查是否有64字节的内存池
+//      * 2. 如果没有，则创建64字节规格的池，具体操作是 向系统申请一大块内存（比如几KB），将这块大内存分割成多个64字节的小块，建立空闲链表管理这些小块
+//      * 3. 如果有，则从空闲链表中取出一个小块，并返回给调用者
+//      * 4. 如果池中64字节块用完了，触发再次向系统申请大块内存，然后分割成更多64字节块
+//      *
+//      * // 第一次调用 - 只创建64字节的池
+//      * gpointer s1 = g_slice_alloc(64);   // 创建64字节池
+//      * // 第二次调用不同规格 - 创建新的池
+//      * gpointer s2 = g_slice_alloc(128);  // 创建128字节池
+//      * // 第三次调用已有规格 - 直接使用现有池
+//      * gpointer s3 = g_slice_alloc(64);   // 直接使用64字节池
+//      * // ... 假设池中64字节块用完了 ...
+//      * gpointer s3 = g_slice_alloc(64);   // 触发再次向系统申请大块内存，然后分割成更多64字节块
+//      */
+//     g_print("g_slice_alloc(64) = %p\n", slice);
+//     // 释放内存块
+//     g_slice_free1(64, slice);
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * 第 4 章：字符串与文本处理
@@ -3167,8 +3342,8 @@ int main(int argc, char *argv[])
     g_argv = argv;
 
     // chapter_01_glib_overview();
-    chapter_02_basic_types_and_macros();
-    // chapter_03_memory_management();
+    // chapter_02_basic_types_and_macros();
+    chapter_03_memory_management();
     // chapter_04_strings_and_text();
     // chapter_05_linear_data_structures();
     // chapter_06_associative_and_set_structures();
